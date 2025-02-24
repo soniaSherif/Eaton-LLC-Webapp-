@@ -1,0 +1,20 @@
+<ul class="navbar-nav">
+  <li>
+    <a href="javascript:" class="full-screen" (click)="toggleFullscreen()">
+      <i class="feather" [ngClass]="screenFull ? 'icon-minimize' : 'icon-maximize'"></i>
+    </a>
+  </li>
+  <li class="nav-item show-items" ngbDropdown placement="auto">
+    <a href="javascript:" ngbDropdownToggle>Dropdown</a>
+    <ul ngbDropdownMenu>
+      <li><a href="javascript:" ngbDropdownItem>Action</a></li>
+      <li><a href="javascript:" ngbDropdownItem>Another action</a></li>
+      <li>
+        <a href="javascript:" ngbDropdownItem>Something else here</a>
+      </li>
+    </ul>
+  </li>
+  <li class="nav-item">
+    <app-nav-search />
+  </li>
+</ul>
