@@ -1,0 +1,37 @@
+<p>all-jobs works!</p>
+
+
+<div class="row">
+    <div class="col-xl-12">
+      <app-card cardTitle="Basic Table" [options]="false" blockClass="table-border-style">
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th></th>
+                <th>JOB</th>
+                <th>PROJECT</th>
+                <th>SCHEDULE</th>
+                <th>CUSTOMER</th>
+                <th>MATERIAL</th>
+                <th>ORDERED</th>
+              </tr>
+            </thead>
+            <tbody>
+                <!-- Loop through the jobs array and display each job -->
+                <tr *ngFor="let job of jobs">
+                  <td><input type="checkbox" [(ngModel)]="job.selected"></td>
+                  <td>{{ job.jobId }}</td>
+                  <td>{{ job.project }}</td>
+                  <td>{{ job.schedule }}</td>
+                  <td>{{ job.customer }}</td>
+                  <td>{{ job.material }}</td>
+                  <td>{{ job.ordered }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </app-card>
+    </div>
+  </div>
+  

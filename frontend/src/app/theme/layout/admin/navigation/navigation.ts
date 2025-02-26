@@ -208,7 +208,7 @@ export const NavigationItems: NavigationItem[] = [
             id: 'All Jobs',
             title: 'All Jobs',
             type: 'item',
-            url: '/tables/bootstrap',
+            url: '/all-jobs',
             
           },
           {
