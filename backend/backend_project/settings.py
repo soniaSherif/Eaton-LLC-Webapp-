@@ -143,22 +143,22 @@ CORS_ALLOWED_ORIGINS = [
     "https://yourdomain.com",  # Production frontend (Replace with actual domain)
 ]
 CORS_ALLOW_ALL_ORIGINS = True  
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-    ),
-}
 # REST_FRAMEWORK = {
 #     'DEFAULT_AUTHENTICATION_CLASSES': (
 #         'rest_framework_simplejwt.authentication.JWTAuthentication',
 #     ),
 #     'DEFAULT_PERMISSION_CLASSES': (
-#         'rest_framework.permissions.AllowAny',  # Allow public access by default
+#         'rest_framework.permissions.IsAuthenticated',
 #     ),
 # }
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny',  # Allow public access by default
+    ),
+}
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),  # 1-day token expiry
