@@ -1,0 +1,105 @@
+<div class="container">
+    <h2>Job Creator ({{ currentStep }}/6)</h2>
+  
+    <!-- Step 1: Job Details -->
+    <div *ngIf="currentStep === 1">
+      <h3>Job Details</h3>
+      <label>Project</label>
+      <input type="text" [(ngModel)]="jobData.project" class="form-control">
+  
+      <label>Customer</label>
+      <input type="text" [(ngModel)]="jobData.customer" class="form-control">
+  
+      <label>Job Title</label>
+      <input type="text" [(ngModel)]="jobData.jobTitle" class="form-control">
+  
+      <label>PO #</label>
+      <input type="text" [(ngModel)]="jobData.poNumber" class="form-control">
+  
+      <label>JOB #</label>
+      <input type="text" [(ngModel)]="jobData.jobNumber" class="form-control">
+  
+      <label>Order #</label>
+      <input type="text" [(ngModel)]="jobData.orderNumber" class="form-control">
+    </div>
+  
+    <!-- Step 2: Rate & Material -->
+    <div *ngIf="currentStep === 2">
+      <h3>Rate & Material</h3>
+      <label>Markets</label>
+      <input type="text" [(ngModel)]="jobData.markets" class="form-control">
+  
+      <label>Material</label>
+      <input type="text" [(ngModel)]="jobData.material" class="form-control">
+  
+      <label>Phase Code</label>
+      <input type="text" [(ngModel)]="jobData.phaseCode" class="form-control">
+  
+      <label>Invoice Type</label>
+      <select [(ngModel)]="jobData.invoiceType" class="form-control">
+        <option value="weight">Weight</option>
+        <option value="load">Load</option>
+        <option value="hour">Hour</option>
+      </select>
+  
+      <label>Rate ($)</label>
+      <input type="number" [(ngModel)]="jobData.rate" class="form-control">
+    </div>
+  
+    <!-- Step 3: Date, Time, and Volume -->
+    <div *ngIf="currentStep === 3">
+      <h3>Date, Time, and Volume</h3>
+      <label>Total Amount Ordered</label>
+      <input type="number" [(ngModel)]="jobData.totalAmount" class="form-control">
+  
+      <label>Date Range</label>
+      <input type="date" [(ngModel)]="jobData.dateRange" class="form-control">
+  
+      <label>Shift Start Time</label>
+      <input type="time" [(ngModel)]="jobData.shiftStart" class="form-control">
+  
+      <label>Shift End Time</label>
+      <input type="time" [(ngModel)]="jobData.shiftEnd" class="form-control">
+  
+      <label>Default Yard Buffer Time (Minutes)</label>
+      <input type="number" [(ngModel)]="jobData.yardBufferTime" class="form-control">
+    </div>
+  
+    <!-- Step 4: Dispatch Request -->
+    <div *ngIf="currentStep === 4">
+      <h3>Dispatch Request</h3>
+      <label>Number of Trucks Needed</label>
+      <input type="number" [(ngModel)]="jobData.trucksNeeded" class="form-control">
+  
+      <label>Truck Types</label>
+      <input type="text" [(ngModel)]="jobData.truckTypes" class="form-control">
+  
+      <label>Daily Delivery Target</label>
+      <input type="number" [(ngModel)]="jobData.dailyTarget" class="form-control">
+    </div>
+  
+    <!-- Step 5: Loading & Unloading -->
+    <div *ngIf="currentStep === 5">
+      <h3>Loading & Unloading</h3>
+      <label>Loading Address</label>
+      <input type="text" [(ngModel)]="jobData.loadingAddress" class="form-control">
+  
+      <label>Unloading Address</label>
+      <input type="text" [(ngModel)]="jobData.unloadingAddress" class="form-control">
+    </div>
+  
+    <!-- Step 6: Additional Notes -->
+    <div *ngIf="currentStep === 6">
+      <h3>Additional Notes</h3>
+      <label>Notes</label>
+      <textarea [(ngModel)]="jobData.additionalNotes" class="form-control"></textarea>
+    </div>
+  
+    <!-- Navigation Buttons -->
+    <div class="d-flex justify-content-between mt-3">
+      <button *ngIf="currentStep > 1" class="btn btn-secondary" (click)="prevStep()">← Previous</button>
+      <button *ngIf="currentStep < 6" class="btn btn-primary" (click)="nextStep()">Next →</button>
+      <button *ngIf="currentStep === 6" class="btn btn-success" (click)="submitJob()">Submit Job</button>
+    </div>
+  </div>
+  

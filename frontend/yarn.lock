@@ -1890,6 +1890,11 @@
     "@types/qs" "*"
     "@types/serve-static" "*"
 
+"@types/geojson@*":
+  version "7946.0.16"
+  resolved "https://registry.npmjs.org/@types/geojson/-/geojson-7946.0.16.tgz"
+  integrity sha512-6C8nqWur3j98U6+lXDfTUWIfgvZU+EumvpHKcYjujKH7woYyLj2sUmff0tRhrqM7BohUw7Pz3ZB1jj2gW9Fvmg==
+
 "@types/http-errors@*":
   version "2.0.4"
   resolved "https://registry.npmjs.org/@types/http-errors/-/http-errors-2.0.4.tgz"
@@ -1911,6 +1916,13 @@
   version "7.0.15"
   resolved "https://registry.npmjs.org/@types/json-schema/-/json-schema-7.0.15.tgz"
   integrity sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==
+
+"@types/leaflet@^1.9.16":
+  version "1.9.16"
+  resolved "https://registry.npmjs.org/@types/leaflet/-/leaflet-1.9.16.tgz"
+  integrity sha512-wzZoyySUxkgMZ0ihJ7IaUIblG8Rdc8AbbZKLneyn+QjYsj5q1QU7TEKYqwTr10BGSzY5LI7tJk9Ifo+mEjdFRw==
+  dependencies:
+    "@types/geojson" "*"
 
 "@types/lodash@4.17.13":
   version "4.17.13"
@@ -4632,6 +4644,11 @@ launch-editor@^2.6.1:
     picocolors "^1.0.0"
     shell-quote "^1.8.1"
 
+leaflet@^1.9.4:
+  version "1.9.4"
+  resolved "https://registry.npmjs.org/leaflet/-/leaflet-1.9.4.tgz"
+  integrity sha512-nxS1ynzJOmOlHp+iL3FyWqK89GtNL8U8rvlMOsQdTTssxZwCXh8N2NB3GDQOL+YR3XnWyZAxwQixURb+FA74PA==
+
 less-loader@12.2.0:
   version "12.2.0"
   resolved "https://registry.npmjs.org/less-loader/-/less-loader-12.2.0.tgz"
@@ -5150,12 +5167,19 @@ neo-async@^2.6.2:
   resolved "https://registry.npmjs.org/neo-async/-/neo-async-2.6.2.tgz"
   integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
 
-ng-apexcharts@1.11.0:
-  version "1.11.0"
-  resolved "https://registry.npmjs.org/ng-apexcharts/-/ng-apexcharts-1.11.0.tgz"
-  integrity sha512-bzZ2qMYpJJ1V/Yfp9eC5y7BuxrlZx4fc9ev9pNHW8qEs5B0yE5yW25WrLhoGTYsfeFZfiADWeAmZkceEiihpFw==
+ng-apexcharts@^1.15.0:
+  version "1.15.0"
+  resolved "https://registry.npmjs.org/ng-apexcharts/-/ng-apexcharts-1.15.0.tgz"
+  integrity sha512-CNJMStzS+NxLvxRLrybPCy67n1z53WqsGvD9qdepWMo3xgZRDzpX8NiNOvwWDsZGSi7Y/nS5qaUmiM84gi3x7Q==
   dependencies:
     tslib "^2.0.0"
+
+ngx-leaflet@^0.0.16:
+  version "0.0.16"
+  resolved "https://registry.npmjs.org/ngx-leaflet/-/ngx-leaflet-0.0.16.tgz"
+  integrity sha512-4cm06T9ZrD3i0VI+/fghrfx/Oe3UkOcYsDYKLFgh+XkoBvCt3oXIgdrABjoXIgMLcKtzS/oDHcVgRkDy/x5/MA==
+  dependencies:
+    tslib "^2.3.0"
 
 ngx-scrollbar@16.1.1:
   version "16.1.1"

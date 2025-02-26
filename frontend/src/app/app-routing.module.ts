@@ -40,7 +40,11 @@ const routes: Routes = [
       {
         path: 'all-jobs',
         loadComponent: () => import('./demo/pages/all-jobs/all-jobs.component').then((c) => c.AllJobsComponent)
-      }         
+      },
+      {
+        path: 'all-jobs/create',
+        loadComponent: () => import('./demo/pages/all-jobs/create-job/create-job.component').then((c) => c.CreateJobComponent)
+      }        
     ]
   },
   {
