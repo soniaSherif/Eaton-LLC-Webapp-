@@ -19,7 +19,8 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('myapp.urls')),  # Ensure this is correct
+    path('api/', include('myapp.urls')),  # API routes under /api/
+    path('myapp/', include('myapp.urls')),  # Add this for direct access to myapp
 ]
 
 
