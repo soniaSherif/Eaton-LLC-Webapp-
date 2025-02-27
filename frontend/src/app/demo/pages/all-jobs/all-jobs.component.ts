@@ -11,6 +11,8 @@ import { Router } from '@angular/router';
 export class AllJobsComponent {
   jobs = [
     { jobId: '1234', project: 'I-94', schedule: 'May 16, 2023 - May 17, 2023', customer: 'AMES', material: 'SAND', ordered: '0 / Tons', selected: false },
+    { jobId: '1234', project: 'I-94', schedule: 'May 16, 2023 - May 17, 2023', customer: 'AMES', material: 'SAND', ordered: '0 / Tons', selected: false },
+    { jobId: '1234', project: 'I-94', schedule: 'May 16, 2023 - May 17, 2023', customer: 'AMES', material: 'SAND', ordered: '0 / Tons', selected: false },
     // Add more job data here
   ];
 
