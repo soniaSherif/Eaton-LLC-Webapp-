@@ -1,63 +1,49 @@
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
+import { CdkStepperModule } from '@angular/cdk/stepper';
+import { NgStepperModule } from 'angular-ng-stepper';
 
 @Component({
   selector: 'app-create-job',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, CdkStepperModule, NgStepperModule],
   templateUrl: './create-job.component.html',
   styleUrls: ['./create-job.component.scss']
 })
 export class CreateJobComponent {
-  currentStep = 1; // Track the current step
-
-  jobData = {
-    project: '',
-    customer: '',
-    jobTitle: '',
-    poNumber: '',
-    jobNumber: '',
-    orderNumber: '',
-    markets: '',
-    material: '',
-    phaseCode: '',
-    invoiceType: '',
-    rate: '',
-    haulRate: '',
-    totalAmount: '',
-    dateRange: '',
-    shiftStart: '',
-    shiftEnd: '',
-    yardBufferTime: '',
-    trucksNeeded: '',
-    truckTypes: '',
-    dailyTarget: '',
-    staggerStartTime: '',
-    loadingAddress: '',
-    unloadingAddress: '',
-    loadingOptions: {},
-    unloadingOptions: {},
-    additionalNotes: ''
-  };
+  jobForm = new FormGroup({
+    project: new FormControl(''),
+    customer: new FormControl(''),
+    jobTitle: new FormControl(''),
+    poNumber: new FormControl(''),
+    jobNumber: new FormControl(''),
+    orderNumber: new FormControl(''),
+    markets: new FormControl(''),
+    material: new FormControl(''),
+    phaseCode: new FormControl(''),
+    invoiceType: new FormControl(''),
+    rate: new FormControl(''),
+    haulRate: new FormControl(''),
+    totalAmount: new FormControl(''),
+    dateRange: new FormControl(''),
+    shiftStart: new FormControl(''),
+    shiftEnd: new FormControl(''),
+    yardBufferTime: new FormControl(''),
+    trucksNeeded: new FormControl(''),
+    truckTypes: new FormControl(''),
+    dailyTarget: new FormControl(''),
+    staggerStartTime: new FormControl(''),
+    loadingAddress: new FormControl(''),
+    unloadingAddress: new FormControl(''),
+    additionalNotes: new FormControl('')
+  });
 
   constructor(private router: Router) {}
 
-  nextStep() {
-    if (this.currentStep < 6) {
-      this.currentStep++;
-    }
-  }
-
-  prevStep() {
-    if (this.currentStep > 1) {
-      this.currentStep--;
-    }
-  }
-
   submitJob() {
-    console.log('Job Submitted:', this.jobData);
+    console.log('Job Submitted:', this.jobForm.value);
     // TODO: Add API call to submit the form data to the database
   }
 }

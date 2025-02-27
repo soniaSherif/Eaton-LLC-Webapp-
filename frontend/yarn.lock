@@ -211,10 +211,10 @@
   optionalDependencies:
     lmdb "3.1.5"
 
-"@angular/cdk@19.0.4":
-  version "19.0.4"
-  resolved "https://registry.npmjs.org/@angular/cdk/-/cdk-19.0.4.tgz"
-  integrity sha512-P8V1n6AFFjBUJG3YRgw8DiiNDWPZVrwQ42wbwgZxd4s2TQAuNFg3YY8h/DSMVxt2sXpavrshZsoLtP9yLKZjHA==
+"@angular/cdk@^19.2.1":
+  version "19.2.1"
+  resolved "https://registry.npmjs.org/@angular/cdk/-/cdk-19.2.1.tgz"
+  integrity sha512-j7dg18PJIbyeU4DTko3vIK3M2OuUv3H0ZViNddOaLlGN5X93cq4QCGcNhcGm3x3r5rUr/AaexYu+KHMyN8PwmA==
   dependencies:
     tslib "^2.3.0"
   optionalDependencies:
@@ -294,6 +294,13 @@
     "@types/babel__core" "7.20.5"
     fast-glob "3.3.2"
     yargs "^17.2.1"
+
+"@angular/material@^19.2.1":
+  version "19.2.1"
+  resolved "https://registry.npmjs.org/@angular/material/-/material-19.2.1.tgz"
+  integrity sha512-hA+HVIJn/y72vXv/X1JRbrL/tynW95wYMQF2fV3lIeeAmmFKkkzextBaE9rTaiW6pVN6LXoRvLJl2Vyi9jIHzw==
+  dependencies:
+    tslib "^2.3.0"
 
 "@angular/platform-browser-dynamic@19.0.5":
   version "19.0.5"
@@ -1531,7 +1538,7 @@
     "@napi-rs/nice-win32-ia32-msvc" "1.0.1"
     "@napi-rs/nice-win32-x64-msvc" "1.0.1"
 
-"@ng-bootstrap/ng-bootstrap@18.0.0":
+"@ng-bootstrap/ng-bootstrap@^18.0.0":
   version "18.0.0"
   resolved "https://registry.npmjs.org/@ng-bootstrap/ng-bootstrap/-/ng-bootstrap-18.0.0.tgz"
   integrity sha512-GeSAz4yiGq49psdte8kcf+Y562wB3jK/qKRAkh6iA32lcXmy2sfQXVAmlHdjZ3AyP+E8lf3yMwuPdSKiYcDgSg==
@@ -2365,6 +2372,13 @@ ajv@^8.0.0, ajv@^8.9.0, ajv@8.17.1:
     json-schema-traverse "^1.0.0"
     require-from-string "^2.0.2"
 
+angular-bootstrap-md@^15.0.0:
+  version "15.0.0"
+  resolved "https://registry.npmjs.org/angular-bootstrap-md/-/angular-bootstrap-md-15.0.0.tgz"
+  integrity sha512-Rn8Nim869YOfCy1OAm0vvsY47qDuyNfASwUYJf4SG1SgiJ/U5E7LM0nQbrFSiBNoW05dlBuPpoTu/dX4Hcygkw==
+  dependencies:
+    tslib "^2.0.0"
+
 angular-eslint@19.0.2:
   version "19.0.2"
   resolved "https://registry.npmjs.org/angular-eslint/-/angular-eslint-19.0.2.tgz"
@@ -2379,6 +2393,13 @@ angular-eslint@19.0.2:
     "@angular-eslint/template-parser" "19.0.2"
     "@typescript-eslint/types" "^8.0.0"
     "@typescript-eslint/utils" "^8.0.0"
+
+angular-ng-stepper@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.npmjs.org/angular-ng-stepper/-/angular-ng-stepper-2.0.0.tgz"
+  integrity sha512-nGjktQZlgKq3eZje5xPPk3Fo6ChnQkqEQ0D9uuTATo59BfXVilTdmfmlM7JVUbE3AG3tBqpOMwLdF1SSAHu5cA==
+  dependencies:
+    tslib "^2.3.0"
 
 ansi-colors@4.1.3:
   version "4.1.3"
@@ -4859,6 +4880,13 @@ math-intrinsics@^1.1.0:
   version "1.1.0"
   resolved "https://registry.npmjs.org/math-intrinsics/-/math-intrinsics-1.1.0.tgz"
   integrity sha512-/IXtbwEk5HTPyEwyKX6hGkYXxM9nbj64B+ilVJnC/R6B0pH5G4V3b0pVbL7DBj4tkhBAppbQUlf6F6Xl9LHu1g==
+
+mdb-angular-ui-kit@^7.1.0:
+  version "7.1.0"
+  resolved "https://registry.npmjs.org/mdb-angular-ui-kit/-/mdb-angular-ui-kit-7.1.0.tgz"
+  integrity sha512-/24kS8P25ihnugfUW1Mi4EXp+0ugytgqN3TJmqIeStAE7OScVqYQ96JrCuIf06XS5iuaUbLZ8nWZD8khzl3/4A==
+  dependencies:
+    tslib "^2.0.0"
 
 media-typer@0.3.0:
   version "0.3.0"
