@@ -202,25 +202,40 @@ export const NavigationItems: NavigationItem[] = [
         id: 'Jobs',
         title: 'Jobs',
         type: 'collapse',
-        icon: 'feather icon-lock',
+        icon: 'feather icon-briefcase',
         children: [
           {
             id: 'All Jobs',
             title: 'All Jobs',
             type: 'item',
             url: '/all-jobs',
-            
           },
           {
             id: 'Daily Board',
             title: 'Daily Board',
             type: 'item',
             url: '/tables/bootstrap',
-           
-            
           }
         ]
+      },
+      {
+        id: 'Fleet',
+        title: 'Fleet',
+        type: 'item',
+        icon: 'feather icon-truck',  // Truck icon for Fleet
+        url: '/fleet',
+        classes: 'nav-item'
+      },
+      {
+        id: 'customers',
+        title: 'Customers',
+        type: 'item',
+        url: '/customers',
+        icon: 'feather icon-users',
+        classes: 'nav-item'
       }
+      
     ]
-  },
+}
+
 ];

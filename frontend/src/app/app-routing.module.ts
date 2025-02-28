@@ -40,7 +40,20 @@ const routes: Routes = [
       {
         path: 'all-jobs',
         loadComponent: () => import('./demo/pages/all-jobs/all-jobs.component').then((c) => c.AllJobsComponent)
-      }         
+      },
+      {
+        path: 'all-jobs/create',
+        loadComponent: () => import('./demo/pages/all-jobs/create-job/create-job.component').then((c) => c.CreateJobComponent)
+      },
+      {
+        path: 'fleet',
+        loadComponent: () => import('./demo/pages/fleet/fleet.component').then((c) => c.FleetComponent)      
+      },
+      { path: 'customers', 
+        loadComponent: () => import('./demo/pages/customer/customer.component').then((c) => c.CustomerComponent)
+      },
+
+
     ]
   },
   {
