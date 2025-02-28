@@ -32,6 +32,7 @@
     "angular-ng-stepper": "^2.0.0",
     "apexcharts": "3.49.2",
     "bootstrap": "5.3.3",
+    "feather-icons": "^4.29.2",
     "leaflet": "^1.9.4",
     "mdb-angular-ui-kit": "^7.1.0",
     "ng-apexcharts": "^1.15.0",

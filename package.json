@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "leaflet": "^1.9.4",
+    "ngx-leaflet": "^0.0.16"
+  }
+}
