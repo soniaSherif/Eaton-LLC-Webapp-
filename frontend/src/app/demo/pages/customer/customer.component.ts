@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms'; // ✅ Required for ngModel
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-customer',
@@ -10,6 +11,7 @@ import { FormsModule } from '@angular/forms'; // ✅ Required for ngModel
   styleUrls: ['./customer.component.scss']
 })
 export class CustomerComponent {
+  constructor(private router: Router) {}
   customers = [
     { name: 'Jake', phone: 'xxx-xxx-xxxx', email: 'test@email', billingId: '556653', selected: false },
     { name: 'Sarah', phone: 'xxx-xxx-xxxx', email: 'sarah@email', billingId: '778899', selected: false },
@@ -19,6 +21,7 @@ export class CustomerComponent {
   // ✅ Fix: Define the missing method to add a customer
   addCustomer() {
     console.log('Adding a new customer...');
+    this.router.navigate(['/customers/create']);
   }
 
   // ✅ Fix: Define the missing method to select/deselect all customers
