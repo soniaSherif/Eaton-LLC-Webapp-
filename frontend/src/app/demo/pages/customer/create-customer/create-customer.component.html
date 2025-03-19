@@ -2,14 +2,14 @@
     <h2>Customer Creator</h2>
   
     <form [formGroup]="customerForm">
-      <ng-stepper #cdkStepper [linear]="true" class="custom-stepper">
+      <ng-stepper #cdkStepper [linear]="true" class="custom-stepper" style="justify-content: center;">
         <!-- Step 1: Contact Details -->
         <cdk-step [stepControl]="customerForm.controls['project']">
-          <ng-template cdkStepLabel>
-            <div class="step-bullet">1</div>
+          <ng-template cdkStepLabel >
+            <div class="step-bullet" >1</div>
             <div class="step-title">Customer Details</div>
           </ng-template>
-          <div class="form-content">
+          <div class="form-content" >
             <label>Company Name *</label>
             <input type="text" formControlName="companyName" class="form-control">
         
@@ -34,8 +34,7 @@
           <div class="stepper-buttons">
             <button cdkStepperNext class="btn btn-primary">Next →</button>
         </div>
-        </cdk-step>
-  
+        </cdk-step>  
         <!-- Step 2: Additional Notes -->
         <cdk-step>
           <ng-template cdkStepLabel>

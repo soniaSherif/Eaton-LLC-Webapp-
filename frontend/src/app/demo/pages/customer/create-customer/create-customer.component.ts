@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation  } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
@@ -9,7 +9,9 @@ import { NgStepperModule } from 'angular-ng-stepper';
   selector: 'app-create-customer',
   imports: [CommonModule, ReactiveFormsModule, CdkStepperModule, NgStepperModule],
   templateUrl: './create-customer.component.html',
-  styleUrl: './create-customer.component.scss'
+  styleUrl: './create-customer.component.scss',
+  encapsulation: ViewEncapsulation.None // Disable scoped styles
+
 })
 export class CreateCustomerComponent {
     customerForm = new FormGroup({
