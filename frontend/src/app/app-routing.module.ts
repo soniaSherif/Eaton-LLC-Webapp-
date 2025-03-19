@@ -52,6 +52,10 @@ const routes: Routes = [
       { path: 'customers', 
         loadComponent: () => import('./demo/pages/customer/customer.component').then((c) => c.CustomerComponent)
       },
+      {
+        path: 'customers/create',
+        loadComponent: () => import('./demo/pages/customer/create-customer/create-customer.component').then((c) => c.CreateCustomerComponent)
+      },
 
 
     ]
