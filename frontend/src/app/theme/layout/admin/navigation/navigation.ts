@@ -214,7 +214,7 @@ export const NavigationItems: NavigationItem[] = [
             id: 'Daily Board',
             title: 'Daily Board',
             type: 'item',
-            url: '/tables/bootstrap',
+            url: 'daily-board',
           }
         ]
       },
