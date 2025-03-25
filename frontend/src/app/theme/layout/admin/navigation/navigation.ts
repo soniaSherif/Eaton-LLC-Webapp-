@@ -205,17 +205,25 @@ export const NavigationItems: NavigationItem[] = [
         icon: 'feather icon-briefcase',
         children: [
           {
+            
+            id: 'Daily Board',
+            title: 'Daily Board',
+            type: 'item',
+            url: 'daily-board',
+          },
+          {
             id: 'All Jobs',
             title: 'All Jobs',
             type: 'item',
             url: '/all-jobs',
           },
           {
-            id: 'Daily Board',
-            title: 'Daily Board',
+            id: 'Dispatch Driver',
+            title: 'Dispatch',
             type: 'item',
-            url: 'daily-board',
-          }
+            url: '/dispatch',
+          },
+          
         ]
       },
       {

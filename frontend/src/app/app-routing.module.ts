@@ -60,6 +60,10 @@ const routes: Routes = [
         path: 'daily-board',
         loadComponent: () => import('./demo/pages/daily-board/daily-board.component').then((c) => c.DailyBoardComponent)
       },
+      {
+        path: 'dispatch',
+        loadComponent: () => import('./demo/pages/dispatch/dispatch.component').then((c) => c.DispatchComponent)
+      },
 
 
     ]
