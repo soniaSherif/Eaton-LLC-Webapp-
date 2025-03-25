@@ -167,4 +167,4 @@ SIMPLE_JWT = {
     'BLACKLIST_AFTER_ROTATION': True,
     'ALGORITHM': 'HS256',
 }
-AUTH_USER_MODEL = "myapp.User"
+# AUTH_USER_MODEL = "myapp.User"
