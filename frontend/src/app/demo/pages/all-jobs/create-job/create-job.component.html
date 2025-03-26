@@ -7,30 +7,81 @@
         <cdk-step [stepControl]="jobForm.controls['project']">
           <ng-template cdkStepLabel>
             <div class="step-bullet">1</div>
-            <div class="step-title">Job Details</div>
+            <div class="step-title">Project Details</div>
           </ng-template>
           <div class="form-content">
-            <label>Project</label>
-            <input type="text" formControlName="project" class="form-control">
-        
-            <label>Customer</label>
-            <input type="text" formControlName="customer" class="form-control">
-        
-            <label>Job Title</label>
-            <input type="text" formControlName="jobTitle" class="form-control">
-        
-            <label>PO #</label>
-            <input type="text" formControlName="poNumber" class="form-control">
-        
-            <label>JOB #</label>
-            <input type="text" formControlName="jobNumber" class="form-control">
-        
-            <label>Order #</label>
-            <input type="text" formControlName="orderNumber" class="form-control">
+            <div class="form-group">
+              <label>Project</label>
+              <input type="text" formControlName="project" class="form-control">
+            </div>
+
+            <div class="form-group">
+              <label>Prime Contractor</label>
+              <input type="text" formControlName="primeContractor" class="form-control">
+            </div>
+
+            <div class="form-group">
+              <label>Prime Contractor Project Number</label>
+              <input type="text" formControlName="primeContractorProjectNumber" class="form-control">
+            </div>
+
+            <div class="form-group">
+              <label>Invoiced Contractor</label>
+              <select formControlName="contractorInvoice" class="form-control">
+                <option value="primeContractor">Prime Contractor</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            <!-- Conditional Input for "Other" Contractor -->
+            <div class="form-group" *ngIf="isOtherContractor">
+              <label>New Invoiced Contractor</label>
+              <input type="text" formControlName="newContractorInvoice" class="form-control" placeholder="Enter Invoiced Contractor Name">
+            </div>
+
+            <div class="form-group">
+              <label>Invoiced Contractor Project Number</label>
+              <select formControlName="contractorInvoiceProjectNumber" class="form-control">
+                <option value="primeContractorProjectNumber">Prime Contractor Project Number</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            <!-- Conditional Input for "Other" Contractor Project Number -->
+            <div class="form-group" *ngIf="isOtherContractorProjectNumber">
+              <label>New Invoiced Contractor Project Number</label>
+              <input type="text" formControlName="newContractorInvoiceProjectNumber" class="form-control" placeholder="Enter Invoiced Contractor's Project Number">
+            </div>
+
+            <div class="form-group">
+              <label>Customer</label>
+              <input type="text" formControlName="customer" class="form-control">
+            </div>
+
+            <div class="form-group">
+              <label>Job Title</label>
+              <input type="text" formControlName="jobTitle" class="form-control">
+            </div>
+
+            <div class="form-group">
+              <label>PO #</label>
+              <input type="text" formControlName="poNumber" class="form-control">
+            </div>
+
+            <div class="form-group">
+              <label>JOB #</label>
+              <input type="text" formControlName="jobNumber" class="form-control">
+            </div>
+
+            <div class="form-group">
+              <label>Order #</label>
+              <input type="text" formControlName="orderNumber" class="form-control">
+            </div>
           </div>
+
           <div class="stepper-buttons">
             <button cdkStepperNext class="btn btn-primary">Next →</button>
-        </div>
+          </div>
         </cdk-step>
   
         <!-- Step 2: Rate & Material -->

@@ -233,6 +233,27 @@ export const NavigationItems: NavigationItem[] = [
         url: '/customers',
         icon: 'feather icon-users',
         classes: 'nav-item'
+      },
+      {
+        id: 'Reports',
+        title: 'Reports',
+        type: 'collapse',
+        icon: 'feather icon-file-text',
+        children: [
+          {
+            id: 'Pay Reports',
+            title: 'Pay Reports',
+            type: 'item',
+            url: '/pay-report'
+          },
+          {
+            id: 'End of Day Reports',
+            title: 'End of Day Reports',
+            type: 'item',
+            url: '/end-of-day-report'
+          }
+        ]
+        
       }
       
     ]
