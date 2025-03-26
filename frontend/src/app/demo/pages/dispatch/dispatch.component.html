@@ -1,4 +1,31 @@
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h3>Dispatch Assignments</h3>
     <button class="btn btn-primary" (click)="openDialog()">+ Dispatch Driver</button>
+</div>
+
+<div class="card">
+  <div class="card-body">
+      <div class="table-responsive">
+          <table class="table">
+              <thead>
+                  <tr>
+                      <th><input type="checkbox" (change)="toggleAllSelection($event)"></th>
+                      <th>JOB</th>
+                      <th>DRIVER</th>
+                      <th>TRUCK TYPE</th>
+                      <th>DATE</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr *ngFor="let assignment of assignments">
+                      <td><input type="checkbox" [(ngModel)]="assignment.selected"></td>
+                      <td>{{ assignment.job }}</td>
+                      <td>{{ assignment.driver }}</td>
+                      <td>{{ assignment.truck_type }}</td>
+                      <td>{{ getFormattedDate(assignment.date) }}</td>
+                  </tr>
+              </tbody>
+          </table>
+      </div>
   </div>
+</div>
