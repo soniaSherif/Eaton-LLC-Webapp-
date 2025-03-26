@@ -1,0 +1,77 @@
+/* Dialog Header Styling */
+.dialog-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #04a9f5;
+    color: white;
+    padding: 15px;
+    border-radius: 5px 5px 0 0;
+  }
+  
+  .dialog-header h2 {
+    margin: 0;
+    font-size: 24px;
+  }
+  
+  .close-btn {
+    font-size: 30px;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+  }
+  
+  /* Form Styling */
+  .dispatch-form {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 10px;
+    // border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  .form-group input:focus {
+    // border-color: #4CAF50;
+    outline: none;
+  }
+  
+  button[type="submit"] {
+    // background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease;
+  }
+  
+//   button[type="submit"]:hover {
+//     background-color: #45a049;
+//   }
+  
+  button[type="submit"]:focus {
+    outline: none;
+  }
+  
+  
