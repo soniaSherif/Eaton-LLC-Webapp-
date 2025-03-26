@@ -64,7 +64,8 @@ const routes: Routes = [
       {
         path: 'dispatch',
         loadComponent: () => import('./demo/pages/dispatch/dispatch.component').then((c) => c.DispatchComponent)
-
+      },
+      {
         path: 'pay-report',
         loadComponent: () => import('./demo/pages/pay-report/pay-report.component').then((c) => c.PayReportComponent)
       },
