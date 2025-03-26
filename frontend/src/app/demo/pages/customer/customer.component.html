@@ -13,16 +13,14 @@
                         <th>NAME</th>
                         <th>PHONE NUMBER</th>
                         <th>EMAIL</th>
-                        <th>BILLING ID</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr *ngFor="let customer of customers">
                         <td><input type="checkbox" [(ngModel)]="customer.selected"></td>
-                        <td>{{ customer.name }}</td>
-                        <td>{{ customer.phone }}</td>
+                        <td>{{ customer.company_name  }}</td>
+                        <td>{{ customer.phone_number }}</td>
                         <td>{{ customer.email }}</td>
-                        <td>{{ customer.billingId }}</td>
                     </tr>
                 </tbody>
             </table>
