@@ -53,12 +53,25 @@ const routes: Routes = [
         loadComponent: () => import('./demo/pages/customer/customer.component').then((c) => c.CustomerComponent)
       },
       {
+
+        path: 'customers/create',
+        loadComponent: () => import('./demo/pages/customer/create-customer/create-customer.component').then((c) => c.CreateCustomerComponent)
+      },
+      {
+        path: 'daily-board',
+        loadComponent: () => import('./demo/pages/daily-board/daily-board.component').then((c) => c.DailyBoardComponent)
+      },
+      {
+        path: 'dispatch',
+        loadComponent: () => import('./demo/pages/dispatch/dispatch.component').then((c) => c.DispatchComponent)
+
         path: 'pay-report',
         loadComponent: () => import('./demo/pages/pay-report/pay-report.component').then((c) => c.PayReportComponent)
       },
       {
         path: 'end-of-day-report',
         loadComponent: () => import('./demo/pages/end-of-day-report/end-of-day-report.component').then((c) => c.EndOfDayReportComponent)
+
       },
 
 

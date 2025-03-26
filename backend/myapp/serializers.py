@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Job, Customer, Driver, Role, User, UserRole, Comment
+from .models import Job, Customer, Driver, Role, User, UserRole, Comment, Truck, DriverTruckAssignment
 from django.contrib.auth import get_user_model
 
 class JobSerializer(serializers.ModelSerializer):
@@ -36,6 +36,17 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = '__all__'
+
+class TruckSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Truck
+        fields = '__all__'
+
+class DriverTruckAssignmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DriverTruckAssignment
+        fields = '__all__'
+
 
 
 

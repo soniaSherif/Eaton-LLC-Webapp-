@@ -1,20 +1,28 @@
-from django.shortcuts import render
 from django.http import HttpResponse
-from rest_framework import viewsets
-from .models import Job, Customer, Driver, Role, User, UserRole, Comment
-from .serializers import JobSerializer, CustomerSerializer, DriverSerializer, RoleSerializer, UserSerializer, UserRoleSerializer, CommentSerializer
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from rest_framework import generics, permissions
+from rest_framework import viewsets, generics, permissions, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework import status
-from django.contrib.auth import get_user_model
 from rest_framework.permissions import AllowAny
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
-# Test Function
+from django.contrib.auth import get_user_model
+from .models import (
+    Job, Customer, Driver, Role, UserRole, Comment, Truck, DriverTruckAssignment
+)
+from .serializers import (
+    JobSerializer, CustomerSerializer, DriverSerializer, RoleSerializer,
+    UserSerializer, UserRoleSerializer, CommentSerializer, TruckSerializer,
+    DriverTruckAssignmentSerializer
+)
+
+# For user model
+User = get_user_model()
+
+# Basic test view
 def home(request):
     return HttpResponse("Hello, this is the home page!")
 
+# ViewSets for basic CRUD APIs
 class JobViewSet(viewsets.ModelViewSet):
     queryset = Job.objects.all()
     serializer_class = JobSerializer
@@ -26,6 +34,10 @@ class CustomerViewSet(viewsets.ModelViewSet):
 class DriverViewSet(viewsets.ModelViewSet):
     queryset = Driver.objects.all()
     serializer_class = DriverSerializer
+
+class TruckViewSet(viewsets.ModelViewSet):
+    queryset = Truck.objects.all()
+    serializer_class = TruckSerializer
 
 class RoleViewSet(viewsets.ModelViewSet):
     queryset = Role.objects.all()
@@ -43,57 +55,54 @@ class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
 
-User = get_user_model()  
+class DriverTruckAssignmentViewSet(viewsets.ModelViewSet):
+    queryset = DriverTruckAssignment.objects.all()
+    serializer_class = DriverTruckAssignmentSerializer
 
+# Authentication views
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [permissions.AllowAny]
 
-
 class CustomTokenObtainPairView(TokenObtainPairView):
-    pass  # Uses the default SimpleJWT login behavior
-
+    pass
 
 class CustomTokenRefreshView(TokenRefreshView):
-    pass  # Uses default refresh behavior
+    pass
 
+# Protected test endpoint
 @api_view(["GET"])
 def protected_view(request):
     return Response({"message": "This is a protected view!"}, status=status.HTTP_200_OK)
 
+# API: Assign a truck to a driver
+@api_view(["POST"])
+def assign_truck_to_driver(request):
+    driver_id = request.data.get('driver_id')
+    truck_id = request.data.get('truck_id')
 
-# class JobViewSet(viewsets.ModelViewSet):
-#     queryset = Job.objects.all()
-#     serializer_class = JobSerializer
-#     permission_classes = [AllowAny]  # Make the endpoint public
+    if not driver_id or not truck_id:
+        return Response({'error': 'driver_id and truck_id are required.'}, status=400)
 
-# class CustomerViewSet(viewsets.ModelViewSet):
-#     queryset = Customer.objects.all()
-#     serializer_class = CustomerSerializer
-#     permission_classes = [AllowAny]
+    try:
+        driver = Driver.objects.get(id=driver_id)
+        truck = Truck.objects.get(id=truck_id)
+        assignment = DriverTruckAssignment.objects.create(driver=driver, truck=truck)
+        return Response({'message': 'Truck assigned to driver successfully.'})
+    except Driver.DoesNotExist:
+        return Response({'error': 'Driver not found.'}, status=404)
+    except Truck.DoesNotExist:
+        return Response({'error': 'Truck not found.'}, status=404)
 
-# class DriverViewSet(viewsets.ModelViewSet):
-#     queryset = Driver.objects.all()
-#     serializer_class = DriverSerializer
-#     permission_classes = [AllowAny]
-
-# class RoleViewSet(viewsets.ModelViewSet):
-#     queryset = Role.objects.all()
-#     serializer_class = RoleSerializer
-#     permission_classes = [AllowAny]
-
-# class UserViewSet(viewsets.ModelViewSet):
-#     queryset = User.objects.all()
-#     serializer_class = UserSerializer
-#     permission_classes = [AllowAny]
-
-# class UserRoleViewSet(viewsets.ModelViewSet):
-#     queryset = UserRole.objects.all()
-#     serializer_class = UserRoleSerializer
-#     permission_classes = [AllowAny]
-
-# class CommentViewSet(viewsets.ModelViewSet):
-#     queryset = Comment.objects.all()
-#     serializer_class = CommentSerializer
-#     permission_classes = [AllowAny]
+# API: Show all drivers and trucks
+@api_view(["GET"])
+def drivers_and_trucks(request):
+    drivers = Driver.objects.all()
+    trucks = Truck.objects.all()
+    driver_data = DriverSerializer(drivers, many=True).data
+    truck_data = TruckSerializer(trucks, many=True).data
+    return Response({
+        "drivers": driver_data,
+        "trucks": truck_data
+    })

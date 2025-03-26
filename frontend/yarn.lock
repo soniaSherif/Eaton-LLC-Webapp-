@@ -171,7 +171,7 @@
   dependencies:
     "@angular-eslint/bundled-angular-compiler" "19.0.2"
 
-"@angular/animations@19.0.5":
+"@angular/animations@^19.0.5":
   version "19.0.5"
   resolved "https://registry.npmjs.org/@angular/animations/-/animations-19.0.5.tgz"
   integrity sha512-HCOF2CrhUvjoZWusd4nh32VOxpUrg6bV+3Z8Q36Ix3aZdni8v0qoP2rl5wGbotaPtYg5RtyDH60Z2AOPKqlrZg==
@@ -5234,6 +5234,13 @@ ngx-scrollbar@16.1.1:
   dependencies:
     tslib "^2.3.0"
 
+ngx-toastr@^19.0.0:
+  version "19.0.0"
+  resolved "https://registry.npmjs.org/ngx-toastr/-/ngx-toastr-19.0.0.tgz"
+  integrity sha512-6pTnktwwWD+kx342wuMOWB4+bkyX9221pAgGz3SHOJH0/MI9erLucS8PeeJDFwbUYyh75nQ6AzVtolgHxi52dQ==
+  dependencies:
+    tslib "^2.3.0"
+
 node-addon-api@^6.1.0:
   version "6.1.0"
   resolved "https://registry.npmjs.org/node-addon-api/-/node-addon-api-6.1.0.tgz"
@@ -6690,6 +6697,11 @@ svg.select.js@^3.0.1:
   integrity sha512-h5IS/hKkuVCbKSieR9uQCj9w+zLHoPh+ce19bBYyqF53g6mnPB8sAtIbe1s9dh2S2fCmYX2xel1Ln3PJBbK4kw==
   dependencies:
     svg.js "^2.6.5"
+
+sweetalert2@^11.17.2:
+  version "11.17.2"
+  resolved "https://registry.npmjs.org/sweetalert2/-/sweetalert2-11.17.2.tgz"
+  integrity sha512-HKxDr1IyV3Lxr3W6sb61qm/p2epFIEdr5EKwteRFHnIg6f8nHFl2kX++DBVz16Mac+fFiU3hMpjq1L6yE2Ge5w==
 
 symbol-observable@4.0.0:
   version "4.0.0"

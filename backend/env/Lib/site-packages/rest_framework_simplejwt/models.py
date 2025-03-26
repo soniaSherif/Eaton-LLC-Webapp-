@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, List, Optional, Union
+from typing import TYPE_CHECKING, Any, Optional, Union
 
 from django.contrib.auth import models as auth_models
 from django.db.models.manager import EmptyManager
@@ -93,7 +93,7 @@ class TokenUser:
     def has_perm(self, perm: str, obj: Optional[object] = None) -> bool:
         return False
 
-    def has_perms(self, perm_list: List[str], obj: Optional[object] = None) -> bool:
+    def has_perms(self, perm_list: list[str], obj: Optional[object] = None) -> bool:
         return False
 
     def has_module_perms(self, module: str) -> bool:
