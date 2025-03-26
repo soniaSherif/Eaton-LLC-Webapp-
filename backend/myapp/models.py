@@ -19,7 +19,6 @@ class UserRole(models.Model):
 
 
 class Customer(models.Model):
-    company_name = models.CharField(max_length=255)              # Required
     company_name = models.CharField(max_length=255, default='Unnamed Company')
     company_dba_name = models.CharField(max_length=255, blank=True)
     address = models.TextField(blank=True)
