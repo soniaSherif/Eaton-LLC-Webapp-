@@ -1,6 +1,6 @@
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h3>Fleet Management</h3>
-    <button class="btn btn-primary" (click)="addFleetItem()">
+    <button class="btn btn-primary" (click)="Openpopup()">
       + Add {{ selectedTab === 'trucks' ? 'Truck' : 'Driver' }}
     </button>
   </div>
@@ -33,7 +33,7 @@
               <tr>
                 <th><input type="checkbox" (change)="toggleAllSelection()" /></th>
                 <th>{{ selectedTab === 'trucks' ? 'TRUCK TYPE' : 'DRIVER NAME' }}</th>
-                <th>{{ selectedTab === 'trucks' ? 'TRUCK #' : 'LICENSE NUMBER' }}</th>
+                <th>{{ selectedTab === 'trucks' ? 'TRUCK #' : 'CDL #' }}</th>
                 <th>LICENSE PLATE</th>
                 <th>Market</th>
               </tr>

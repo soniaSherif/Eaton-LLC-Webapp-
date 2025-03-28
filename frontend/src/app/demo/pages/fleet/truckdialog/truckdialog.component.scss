@@ -1,0 +1,90 @@
+
+.title { 
+    padding: 20px;
+    font-size: 15pt;
+    background-color: #09a9f5;
+    color: rgb(243, 239, 239);
+}
+.close-button { 
+    
+    float: right; 
+    border: none; 
+    background: none; 
+    color: white;
+
+}
+button[type="submit"] {
+
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease;
+  }
+
+  button[type="submit"]:focus {
+    outline: none;
+  }
+
+  .add-truck-form {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    
+  }
+  
+  .form-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .form-group {
+    flex: 1;
+    margin-bottom: 15px;
+  }
+  
+  .form-group.full-width {
+    flex: 0 0 100%;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #333;
+  }
+  
+  input, select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4; }
+
+    input:focus::placeholder {
+      color: transparent;
+    }
+    
+.datalist-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    }
+    
+    .datalist-wrapper:after {
+    content: "▼";
+    font-size: 0.8em;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #555;
+    }
+
+    
+
+ 

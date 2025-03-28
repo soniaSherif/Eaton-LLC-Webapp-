@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';  // Import CommonModule for *ngIf, *ngFor
 import { FormsModule } from '@angular/forms';  // Import FormsModule for ngModel
-
+import { TruckdialogComponent } from './truckdialog/truckdialog.component'; // import truck dialog form
+import { DriverdialogComponent } from './driverdialog/driverdialog.component'; //import driver dialog form
+import { MatDialog} from '@angular/material/dialog' //import mat dialog 
 @Component({
   selector: 'app-fleet',
   standalone: true,  // Ensure standalone component supports imports
@@ -9,6 +11,7 @@ import { FormsModule } from '@angular/forms';  // Import FormsModule for ngModel
   templateUrl: './fleet.component.html',
   styleUrls: ['./fleet.component.scss']
 })
+
 export class FleetComponent {
   selectedTab: 'trucks' | 'drivers' = 'trucks';
 
@@ -33,4 +36,18 @@ export class FleetComponent {
     const allSelected = items.every(item => item.selected);
     items.forEach(item => item.selected = !allSelected);
   }
+  constructor(public dialog:MatDialog){ 
+
+  }
+
+  Openpopup() { 
+    if (this.selectedTab === 'trucks') {
+      this.dialog.open(TruckdialogComponent, { width: '85%', height: 'fit' });
+    } else {
+      this.dialog.open(DriverdialogComponent, { width: '85%', height: '85%'});
+    }
+    
+  }
+ 
+  
 }
