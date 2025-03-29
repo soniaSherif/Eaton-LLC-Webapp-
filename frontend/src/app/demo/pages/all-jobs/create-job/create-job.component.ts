@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, FormControl, FormArray, ReactiveFormsModule } from '@angular/forms';
 import { CdkStepperModule } from '@angular/cdk/stepper';
 import { NgStepperModule } from 'angular-ng-stepper';
 //import { tick } from '@angular/core/testing';
@@ -39,14 +39,17 @@ export class CreateJobComponent {
     jobDescription: new FormControl(''),
     jobNumber: new FormControl(''),
     material: new FormControl(''),
-    rate: new FormControl(''),
+    numberTruckType: new FormControl(''),
+    truckTypes: new FormArray([]),
+    truckTypeRate: new FormControl(''),
     invoiceType: new FormControl(''),
-    truckTypes: new FormControl(''),
-    haulRate: new FormControl(''),
     itoMtoRate: new FormControl(''),
+    haulRate: new FormControl(''),
+
+    // Job Location Details
     jobDate: new FormControl(''),
     jobStartTime: new FormControl(''),
-    trucksNeeded: new FormControl(''),
+    
 
     // Loading and Unloading Details
     loadingAddress: new FormControl(''),
@@ -63,7 +66,32 @@ export class CreateJobComponent {
 
   isOtherContractor: boolean = false;
   isOtherContractorProjectNumber: boolean = false;
+  isPrevailing: boolean = false;
+  isNonPrevailing: boolean = false;
 
+  // Getter for the truckTypes FormArray
+  get truckTypes(): FormArray {
+    return this.jobForm.get('truckTypes') as FormArray;
+  }
+
+  // Method to dynamically update the truckTypes FormArray
+  updateTruckTypes(count: number) {
+    const truckTypeForms = this.truckTypes;
+    // Remove extra forms if count decreases
+    while (truckTypeForms.length > count) {   
+      truckTypeForms.removeAt(truckTypeForms.length - 1);
+    }
+    // Add new forms if count increases
+    while (truckTypeForms.length < count) {  
+      truckTypeForms.push(new FormGroup({
+        truckTypeName: new FormControl(''),
+        trucksNeeded: new FormControl(''), // Added field for trucks needed per truck type
+        truckRate: new FormControl('')
+
+      }));
+    }
+  }
+  
   constructor(private router: Router) {
     // Listen for changes in the contractorInvoice dropdown
     this.jobForm.get('contractorInvoice')?.valueChanges.subscribe((value) => {
@@ -71,6 +99,15 @@ export class CreateJobComponent {
     });
     this.jobForm.get('contractorInvoiceProjectNumber')?.valueChanges.subscribe((value) => {
       this.isOtherContractorProjectNumber = value === 'other'; // Show new contractor number input if "Other" is selected
+    });
+    this.jobForm.get('prevailingOrNot')?.valueChanges.subscribe((value) => {
+      this.isNonPrevailing = value === 'nonPrevailing'; // Show new SAP or SP number input if "Non-Prevailing" is selected
+      this.isPrevailing = value === 'prevailing'; 
+    });
+
+    // Listen for changes in trucksNeeded and dynamically update truckTypes
+    this.jobForm.get('numberTruckType')?.valueChanges.subscribe((value) => {
+      this.updateTruckTypes(Number(value)); // Ensure value is treated as a number
     });
   }
 

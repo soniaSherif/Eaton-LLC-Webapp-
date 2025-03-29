@@ -10,21 +10,26 @@
             <div class="step-title">Project Details</div>
           </ng-template>
           <div class="form-content">
+
+            <!-- Input for Project Name -->
             <div class="form-group">
               <label>Project</label>
               <input type="text" formControlName="project" class="form-control">
             </div>
 
+            <!-- Input for Prime Contractor -->
             <div class="form-group">
               <label>Prime Contractor</label>
               <input type="text" formControlName="primeContractor" class="form-control">
             </div>
 
+            <!-- Input for Prime Contractor Project Number -->
             <div class="form-group">
               <label>Prime Contractor Project Number</label>
               <input type="text" formControlName="primeContractorProjectNumber" class="form-control">
             </div>
 
+            <!-- Input for Invoiced Contractor -->
             <div class="form-group">
               <label>Invoiced Contractor</label>
               <select formControlName="contractorInvoice" class="form-control">
@@ -33,12 +38,13 @@
               </select>
             </div>
 
-            <!-- Conditional Input for "Other" Contractor -->
+            <!-- Conditional Input for "Other" Invoiced Contractor -->
             <div class="form-group" *ngIf="isOtherContractor">
               <label>New Invoiced Contractor</label>
               <input type="text" formControlName="newContractorInvoice" class="form-control" placeholder="Enter Invoiced Contractor Name">
             </div>
 
+            <!-- Input for Invoiced Contractor Project Number -->
             <div class="form-group">
               <label>Invoiced Contractor Project Number</label>
               <select formControlName="contractorInvoiceProjectNumber" class="form-control">
@@ -53,29 +59,31 @@
               <input type="text" formControlName="newContractorInvoiceProjectNumber" class="form-control" placeholder="Enter Invoiced Contractor's Project Number">
             </div>
 
+            <!-- Input for Prevailing or Non Prevailing -->
             <div class="form-group">
-              <label>Customer</label>
-              <input type="text" formControlName="customer" class="form-control">
+              <label>Prevailing or Non Prevailing</label>
+              <select formControlName="prevailingOrNot" class="form-control">
+                <option value="prevailing">Prevailing</option>
+                <option value="nonPrevailing">Non Prevailing</option>
+              </select>
             </div>
 
-            <div class="form-group">
-              <label>Job Title</label>
-              <input type="text" formControlName="jobTitle" class="form-control">
+            <!-- Conditional Input for Non Prevailing -->
+            <div class="form-group" *ngIf="isNonPrevailing">
+              <label>SAP or SP Number</label>
+              <input type="text" formControlName="sapOrSpNumber" class="form-control" placeholder="Enter SAP or SP Number">
             </div>
 
-            <div class="form-group">
-              <label>PO #</label>
-              <input type="text" formControlName="poNumber" class="form-control">
-            </div>
+            <!-- Conditional Input for Prevailing -->
+            <div class="form-group" *ngIf="isPrevailing">
+              <label>Reporting Requirement</label>
+              <input type="text" formControlName="reportRequirement" class="form-control" placeholder="Enter Reporting Requirement">
 
-            <div class="form-group">
-              <label>JOB #</label>
-              <input type="text" formControlName="jobNumber" class="form-control">
-            </div>
+              <label>Contract Number</label>
+              <input type="text" formControlName="contractNumber" class="form-control" placeholder="Enter Contract Number">
 
-            <div class="form-group">
-              <label>Order #</label>
-              <input type="text" formControlName="orderNumber" class="form-control">
+              <label>Project ID Number</label>
+              <input type="text" formControlName="projectId" class="form-control" placeholder="Enter Project ID Number">
             </div>
           </div>
 
@@ -88,27 +96,66 @@
         <cdk-step [stepControl]="jobForm.controls['material']">
           <ng-template cdkStepLabel>
             <div class="step-bullet">2</div>
-            <div class="step-title">Rate & Material</div>
+            <div class="step-title">Job Rate & Material</div>
           </ng-template>
           <div class="form-content">
-            <label>Markets</label>
-            <input type="text" formControlName="markets" class="form-control">
+
+            <!-- Input for Job Description -->
+            <div class ="form-group">
+              <label>Job Description</label>
+              <input type="text" formControlName="jobDescription" class="form-control" placeholder="Enter a Job Description">
+            </div>
+            
+            <!-- Input for Job Number / Code -->
+            <div class ="form-group">
+              <label>Job Number</label>
+              <input type="text" formControlName="jobNumber" class="form-control" placeholder="Enter the Job or Phase Number">             
+            </div>
+            
+            <!-- Input for Material To Be Moved -->
+            <div class ="form-group">
+              <label>Material</label>
+              <input type="text" formControlName="material" class="form-control" placeholder="Enter the Material to be Moved">
+            </div>
+
+            <!-- Input for Material To Be Moved -->
+            <div class ="form-group">
+              <label>Number Of Different Truck Types</label>
+              <input type="text" formControlName="numberTruckType" class="form-control" placeholder="Enter the Number of Different Truck Types Used">
+            </div>
+
+            <!-- Dynamically Rendered Truck Types -->
+            <div class="form-section">
+              <div formArrayName="truckTypes">
+                <div *ngFor="let truckType of truckTypes.controls; let i = index" [formGroupName]="i" class="truck-type-form">
+                  <h3>Truck Type {{ i + 1 }}</h3>
+                  <label for="truckTypeName-{{ i }}">Truck Type Name:</label>
+                  <input id="truckTypeName-{{ i }}" formControlName="truckTypeName" type="text" />
+
+                  <label for="trucksNeeded-{{ i }}">Trucks Needed:</label>
+                  <input id="trucksNeeded-{{ i }}" formControlName="trucksNeeded" type="number" min="0" />
+
+                  <label for="truckRate-{{ i }}">Truck Rate:</label>
+                  <input id="truckRate-{{ i }}" formControlName="truckRate" type="number" />
+                </div>
+              </div>
+            </div>
+            
+            <!-- Input for Invoice Type -->
+            <div class ="form-group">
+              <label>Invoice Type</label>
+              <select formControlName="invoiceType" class="form-control">
+                <option value="weight">Weight</option>
+                <option value="load">Load</option>
+                <option value="hour">Hour</option>
+              </select>            
+            </div>
+            
+            <div class ="form-group">
+              <label>Rate ($)</label>
+              <input type="number" formControlName="rate" class="form-control">
+            </div>
         
-            <label>Material</label>
-            <input type="text" formControlName="material" class="form-control">
-        
-            <label>Phase Code</label>
-            <input type="text" formControlName="phaseCode" class="form-control">
-        
-            <label>Invoice Type</label>
-            <select formControlName="invoiceType" class="form-control">
-              <option value="weight">Weight</option>
-              <option value="load">Load</option>
-              <option value="hour">Hour</option>
-            </select>
-        
-            <label>Rate ($)</label>
-            <input type="number" formControlName="rate" class="form-control">
           </div>
           <div class="stepper-buttons">
             <button cdkStepperPrevious class="btn btn-secondary">← Previous</button>
