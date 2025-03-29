@@ -26,7 +26,6 @@ class Customer(models.Model):
     phone_number = models.CharField(max_length=50)               # Required
     email = models.EmailField(max_length=255)                    # Required
     additional_comments = models.TextField(blank=True)           # Optional
-
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -35,7 +34,20 @@ class Customer(models.Model):
         return self.name
 
 
+class Operator(models.Model):
+    OPERATOR_TYPE_CHOICES = [
+        ('ITO', 'Individual Truck Operator'),
+        ('MTO', 'Multiple Truck Operator'),
+    ]
+    name = models.CharField(max_length=255)  # Individual name or company name
+    operator_type = models.CharField(max_length=3, choices=OPERATOR_TYPE_CHOICES)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.name} ({self.operator_type})"
+
 class Truck(models.Model):
+    operator = models.ForeignKey(Operator, on_delete=models.CASCADE)
     truck_type = models.TextField()
     carrier = models.TextField()
     truck_number = models.CharField(max_length=100)
@@ -49,14 +61,14 @@ class Truck(models.Model):
 
 class Driver(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    operator = models.ForeignKey(Operator, on_delete=models.CASCADE)
     name = models.TextField()
     email_address = models.TextField()
     phone_number = models.TextField()
     driver_license = models.CharField(max_length=100)
     contact_info = models.TextField()
     address = models.TextField()
-    operator_type = models.CharField(max_length=10)  # 'MTO' or 'ITO'
-    truck_count = models.IntegerField()
+    truck_count = models.IntegerField(default=1)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -68,6 +80,9 @@ class DriverTruckAssignment(models.Model):
     truck = models.ForeignKey(Truck, on_delete=models.CASCADE)
     assigned_at = models.DateTimeField(auto_now_add=True)
     unassigned_at = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.driver.name} assigned to {self.truck.truck_number}"
 
 
 class Job(models.Model):
@@ -102,3 +117,12 @@ class Comment(models.Model):
     job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='comments')
     comment_text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+    
+# (Optional) Validation Logic You can add validation in DriverTruckAssignment to ensure only one active driver per truck:
+# def clean(self):
+#     if not self.unassigned_at:
+#         conflict = DriverTruckAssignment.objects.filter(
+#             truck=self.truck, unassigned_at__isnull=True
+#         ).exclude(id=self.id)
+#         if conflict.exists():
+#             raise ValidationError("Truck is already assigned to another driver.")
