@@ -1,0 +1,77 @@
+
+<h1 class="title">Add a Truck
+  <button (click)="closepopup()" class="close-button">x</button>
+</h1>
+
+<form (ngSubmit) = "submitForm()" class="add-truck-form">
+
+  <div class="form-group">
+    <label for="trucktype">Truck Type</label>
+    <div class="datalist-wrapper">
+        <input type="text" 
+               name="trucktype" 
+               id="trucktype" 
+               list="truckList"
+               placeholder="Select Truck Type"
+               class="form-control"
+               [(ngModel)]="selectedTruck_type">
+        <datalist id="truckList">
+            <option *ngFor="let truckType of truckType" [value]="truckType">{{truckType}}</option>
+        </datalist>
+    </div>
+</div>
+
+    <div class="form-group">
+      <label for="trucktype">Carrier</label>
+      <div class="datalist-wrapper">
+          <input type="text" 
+                 name="carrier" 
+                 id="carrier" 
+                 list="carrierList"
+                 placeholder="Select Carrier"
+                 class="form-control"
+                 [(ngModel)]="selectedCarrier">
+          <datalist id="carrierList">
+              <option *ngFor="let c of carrier" [value]="c">{{c}}</option>
+          </datalist>
+      </div>
+  </div>
+    <div class="form-row">
+        <div class="form-group">
+            <label for="truckNumber">Truck #</label>
+            <input  type="text" 
+                    id="truckNumber" 
+                    name="truckNumber"
+                    placeholder="Truck Number"
+                    [(ngModel)]="selectedTruck_number">
+        </div>
+
+        <div class="form-group">
+            <label for="licenseNumber">License Plate</label>
+            <input  type="text" 
+                    id="licenseNumber" 
+                    name="licenseNumber"
+                    placeholder="LICENSE PLATE"
+                    [(ngModel)]="selectedLicense_number">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="markets">Markets</label>
+        <div class="datalist-wrapper">
+        <select id="market" 
+                list="marketList"
+                name="market" 
+                class="form-control" 
+                [(ngModel)]="selectedMarket">
+          <datalist id="marketList">
+            <option *ngFor=" let market of market" [value]="market">{{ market }}</option>
+          </datalist>
+        </select>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Add a Truck</button>
+
+</form>
+
