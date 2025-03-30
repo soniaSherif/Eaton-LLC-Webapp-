@@ -1,34 +1,71 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';  // Import CommonModule for *ngIf, *ngFor
-import { FormsModule } from '@angular/forms';  // Import FormsModule for ngModel
-import { TruckdialogComponent } from './truckdialog/truckdialog.component'; // import truck dialog form
-import { DriverdialogComponent } from './driverdialog/driverdialog.component'; //import driver dialog form
-import { MatDialog} from '@angular/material/dialog' //import mat dialog 
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+
+import { TruckdialogComponent } from './truckdialog/truckdialog.component';
+import { DriverdialogComponent } from './driverdialog/driverdialog.component';
+
+import { TruckService } from 'src/app/services/truck.service';
+import { DriverService } from 'src/app/services/driver.service';
+
 @Component({
   selector: 'app-fleet',
-  standalone: true,  // Ensure standalone component supports imports
-  imports: [CommonModule, FormsModule],  // Add required modules
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './fleet.component.html',
   styleUrls: ['./fleet.component.scss']
 })
-
-export class FleetComponent {
+export class FleetComponent implements OnInit {
   selectedTab: 'trucks' | 'drivers' = 'trucks';
 
   fleetData = {
-    trucks: [
-      { type: 'Semi', number: '1234 M Eaton', license: 'xxxxx', market: 'Company Driver', selected: false },
-      { type: 'Dump Truck', number: '5678 X Pro', license: 'ABCD123', market: 'Independent', selected: false },
-      { type: 'Flatbed', number: '9999 Z Road', license: 'EFGH789', market: 'Company Driver', selected: false }
-    ],
-    drivers: [
-      { type: 'John Doe', number: 'D12345', license: 'XYZ789', market: 'Independent', selected: false },
-      { type: 'Jane Smith', number: 'D67890', license: 'LMN456', market: 'Company Driver', selected: false }
-    ]
+    trucks: [],
+    drivers: []
   };
 
-  addFleetItem() {
-    console.log(this.selectedTab === 'trucks' ? 'Adding a new Truck' : 'Adding a new Driver');
+  constructor(
+    public dialog: MatDialog,
+    private truckService: TruckService,
+    private driverService: DriverService
+  ) {}
+
+  ngOnInit() {
+    this.fetchData();
+  }
+
+  fetchData() {
+    this.truckService.getAllTrucks().subscribe((trucks: any[]) => {
+      this.fleetData.trucks = trucks.map(truck => ({
+        ...truck,
+        type: truck.truck_type,
+        number: truck.truck_number,
+        license: truck.license_plate,
+        market: truck.market?.[0] || '',
+        selected: false
+      }));
+    });
+
+    this.driverService.getAllDrivers().subscribe((drivers: any[]) => {
+      this.fleetData.drivers = drivers.map(driver => ({
+        ...driver,
+        type: driver.name,
+        number: driver.driver_license,
+        address: driver.address,
+        phone: driver.phone_number,
+        selected: false
+      }));
+    });    
+  }
+
+  Openpopup() {
+    const dialogRef = this.selectedTab === 'trucks'
+      ? this.dialog.open(TruckdialogComponent, { width: '85%', height: 'fit' })
+      : this.dialog.open(DriverdialogComponent, { width: '85%', height: '85%' });
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.fetchData(); // Refresh data after closing popup
+    });
   }
 
   toggleAllSelection() {
@@ -36,18 +73,4 @@ export class FleetComponent {
     const allSelected = items.every(item => item.selected);
     items.forEach(item => item.selected = !allSelected);
   }
-  constructor(public dialog:MatDialog){ 
-
-  }
-
-  Openpopup() { 
-    if (this.selectedTab === 'trucks') {
-      this.dialog.open(TruckdialogComponent, { width: '85%', height: 'fit' });
-    } else {
-      this.dialog.open(DriverdialogComponent, { width: '85%', height: '85%'});
-    }
-    
-  }
- 
-  
 }

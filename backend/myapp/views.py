@@ -7,12 +7,12 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from django.contrib.auth import get_user_model
 from .models import (
-    Job, Customer, Driver, Role, UserRole, Comment, Truck, DriverTruckAssignment
+    Job, Customer, Driver, Role, UserRole, Comment, Truck, DriverTruckAssignment, Operator
 )
 from .serializers import (
     JobSerializer, CustomerSerializer, DriverSerializer, RoleSerializer,
     UserSerializer, UserRoleSerializer, CommentSerializer, TruckSerializer,
-    DriverTruckAssignmentSerializer
+    DriverTruckAssignmentSerializer, OperatorSerializer
 )
 
 # For user model
@@ -65,6 +65,10 @@ class RegisterView(generics.CreateAPIView):
     serializer_class = UserSerializer
     permission_classes = [permissions.AllowAny]
 
+class OperatorViewSet(viewsets.ModelViewSet):
+    queryset = Operator.objects.all()
+    serializer_class = OperatorSerializer
+
 class CustomTokenObtainPairView(TokenObtainPairView):
     pass
 
@@ -106,3 +110,14 @@ def drivers_and_trucks(request):
         "drivers": driver_data,
         "trucks": truck_data
     })
+
+@api_view(['GET'])
+def unassigned_trucks(request):
+    # Get only truck IDs that are currently assigned (not unassigned yet)
+    assigned_truck_ids = DriverTruckAssignment.objects.filter(unassigned_at__isnull=True).values_list('truck_id', flat=True)
+    
+    # Exclude those from available trucks
+    unassigned = Truck.objects.exclude(id__in=assigned_truck_ids)
+    
+    serializer = TruckSerializer(unassigned, many=True)
+    return Response(serializer.data)

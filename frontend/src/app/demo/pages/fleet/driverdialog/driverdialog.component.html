@@ -146,7 +146,7 @@
           </div>
     </div>
 
-    <div class="form-group">
+    <!-- <div class="form-group">
         <label for="markets" >Markets</label>
         <div class="datalist-wrapper">
         <select id="market" 
@@ -159,9 +159,133 @@
             </datalist>
         </select>
       </div>
-    </div>
+    </div> -->
+    
+    <form (ngSubmit)="submitForm()" class="add-driver-form">
+    
+      <!-- DRIVER INFO -->
+      <!-- ... your existing driver fields (First name, Last name, Email, etc.) ... -->
+    
+      <!-- ============================= -->
+      <!-- OPERATOR SECTION -->
+      <!-- ============================= -->
+    
+      <div class="form-check mb-3">
+        <input 
+          class="form-check-input" 
+          type="checkbox" 
+          id="createOperatorToggle"
+          [(ngModel)]="creatingNewOperator" 
+          name="createOperatorToggle"
+        >
+        <label class="form-check-label" for="createOperatorToggle">
+          Create New Operator
+        </label>
+      </div>
+
+      <div *ngIf="creatingNewOperator">
+        <div class="form-group">
+          <label for="operatorName">Operator Name</label>
+          <input
+            type="text"
+            id="operatorName"
+            name="operatorName"
+            class="form-control"
+            [(ngModel)]="newOperatorName"
+            required
+          />
+        </div>
+      
+        <div class="form-group">
+          <label for="operatorType">Operator Type</label>
+          <select
+            id="operatorType"
+            name="operatorType"
+            class="form-select"
+            [(ngModel)]="newOperatorType"
+            required
+          >
+            <option value="ITO">ITO (Individual Truck Operator)</option>
+            <option value="MTO">MTO (Multiple Truck Operator)</option>
+          </select>
+        </div>
+      </div>
+      
+    
+      <div *ngIf="!creatingNewOperator">
+        <div class="form-group">
+          <label for="operatorSelect">Select Operator</label>
+          <select id="operatorSelect" name="operatorSelect" class="form-select"
+                  [(ngModel)]="selectedOperatorId" required>
+            <option [value]="''" disabled selected>Select an operator</option>
+            <option *ngFor="let operator of operatorList" [value]="operator.id">
+              {{ operator.name }} ({{ operator.operator_type }})
+            </option>
+          </select>
+        </div>
+      </div>
+    
+    
+      <!-- ============================= -->
+      <!-- TRUCK SECTION -->
+      <!-- ============================= -->
+    
+      <div class="form-check mb-3">
+        <input class="form-check-input" type="checkbox" id="createTruckToggle"
+               [(ngModel)]="creatingNewTruck" name="createTruckToggle">
+        <label class="form-check-label" for="createTruckToggle">
+          Create New Truck
+        </label>
+      </div>
+      
+      
+    
+      <div *ngIf="creatingNewTruck">
+        <div class="form-group">
+          <label for="truckType">Truck Type</label>
+          <input type="text" id="truckType" [(ngModel)]="newTruckData.truck_type" name="truckType" class="form-control" />
+        </div>
+    
+        <div class="form-group">
+          <label for="carrier">Carrier</label>
+          <input type="text" id="carrier" [(ngModel)]="newTruckData.carrier" name="carrier" class="form-control" />
+        </div>
+    
+        <div class="form-group">
+          <label for="truckNumber">Truck Number</label>
+          <input type="text" id="truckNumber" [(ngModel)]="newTruckData.truck_number" name="truckNumber" class="form-control" />
+        </div>
+    
+        <div class="form-group">
+          <label for="licensePlate">License Plate</label>
+          <input type="text" id="licensePlate" [(ngModel)]="newTruckData.license_plate" name="licensePlate" class="form-control" />
+        </div>
+    
+        <div class="form-group">
+          <label for="market">Market</label>
+          <input type="text" id="market" [(ngModel)]="newTruckData.market" name="market" class="form-control" />
+        </div>
+      </div>
+    
+      <div *ngIf="!creatingNewTruck">
+        <div class="form-group">
+          <label for="truckSelect">Select Existing Truck</label>
+          <select id="truckSelect" name="truckSelect" class="form-select"
+        [(ngModel)]="selectedTruckId" required>
+          <option [value]="''" disabled selected>Select a truck</option>
+          <option *ngFor="let truck of availableTrucks" [value]="truck.id">
+            {{ truck.truck_number }} - {{ truck.truck_type }}
+          </option>
+        </select>
+
+        </div>
+      </div>
+    
+      <!-- SUBMIT -->
+      <div class="form-actions mt-4">
+        <button type="submit" class="btn btn-primary">Add Driver</button>
+      </div>
+    </form>
+    
   
-    <div class="form-actions">
-      <button type="submit" class="btn btn-primary">Add Driver</button>
-    </div>
-  </form>
+    
