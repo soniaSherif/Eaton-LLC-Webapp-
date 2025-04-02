@@ -73,23 +73,21 @@
           "defaultConfiguration": "production"
         },
         "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
-          "configurations": {
-            "production": {
-              "buildTarget": "datta-able-free-angular-admin-template:build:production"
-            },
-            "development": {
-              "buildTarget": "datta-able-free-angular-admin-template:build:development"
-            }
-          },
-          "defaultConfiguration": "development"
-        },
-        "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
-          "options": {
-            "buildTarget": "datta-able-free-angular-admin-template:build"
-          }
-        },
+  "builder": "@angular-devkit/build-angular:dev-server",
+  "options": {
+    "host": "0.0.0.0",
+    "port": 4200
+  },
+  "configurations": {
+    "production": {
+      "buildTarget": "datta-able-free-angular-admin-template:build:production"
+    },
+    "development": {
+      "buildTarget": "datta-able-free-angular-admin-template:build:development"
+    }
+  },
+  "defaultConfiguration": "development"
+},
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {

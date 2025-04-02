@@ -34,8 +34,9 @@
                 <th><input type="checkbox" (change)="toggleAllSelection()" /></th>
                 <th>{{ selectedTab === 'trucks' ? 'TRUCK TYPE' : 'DRIVER NAME' }}</th>
                 <th>{{ selectedTab === 'trucks' ? 'TRUCK #' : 'CDL #' }}</th>
-                <th>LICENSE PLATE</th>
-                <th>Market</th>
+                <th *ngIf="selectedTab === 'trucks'">LICENSE PLATE</th>
+                <th *ngIf="selectedTab === 'drivers'">ADDRESS</th>
+                <th>{{ selectedTab === 'trucks' ? 'Market' : 'PHONE' }}</th>
               </tr>
             </thead>
             <tbody>
@@ -43,10 +44,15 @@
                 <td><input type="checkbox" [(ngModel)]="item.selected"></td>
                 <td>{{ item.type }}</td>
                 <td>{{ item.number }}</td>
-                <td>{{ item.license }}</td>
-                <td>{{ item.market }}</td>
+            
+                <!-- TRUCKS: License Plate and Market -->
+                <td *ngIf="selectedTab === 'trucks'">{{ item.license }}</td>
+                <td *ngIf="selectedTab === 'drivers'">{{ item.address }}</td>
+                
+                <td>{{ selectedTab === 'trucks' ? item.market : item.phone }}</td>
               </tr>
             </tbody>
+            
           </table>
         </div>
       </div>

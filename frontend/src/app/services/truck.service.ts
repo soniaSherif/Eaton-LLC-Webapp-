@@ -18,4 +18,10 @@ export class TruckService {
   getAllTrucks(): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrl);
   }
+  getUnassignedTrucks(): Observable<any[]> {
+    return this.http.get<any[]>(`${environment.apiBaseUrl}unassigned-trucks/`);
+  }
+  
+
+  
 }

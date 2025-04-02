@@ -1,77 +1,127 @@
-
 <h1 class="title">Add a Truck
   <button (click)="closepopup()" class="close-button">x</button>
 </h1>
 
-<form (ngSubmit) = "submitForm()" class="add-truck-form">
-
+<form (ngSubmit)="submitForm()" class="add-truck-form">
   <div class="form-group">
     <label for="trucktype">Truck Type</label>
     <div class="datalist-wrapper">
-        <input type="text" 
-               name="trucktype" 
-               id="trucktype" 
-               list="truckList"
-               placeholder="Select Truck Type"
-               class="form-control"
-               [(ngModel)]="selectedTruck_type">
-        <datalist id="truckList">
-            <option *ngFor="let truckType of truckType" [value]="truckType">{{truckType}}</option>
-        </datalist>
+      <input type="text"
+             id="trucktype"
+             list="truckList"
+             class="form-control"
+             [(ngModel)]="selectedTruck_type"
+             name="truck_type"
+             placeholder="Select Truck Type" />
+      <datalist id="truckList">
+        <option *ngFor="let t of truckType" [value]="t">{{ t }}</option>
+      </datalist>
     </div>
+  </div>
+
+  <div class="form-group">
+    <label for="carrier">Carrier</label>
+    <div class="datalist-wrapper">
+      <input type="text"
+             id="carrier"
+             list="carrierList"
+             class="form-control"
+             [(ngModel)]="selectedCarrier"
+             name="carrier"
+             placeholder="Select Carrier" />
+      <datalist id="carrierList">
+        <option *ngFor="let c of carrier" [value]="c">{{ c }}</option>
+      </datalist>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group">
+      <label for="truckNumber">Truck #</label>
+      <input type="text"
+             id="truckNumber"
+             class="form-control"
+             [(ngModel)]="selectedTruck_number"
+             name="truck_number"
+             placeholder="Truck Number" />
+    </div>
+
+    <div class="form-group">
+      <label for="licensePlate">License Plate</label>
+      <input type="text"
+             id="licensePlate"
+             class="form-control"
+             [(ngModel)]="selectedLicense_plate"
+             name="license_plate"
+             placeholder="License Plate" />
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="market">Market</label>
+    <select id="market"
+            class="form-control"
+            [(ngModel)]="selectedMarket"
+            name="market">
+      <option *ngFor="let m of market" [value]="m">{{ m }}</option>
+    </select>
+  </div>
+
+  <!-- OPERATOR SECTION -->
+<div class="form-check mb-3">
+  <input class="form-check-input"
+         type="checkbox"
+         id="createOperatorToggle"
+         [(ngModel)]="creatingNewOperator"
+         name="createOperatorToggle" />
+  <label class="form-check-label" for="createOperatorToggle">
+    Create New Operator
+  </label>
 </div>
 
-    <div class="form-group">
-      <label for="trucktype">Carrier</label>
-      <div class="datalist-wrapper">
-          <input type="text" 
-                 name="carrier" 
-                 id="carrier" 
-                 list="carrierList"
-                 placeholder="Select Carrier"
-                 class="form-control"
-                 [(ngModel)]="selectedCarrier">
-          <datalist id="carrierList">
-              <option *ngFor="let c of carrier" [value]="c">{{c}}</option>
-          </datalist>
-      </div>
+<!-- New Operator Form -->
+<div *ngIf="creatingNewOperator">
+  <div class="form-group">
+    <label for="operatorName">Operator Name</label>
+    <input type="text"
+           id="operatorName"
+           class="form-control"
+           [(ngModel)]="newOperatorName"
+           name="operatorName"
+           placeholder="Enter Operator Name"
+           required />
   </div>
-    <div class="form-row">
-        <div class="form-group">
-            <label for="truckNumber">Truck #</label>
-            <input  type="text" 
-                    id="truckNumber" 
-                    name="truckNumber"
-                    placeholder="Truck Number"
-                    [(ngModel)]="selectedTruck_number">
-        </div>
 
-        <div class="form-group">
-            <label for="licenseNumber">License Plate</label>
-            <input  type="text" 
-                    id="licenseNumber" 
-                    name="licenseNumber"
-                    placeholder="LICENSE PLATE"
-                    [(ngModel)]="selectedLicense_number">
-        </div>
-    </div>
+  <div class="form-group">
+    <label for="operatorType">Operator Type</label>
+    <select id="operatorType"
+            class="form-select"
+            [(ngModel)]="newOperatorType"
+            name="operatorType"
+            required>
+      <option value="ITO">ITO (Individual Truck Operator)</option>
+      <option value="MTO">MTO (Multiple Truck Operator)</option>
+    </select>
+  </div>
+</div>
 
-    <div class="form-group">
-        <label for="markets">Markets</label>
-        <div class="datalist-wrapper">
-        <select id="market" 
-                list="marketList"
-                name="market" 
-                class="form-control" 
-                [(ngModel)]="selectedMarket">
-          <datalist id="marketList">
-            <option *ngFor=" let market of market" [value]="market">{{ market }}</option>
-          </datalist>
-        </select>
-        </div>
-    </div>
+<!-- Existing Operator Select -->
+<div *ngIf="!creatingNewOperator">
+  <div class="form-group">
+    <label for="operatorSelect">Operator</label>
+    <select id="operatorSelect"
+            class="form-select"
+            [(ngModel)]="selectedOperatorId"
+            name="operator"
+            required>
+      <option [value]="''" disabled selected>Select Operator</option>
+      <option *ngFor="let op of operatorList" [value]="op.id">
+        {{ op.name }} ({{ op.operator_type }})
+      </option>
+    </select>
+  </div>
+</div>
 
-    <button type="submit" class="btn btn-primary">Add a Truck</button>
 
+  <button type="submit" class="btn btn-primary">Add a Truck</button>
 </form>
-

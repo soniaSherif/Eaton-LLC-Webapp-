@@ -55,15 +55,29 @@ label {
   color: #333;
 }
 
-input, select {
+
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+select {
   width: 100%;
   padding: 10px 12px;
   border: 1px solid #ddd;
-  border-radius: 4; }
-  input:focus::placeholder {
-    color: transparent;
-  }
+  border-radius: 4px;
+}
 
+// ✅ Reset checkboxes to look native
+input[type="checkbox"] {
+  width: auto;
+  height: auto;
+  margin-right: 8px;
+  appearance: checkbox;
+  -webkit-appearance: checkbox;
+  -moz-appearance: checkbox;
+  cursor: pointer;
+}
 .datalist-wrapper {
   position: relative;
   display: inline-block;

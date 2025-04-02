@@ -6,8 +6,8 @@ from . import views
 from .views import (
     JobViewSet, CustomerViewSet, DriverViewSet, RoleViewSet,
     UserViewSet, UserRoleViewSet, CommentViewSet, TruckViewSet,
-    DriverTruckAssignmentViewSet, RegisterView, CustomTokenObtainPairView,
-    CustomTokenRefreshView, protected_view, assign_truck_to_driver
+    DriverTruckAssignmentViewSet, RegisterView, CustomTokenObtainPairView, OperatorViewSet,
+    CustomTokenRefreshView, protected_view, assign_truck_to_driver, unassigned_trucks
 )
 
 router = DefaultRouter()
@@ -20,6 +20,7 @@ router.register(r'userroles', UserRoleViewSet)
 router.register(r'comments', CommentViewSet)
 router.register(r'trucks', TruckViewSet)
 router.register(r'driver-truck-assignments', DriverTruckAssignmentViewSet)
+router.register(r'operators', OperatorViewSet, basename='operator')
 
 urlpatterns = [
     path('', include(router.urls)),  
@@ -29,4 +30,6 @@ urlpatterns = [
     path('token/verify/', TokenVerifyView.as_view(), name='token_verify'),
     path('protected/', protected_view, name='protected'),
     path('assign-truck/', assign_truck_to_driver, name='assign_truck'),
+    path('unassigned-trucks/', unassigned_trucks, name='unassigned_trucks'),
+    
 ]
