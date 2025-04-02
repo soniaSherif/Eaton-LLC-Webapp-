@@ -1,0 +1,19 @@
+.daily-board .job-card {
+    margin-bottom: 20px;
+  }
+  
+  .job-info {
+    display: flex;
+    justify-content: space-between; /* Space between job details and foremen */
+    width: 100%;
+  }
+  
+  .job-details {
+    flex-grow: 1;
+  }
+  
+  .foremen {
+    text-align: right; /* Align foremen to the right */
+    margin-left: 20px;
+  }
+  
