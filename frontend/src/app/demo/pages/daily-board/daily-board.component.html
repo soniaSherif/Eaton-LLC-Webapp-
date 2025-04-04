@@ -1,38 +1,48 @@
 <h3>Daily Board</h3>
 <div class="daily-board">
-    <mat-card class="job-card" *ngFor="let job of jobs">
-      <mat-card-header>
-        <div class="job-info">
-          <div class="job-details">
-            <mat-card-title class="job-title">{{ job.jobName }} ({{ job.jobNumber }})</mat-card-title>
-            <mat-card-subtitle class="job-location">{{ job.startLocation }} → {{ job.endLocation }}</mat-card-subtitle>
-          </div>
-          <div class="foremen">
-            <p *ngFor="let foreman of job.foremen">Foreman: {{ foreman }}</p>
-          </div>
+  <mat-card class="job-card" *ngFor="let job of jobs">
+    <mat-card-header>
+      <div class="job-info">
+        <div class="job-details">
+          <mat-card-title class="job-title">{{ job.jobName }} ({{ job.jobNumber }})</mat-card-title>
+          <mat-card-subtitle class="job-location">{{ job.startLocation }} → {{ job.endLocation }}</mat-card-subtitle>
         </div>
-      </mat-card-header>
-  
-      <mat-card-content>
-        <table mat-table [dataSource]="job.assignments" class="mat-elevation-z2">
-          <thead>
-            <tr>
-              <th mat-header-cell *matHeaderCellDef> Start Time </th>
-              <th mat-header-cell *matHeaderCellDef> Truck </th>
-              <th mat-header-cell *matHeaderCellDef> Driver </th>
-              <th mat-header-cell *matHeaderCellDef> Phone </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr mat-row *matRowDef="let assignment; columns: ['startTime', 'truckName', 'driverName', 'driverPhone']">
-              <td mat-cell *matCellDef="let assignment">{{ assignment.startTime }}</td>
-              <td mat-cell *matCellDef="let assignment">{{ assignment.truckName }}</td>
-              <td mat-cell *matCellDef="let assignment">{{ assignment.driverName }}</td>
-              <td mat-cell *matCellDef="let assignment">{{ assignment.driverPhone }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </mat-card-content>
-    </mat-card>
-  </div>
-  
+        <div class="foremen">
+          <p *ngFor="let foreman of job.foremen">Foreman: {{ foreman }}</p>
+        </div>
+      </div>
+    </mat-card-header>
+
+    <mat-card-content>
+      <!-- Table is inside the *ngFor scope so 'job' is recognized -->
+      <table mat-table [dataSource]="job.assignments" class="mat-elevation-z2">
+        <ng-container matColumnDef="startTime">
+          <th mat-header-cell *matHeaderCellDef> Start Time </th>
+          <td mat-cell *matCellDef="let assignment">{{ assignment.startTime }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="truckName">
+          <th mat-header-cell *matHeaderCellDef> Truck </th>
+          <td mat-cell *matCellDef="let assignment">{{ assignment.truckName }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="driverName">
+          <th mat-header-cell *matHeaderCellDef> Driver </th>
+          <td mat-cell *matCellDef="let assignment">{{ assignment.driverName }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="driverPhone">
+          <th mat-header-cell *matHeaderCellDef> Phone </th>
+          <td mat-cell *matCellDef="let assignment">{{ assignment.driverPhone }}</td>
+        </ng-container>
+
+        <thead>
+          <tr mat-header-row *matHeaderRowDef="['startTime', 'truckName', 'driverName', 'driverPhone']"></tr>
+        </thead>
+        <tbody>
+          <tr mat-row *matRowDef="let assignment; columns: ['startTime', 'truckName', 'driverName', 'driverPhone']"></tr>
+        </tbody>
+      </table>
+    </mat-card-content>
+  </mat-card>
+</div>
