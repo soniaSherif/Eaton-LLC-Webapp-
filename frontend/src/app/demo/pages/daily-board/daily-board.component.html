@@ -8,8 +8,13 @@
           <mat-card-subtitle class="job-location">{{ job.startLocation }} → {{ job.endLocation }}</mat-card-subtitle>
         </div>
         <div class="foremen">
-          <p *ngFor="let foreman of job.foremen">Foreman: {{ foreman }}</p>
-        </div>
+          <p *ngFor="let foreman of job.foremen">
+            Foreman: 
+            <span matTooltip="{{ foreman.phone }}" matTooltipPosition="above" class="foreman-name">
+              {{ foreman.name }}
+            </span>
+          </p>
+        </div>                
       </div>
     </mat-card-header>
 
@@ -18,7 +23,7 @@
       <table mat-table [dataSource]="job.assignments" class="mat-elevation-z2">
         <ng-container matColumnDef="startTime">
           <th mat-header-cell *matHeaderCellDef> Start Time </th>
-          <td mat-cell *matCellDef="let assignment">{{ assignment.startTime | date: 'shortTime' }}</td>
+          <td mat-cell *matCellDef="let assignment">{{ assignment.startTime | date: 'shortTime' }}</td>  <!-- ShortTime makes the full date format to like 8:00 AM -->
 
         </ng-container>
 

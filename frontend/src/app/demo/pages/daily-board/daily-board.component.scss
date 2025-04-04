@@ -17,3 +17,14 @@
     margin-left: 20px;
   }
   
+  .foreman-name {
+    text-decoration: underline;  /* Underlines the name */
+    color: blue;  /* Makes it look like a hyperlink */
+    cursor: pointer;  /* Changes the cursor to indicate interactivity */
+    display: inline-block; /* Helps with proper tooltip positioning */
+  }
+  
+  .foreman-name:hover {
+    color: darkblue;  /* Slightly darker on hover for better feedback */
+  }
+  

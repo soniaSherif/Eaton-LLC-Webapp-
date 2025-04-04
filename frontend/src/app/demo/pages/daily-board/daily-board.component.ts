@@ -2,13 +2,15 @@ import { Component } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
 import { CommonModule } from '@angular/common'; // Import CommonModule for directives like ngFor, ngIf
+import { MatTooltipModule } from '@angular/material/tooltip';
+
 
 @Component({
   selector: 'app-daily-board',
   templateUrl: './daily-board.component.html',
   styleUrls: ['./daily-board.component.scss'],
   standalone: true,  // Mark the component as standalone
-  imports: [CommonModule, MatCardModule, MatTableModule],  // Import required modules
+  imports: [CommonModule, MatCardModule, MatTableModule, MatTooltipModule],  // Import required modules
 })
 export class DailyBoardComponent {
   jobs = [
@@ -18,7 +20,10 @@ export class DailyBoardComponent {
       material: "Asphalt",
       startLocation: "Site A",
       endLocation: "Site B",
-      foremen: ["John Doe", "Jane Smith"],
+      foremen: [
+        { name: "John Doe", phone: "555-111-2222" },
+        { name: "Jane Smith", phone: "555-333-4444" }
+      ],
       assignments: [
         {
           startTime: "2025-04-02T08:00:00",
@@ -40,7 +45,9 @@ export class DailyBoardComponent {
       material: "Concrete",
       startLocation: "Plant X",
       endLocation: "Warehouse Y",
-      foremen: ["Robert Brown"],
+      foremen: [
+        { name: "Robert Brown", phone: "555-555-6666" }
+      ],
       assignments: [
         {
           startTime: "2025-04-02T07:45:00",
