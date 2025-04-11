@@ -1,10 +1,13 @@
 <h3>Daily Board</h3>
 <div class="d-flex justify-content-between align-items-center mb-3">
-  <!-- Date Picker Input -->
   <input type="date" [(ngModel)]="selectedDate" (change)="filterJobs()" [value]="selectedDate" class="form-control custom-date-input">
 </div>
 
 <div class="daily-board">
+  <div *ngIf="filteredJobs.length === 0" class="no-jobs-message">
+    <p>No jobs available for the selected date.</p>
+  </div>
+
   <mat-card class="job-card" *ngFor="let job of filteredJobs">
     <mat-card-header>
       <div class="job-info">
@@ -15,9 +18,10 @@
           <mat-card-subtitle class="job-location">
             {{ job.startLocation }} → {{ job.endLocation }}
           </mat-card-subtitle>
-          <mat-card-subtitle class="job-date">
-            Date: {{ job.date }}
+          <mat-card-subtitle class="job-material">
+            {{ job.material }} 
           </mat-card-subtitle>
+        
         </div>
         <div class="foremen">
           <p *ngFor="let foreman of job.foremen">

@@ -33,3 +33,11 @@
     flex-direction: column;  /* Keeps job title and location stacked */
     margin-bottom: 12px;  /* Adds space between the location info and foremen section */
   }
+  
+  .no-jobs-message {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #888;
+    padding: 20px;
+  }
+  
