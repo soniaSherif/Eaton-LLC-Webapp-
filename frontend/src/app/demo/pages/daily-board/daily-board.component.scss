@@ -33,11 +33,29 @@
     flex-direction: column;  /* Keeps job title and location stacked */
     margin-bottom: 12px;  /* Adds space between the location info and foremen section */
   }
-  
+
   .no-jobs-message {
     text-align: center;
     font-size: 1.2rem;
     color: #888;
     padding: 20px;
+  }
+  
+
+  .custom-date-input {
+    width: 10rem;  // Adjust the width as needed
+    padding: 0.25rem;  // Adjust the padding to make it smaller
+    font-size: 0.875rem;  // Adjust the font size to make the text smaller
+  }
+  
+  .d-flex.align-items-center input[type="date"] {
+    height: 2.6rem;  /* Ensure same height as the buttons */
+    padding: 0.375rem 0.75rem;  /* Same padding for both input and button */
+    display: inline-flex;  /* Ensures the input contents are flex items */
+    align-items: center;  /* Vertically center the content */
+    justify-content: center;  /* Horizontally center the text */
+    margin: 0;  /* Remove default margin */
+    min-width: 9rem;  /* Ensure the input has the same width as the button */
+    white-space: nowrap;  /* Prevent text from wrapping */
   }
   

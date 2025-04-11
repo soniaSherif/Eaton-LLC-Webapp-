@@ -1,7 +1,7 @@
 /* Ensure both input and button have the same height, padding, and align vertically */
 .d-flex.align-items-center input,
 .d-flex.align-items-center button {
-  height: 2.4rem; /* Ensure equal height for both */
+  height: 2.6rem; /* Ensure equal height for both */
   padding: 0.375rem 0.75rem; /* Same padding for both */
   display: inline-flex; /* Ensures input and button contents are flex items */
   align-items: center; /* Vertically center content */

@@ -1,5 +1,5 @@
-<h3>Daily Board</h3>
-<div class="d-flex justify-content-between align-items-center mb-3">
+<div class="d-flex justify-content-between align-items-center mb-3"> 
+  <h3>Daily Board</h3>
   <input type="date" [(ngModel)]="selectedDate" (change)="filterJobs()" [value]="selectedDate" class="form-control custom-date-input">
 </div>
 
@@ -12,8 +12,8 @@
     <mat-card-header>
       <div class="job-info">
         <div class="job-details">
-          <mat-card-title class="job-title">
-            {{ job.jobName }} ({{ job.jobNumber }})
+          <mat-card-title class="job-title" style="font-weight: bold; color: black;">
+            {{ job.jobName }} (<span style="font-weight: bold; color: black;">{{ job.jobNumber }}</span>)
           </mat-card-title>
           <mat-card-subtitle class="job-location">
             {{ job.startLocation }} → {{ job.endLocation }}
@@ -21,7 +21,6 @@
           <mat-card-subtitle class="job-material">
             {{ job.material }} 
           </mat-card-subtitle>
-        
         </div>
         <div class="foremen">
           <p *ngFor="let foreman of job.foremen">
@@ -37,24 +36,24 @@
     <mat-card-content>
       <table mat-table [dataSource]="job.assignments" class="mat-elevation-z2">
         <ng-container matColumnDef="startTime">
-          <th mat-header-cell *matHeaderCellDef> Start Time </th>
+          <th mat-header-cell *matHeaderCellDef style="font-weight: bold; color: black;"> Start Time </th>
           <td mat-cell *matCellDef="let assignment">
             {{ (job.date + 'T' + assignment.startTime) | date: 'shortTime' }}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="truckName">
-          <th mat-header-cell *matHeaderCellDef> Truck </th>
+          <th mat-header-cell *matHeaderCellDef style="font-weight: bold; color: black;"> Truck </th>
           <td mat-cell *matCellDef="let assignment">{{ assignment.truckName }}</td>
         </ng-container>
 
         <ng-container matColumnDef="driverName">
-          <th mat-header-cell *matHeaderCellDef> Driver </th>
+          <th mat-header-cell *matHeaderCellDef style="font-weight: bold; color: black;"> Driver </th>
           <td mat-cell *matCellDef="let assignment">{{ assignment.driverName }}</td>
         </ng-container>
 
         <ng-container matColumnDef="driverPhone">
-          <th mat-header-cell *matHeaderCellDef> Phone </th>
+          <th mat-header-cell *matHeaderCellDef style="font-weight: bold; color: black;"> Phone </th>
           <td mat-cell *matCellDef="let assignment">{{ assignment.driverPhone }}</td>
         </ng-container>
 
