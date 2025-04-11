@@ -15,6 +15,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 export class DailyBoardComponent {
   jobs = [
     {
+      date: "2025-04-02",
       jobName: "Highway Expansion",
       jobNumber: "J202501",
       material: "Asphalt",
@@ -26,13 +27,13 @@ export class DailyBoardComponent {
       ],
       assignments: [
         {
-          startTime: "2025-04-02T08:00:00",
+          startTime: "08:00",
           truckName: "Truck 101",
           driverName: "Mike Johnson",
           driverPhone: "555-123-4567"
         },
         {
-          startTime: "2025-04-02T09:30:00",
+          startTime: "09:30",
           truckName: "Truck 202",
           driverName: "Sarah Lee",
           driverPhone: "555-987-6543"
@@ -40,6 +41,7 @@ export class DailyBoardComponent {
       ]
     },
     {
+      date: "2025-04-02",
       jobName: "Warehouse Construction",
       jobNumber: "J202502",
       material: "Concrete",
@@ -50,7 +52,7 @@ export class DailyBoardComponent {
       ],
       assignments: [
         {
-          startTime: "2025-04-02T07:45:00",
+          startTime: "07:45",
           truckName: "Truck 303",
           driverName: "Emily Davis",
           driverPhone: "555-222-3333"

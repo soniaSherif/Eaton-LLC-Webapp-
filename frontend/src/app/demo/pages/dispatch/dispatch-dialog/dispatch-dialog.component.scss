@@ -31,9 +31,7 @@
     margin-top: 20px;
   }
   
-  .form-group {
-    margin-bottom: 15px;
-  }
+  
   
   .form-group label {
     display: block;
@@ -74,4 +72,50 @@
     outline: none;
   }
   
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
   
+  .time-label {
+    display: inline-block;
+    text-align: left; /* Aligns the "Time:" label to the left */
+    margin-bottom: 10px; /* Adds spacing between label and time input */
+    align-self: flex-start; /* Ensures label is at the top of its container */
+    margin-left: 50%; /* Pushes the label to the right, directly above the time input */
+  }
+  
+  
+  
+  .job-date {
+    margin-left: 30px;
+    margin-right: 10px; /* Space between date and time input */
+    font-weight: bold;
+    flex-shrink: 0; /* Prevents the date from shrinking */
+  }
+  
+  .time-date-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Spread the items across the container */
+    width: 100%; /* Make sure the container takes up the full width */
+  }
+  
+  input[type="time"] {
+    width: 100%; /* Ensures the time input fills the available space within its container */
+  }
+  
+  .select-job-message {
+    margin-left: 20px;
+    font-style: italic;
+    color: #888;
+    margin-right: 10px; /* Adds space between the message and the time box */
+    text-align: left; /* Ensures the message stays left aligned */
+    order: -1; /* Ensures the message appears first (to the left) */
+  }
+  
+  .time-wrapper {
+    width: 50%; /* Ensures the time input takes up the right half of the form */
+    text-align: right; /* Aligns the input to the right */
+    display: flex;
+    flex-direction: column; /* Ensures the label and input stack vertically */
+  }

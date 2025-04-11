@@ -4,27 +4,34 @@
     <mat-card-header>
       <div class="job-info">
         <div class="job-details">
-          <mat-card-title class="job-title">{{ job.jobName }} ({{ job.jobNumber }})</mat-card-title>
-          <mat-card-subtitle class="job-location">{{ job.startLocation }} → {{ job.endLocation }}</mat-card-subtitle>
+          <mat-card-title class="job-title">
+            {{ job.jobName }} ({{ job.jobNumber }})
+          </mat-card-title>
+          <mat-card-subtitle class="job-location">
+            {{ job.startLocation }} → {{ job.endLocation }}
+          </mat-card-subtitle>
+          <mat-card-subtitle class="job-date">
+            Date: {{ job.date }}
+          </mat-card-subtitle>
         </div>
         <div class="foremen">
           <p *ngFor="let foreman of job.foremen">
-            Foreman: 
+            Foreman:
             <span matTooltip="{{ foreman.phone }}" matTooltipPosition="above" class="foreman-name">
               {{ foreman.name }}
             </span>
           </p>
-        </div>                
+        </div>
       </div>
     </mat-card-header>
 
     <mat-card-content>
-      <!-- Table is inside the *ngFor scope so 'job' is recognized -->
       <table mat-table [dataSource]="job.assignments" class="mat-elevation-z2">
         <ng-container matColumnDef="startTime">
           <th mat-header-cell *matHeaderCellDef> Start Time </th>
-          <td mat-cell *matCellDef="let assignment">{{ assignment.startTime | date: 'shortTime' }}</td>  <!-- ShortTime makes the full date format to like 8:00 AM -->
-
+          <td mat-cell *matCellDef="let assignment">
+            {{ (job.date + 'T' + assignment.startTime) | date: 'shortTime' }}
+          </td>
         </ng-container>
 
         <ng-container matColumnDef="truckName">
