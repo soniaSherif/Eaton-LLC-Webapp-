@@ -31,7 +31,7 @@
   .job-details {
     display: flex;
     flex-direction: column;  /* Keeps job title and location stacked */
-    margin-bottom: 12px;  /* Adds space between the location info and foremen section */
+    margin-bottom: 0px;  /* Adds space between the location info and foremen section */
   }
 
   .no-jobs-message {

@@ -4,25 +4,33 @@ import { MatTableModule } from '@angular/material/table';
 import { CommonModule, DatePipe } from '@angular/common'; // Import DatePipe
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { FormsModule } from '@angular/forms';
+import { MatDialogModule } from '@angular/material/dialog'; // Import MatDialogModule
+import { MatDialog } from '@angular/material/dialog'; // Import MatDialog service
+import { DispatchDialogComponent } from '../dispatch/dispatch-dialog/dispatch-dialog.component'; // Corrected import path
 
 @Component({
   selector: 'app-daily-board',
   templateUrl: './daily-board.component.html',
   styleUrls: ['./daily-board.component.scss'],
-  standalone: true,  // Mark the component as standalone
-  imports: [CommonModule, MatCardModule, MatTableModule, MatTooltipModule, FormsModule],  // Import required modules
-  providers: [DatePipe],  // Add DatePipe to the providers array
+  standalone: true, // Mark the component as standalone
+  imports: [
+    CommonModule, 
+    MatCardModule, 
+    MatTableModule, 
+    MatTooltipModule, 
+    FormsModule, 
+    MatDialogModule // Use MatDialogModule here
+  ],  
+  providers: [DatePipe] // Add DatePipe to the providers array
 })
 export class DailyBoardComponent implements OnInit {
-  // Inject DatePipe into the constructor
-  constructor(private datePipe: DatePipe) {}
+  constructor(private datePipe: DatePipe, private dialog: MatDialog) {} // Inject MatDialog service
 
-  // Set the default date to today's date in local time format (YYYY-MM-DD)
   selectedDate: string = this.datePipe.transform(new Date(), 'yyyy-MM-dd') || '';
 
   jobs = [
     {
-      date: "2025-04-02",
+      date: "2025-04-10",
       jobName: "Highway Expansion",
       jobNumber: "J202501",
       material: "Asphalt",
@@ -68,19 +76,30 @@ export class DailyBoardComponent implements OnInit {
     }
   ];
 
-  filteredJobs = this.jobs; // Initially set filteredJobs to display all jobs
+  filteredJobs = this.jobs;
 
-  // Called when user changes the date input; updates the filtered list
   filterJobs() {
     if (this.selectedDate) {
       this.filteredJobs = this.jobs.filter(job => job.date === this.selectedDate);
     } else {
-      this.filteredJobs = this.jobs; // No filter, show all jobs
+      this.filteredJobs = this.jobs;
     }
   }
 
-  // ngOnInit to trigger the filtering logic when the component initializes
   ngOnInit() {
     this.filterJobs();
+  }
+
+  // Open the dispatch dialog when the user clicks on a row
+  openDialog(): void {
+    const dialogRef = this.dialog.open(DispatchDialogComponent, {
+      width: '400px', // Set dialog width
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        console.log('Dialog result:', result);
+      }
+    });
   }
 }
