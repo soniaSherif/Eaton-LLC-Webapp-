@@ -1,6 +1,11 @@
 <h3>Daily Board</h3>
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <!-- Date Picker Input -->
+  <input type="date" [(ngModel)]="selectedDate" (change)="filterJobs()" [value]="selectedDate" class="form-control custom-date-input">
+</div>
+
 <div class="daily-board">
-  <mat-card class="job-card" *ngFor="let job of jobs">
+  <mat-card class="job-card" *ngFor="let job of filteredJobs">
     <mat-card-header>
       <div class="job-info">
         <div class="job-details">

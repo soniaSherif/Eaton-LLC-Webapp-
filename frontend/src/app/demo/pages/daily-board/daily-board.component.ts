@@ -1,18 +1,25 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
-import { CommonModule } from '@angular/common'; // Import CommonModule for directives like ngFor, ngIf
+import { CommonModule, DatePipe } from '@angular/common'; // Import DatePipe
 import { MatTooltipModule } from '@angular/material/tooltip';
-
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-daily-board',
   templateUrl: './daily-board.component.html',
   styleUrls: ['./daily-board.component.scss'],
   standalone: true,  // Mark the component as standalone
-  imports: [CommonModule, MatCardModule, MatTableModule, MatTooltipModule],  // Import required modules
+  imports: [CommonModule, MatCardModule, MatTableModule, MatTooltipModule, FormsModule],  // Import required modules
+  providers: [DatePipe],  // Add DatePipe to the providers array
 })
-export class DailyBoardComponent {
+export class DailyBoardComponent implements OnInit {
+  // Inject DatePipe into the constructor
+  constructor(private datePipe: DatePipe) {}
+
+  // Set the default date to today's date in local time format (YYYY-MM-DD)
+  selectedDate: string = this.datePipe.transform(new Date(), 'yyyy-MM-dd') || '';
+
   jobs = [
     {
       date: "2025-04-02",
@@ -41,7 +48,7 @@ export class DailyBoardComponent {
       ]
     },
     {
-      date: "2025-04-02",
+      date: "2025-04-03",
       jobName: "Warehouse Construction",
       jobNumber: "J202502",
       material: "Concrete",
@@ -60,4 +67,20 @@ export class DailyBoardComponent {
       ]
     }
   ];
+
+  filteredJobs = this.jobs; // Initially set filteredJobs to display all jobs
+
+  // Called when user changes the date input; updates the filtered list
+  filterJobs() {
+    if (this.selectedDate) {
+      this.filteredJobs = this.jobs.filter(job => job.date === this.selectedDate);
+    } else {
+      this.filteredJobs = this.jobs; // No filter, show all jobs
+    }
+  }
+
+  // ngOnInit to trigger the filtering logic when the component initializes
+  ngOnInit() {
+    this.filterJobs();
+  }
 }
