@@ -84,9 +84,43 @@
 
               <label>Project ID Number</label>
               <input type="text" formControlName="projectId" class="form-control" placeholder="Enter Project ID Number">
+
+              <!-- Prevailing Wage Class Code Table -->
+              <div class="mt-3">
+                <h5>Prevailing Wage Class Codes</h5>
+                <table class="table table-bordered w-100 dark-table" style="table-layout: auto;">
+                  <thead>
+                    <tr>
+                      <th>Class Code</th>
+                      <th>Base Rate</th>
+                      <th>Fringe Rate</th>
+                      <th>Total Standard Time Rate</th>
+                      <th>Total Overtime Rate</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let classCode of ['602', '604', '607']; let i = index">
+                      <td>
+                        <input class="form-control" [value]="classCode" readonly>
+                      </td>
+                      <td>
+                        <input class="form-control" [formControlName]="'baseRate' + i" placeholder="">
+                      </td>
+                      <td>
+                        <input class="form-control" [formControlName]="'fringeRate' + i" placeholder="">
+                      </td>
+                      <td>
+                        <input class="form-control" [formControlName]="'standardRate' + i" placeholder="">
+                      </td>
+                      <td>
+                        <input class="form-control" [formControlName]="'overtimeRate' + i" placeholder="">
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
-
           <div class="stepper-buttons">
             <button cdkStepperNext class="btn btn-primary">Next →</button>
           </div>
@@ -129,33 +163,40 @@
               <div formArrayName="truckTypes">
                 <div *ngFor="let truckType of truckTypes.controls; let i = index" [formGroupName]="i" class="truck-type-form">
                   <h3>Truck Type {{ i + 1 }}</h3>
-                  <label for="truckTypeName-{{ i }}">Truck Type Name:</label>
-                  <input id="truckTypeName-{{ i }}" formControlName="truckTypeName" type="text" />
+                  <div class="row">
+                    <div class="form-group col-md-3">
+                      <label for="truckTypeName-{{ i }}">Truck Type Name:</label>
+                      <select id="truckTypeName-{{ i }}" formControlName="truckTypeName" type="text" class="form-control" >
+                        <option value="belly">Belly</option>
+                        <option value="side">Side</option>
+                        <option value="end">End</option>
+                        <option value="quint">Quint</option>
+                        <option value="quad">Quad</option>
+                        <option value="tri">Tri</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-md-3">
+                      <label for="trucksNeeded-{{ i }}">Trucks Needed:</label>
+                      <input id="trucksNeeded-{{ i }}" formControlName="trucksNeeded" type="number" min="0" class="form-control" />
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="truckInvoiceType-{{ i }}">Truck Invoice Type:</label>
+                      <select id="truckInvoiceType-{{ i }}" formControlName="truckInvoiceType" class="form-control" >
+                        <option value="weight">Weight</option>
+                        <option value="load">Load</option>
+                        <option value="hour">Hour</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-md-3">
+                      <label for="truckRate-{{ i }}">Truck Rate ($):</label>
+                      <input id="truckRate-{{ i }}" formControlName="truckRate" type="number" class="form-control" />
+                    </div>
+                    
 
-                  <label for="trucksNeeded-{{ i }}">Trucks Needed:</label>
-                  <input id="trucksNeeded-{{ i }}" formControlName="trucksNeeded" type="number" min="0" />
-
-                  <label for="truckRate-{{ i }}">Truck Rate:</label>
-                  <input id="truckRate-{{ i }}" formControlName="truckRate" type="number" />
+                  </div>
                 </div>
               </div>
-            </div>
-            
-            <!-- Input for Invoice Type -->
-            <div class ="form-group">
-              <label>Invoice Type</label>
-              <select formControlName="invoiceType" class="form-control">
-                <option value="weight">Weight</option>
-                <option value="load">Load</option>
-                <option value="hour">Hour</option>
-              </select>            
-            </div>
-            
-            <div class ="form-group">
-              <label>Rate ($)</label>
-              <input type="number" formControlName="rate" class="form-control">
-            </div>
-        
+            </div>     
           </div>
           <div class="stepper-buttons">
             <button cdkStepperPrevious class="btn btn-secondary">← Previous</button>

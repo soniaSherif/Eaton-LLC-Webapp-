@@ -29,7 +29,7 @@ export class CreateJobComponent {
     reportRequirement: new FormControl(''),
     contractNumber: new FormControl(''),
     projectId: new FormControl(''),
-    classCode: new FormControl(''),
+    classCodes: new FormArray([]),
     baseRate: new FormControl(''),
     fringeRate: new FormControl(''),
     totalStandardTimeRate: new FormControl(''),
@@ -41,7 +41,7 @@ export class CreateJobComponent {
     material: new FormControl(''),
     numberTruckType: new FormControl(''),
     truckTypes: new FormArray([]),
-    truckTypeRate: new FormControl(''),
+    //truckTypeRate: new FormControl(''),
     invoiceType: new FormControl(''),
     itoMtoRate: new FormControl(''),
     haulRate: new FormControl(''),
@@ -74,24 +74,22 @@ export class CreateJobComponent {
     return this.jobForm.get('truckTypes') as FormArray;
   }
 
-  // Method to dynamically update the truckTypes FormArray
-  updateTruckTypes(count: number) {
-    const truckTypeForms = this.truckTypes;
-    // Remove extra forms if count decreases
-    while (truckTypeForms.length > count) {   
-      truckTypeForms.removeAt(truckTypeForms.length - 1);
-    }
-    // Add new forms if count increases
-    while (truckTypeForms.length < count) {  
-      truckTypeForms.push(new FormGroup({
-        truckTypeName: new FormControl(''),
-        trucksNeeded: new FormControl(''), // Added field for trucks needed per truck type
-        truckRate: new FormControl('')
-
-      }));
-    }
+  // Getter for the classCodes FormArray
+  get classCodes(): FormArray {
+    return this.jobForm.get('classCodes') as FormArray;
   }
-  
+
+  addClassCode(code: string) {
+    this.classCodes.push(new FormGroup({
+      laborCode: new FormControl(code), // Pre-filled like 602, 604, 607
+      baseRate: new FormControl(''),
+      fringeRate: new FormControl(''),
+      totalStandardTimeRate: new FormControl(''),
+      totalOverTimeRate: new FormControl('')
+    }));
+  }
+
+
   constructor(private router: Router) {
     // Listen for changes in the contractorInvoice dropdown
     this.jobForm.get('contractorInvoice')?.valueChanges.subscribe((value) => {
@@ -103,11 +101,10 @@ export class CreateJobComponent {
     this.jobForm.get('prevailingOrNot')?.valueChanges.subscribe((value) => {
       this.isNonPrevailing = value === 'nonPrevailing'; // Show new SAP or SP number input if "Non-Prevailing" is selected
       this.isPrevailing = value === 'prevailing'; 
-    });
 
-    // Listen for changes in trucksNeeded and dynamically update truckTypes
-    this.jobForm.get('numberTruckType')?.valueChanges.subscribe((value) => {
-      this.updateTruckTypes(Number(value)); // Ensure value is treated as a number
+      if (this.isPrevailing && this.classCodes.length == 0) {
+        ['602', '604', '607'].forEach(code => this.addClassCode(code));
+      }
     });
   }
 
