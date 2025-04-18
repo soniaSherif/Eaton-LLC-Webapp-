@@ -1,0 +1,129 @@
+/* Dialog Header Styling */
+.dialog-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #04a9f5;
+    color: f9f9f9;
+    padding: 15px;
+    border-radius: 0px 0px 0 0;
+    text-align: center;
+  }
+  
+  .dialog-header h2 {
+    margin: 0;
+    font-size: 24px;
+  }
+  
+  .job-info {
+    text-align: center;     /* center the text */
+    font-size: 1rem;     /* larger font */
+    font-weight: 600;       /* optional: make it stand out */
+    margin: 0rem 0;         /* space above and below */
+  }
+
+  .close-btn {
+    font-size: 30px;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+  }
+  
+  /* Form Styling */
+  .dispatch-form {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+  }
+  
+  
+  
+  .form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 10px;
+    // border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  .form-group input:focus {
+    // border-color: #4CAF50;
+    outline: none;
+  }
+  
+  button[type="submit"] {
+    // background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease;
+  }
+  
+//   button[type="submit"]:hover {
+//     background-color: #45a049;
+//   }
+  
+  button[type="submit"]:focus {
+    outline: none;
+  }
+  
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  .time-label {
+    display: inline-block;
+    text-align: left; /* Aligns the "Time:" label to the left */
+    margin-bottom: 10px; /* Adds spacing between label and time input */
+    align-self: flex-start; /* Ensures label is at the top of its container */
+    margin-left: 50%; /* Pushes the label to the right, directly above the time input */
+  }
+  
+  
+  
+  .job-date {
+    margin-left: 30px;
+    margin-right: 10px; /* Space between date and time input */
+    font-weight: bold;
+    flex-shrink: 0; /* Prevents the date from shrinking */
+  }
+  
+  .time-date-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Spread the items across the container */
+    width: 100%; /* Make sure the container takes up the full width */
+  }
+  
+  input[type="time"] {
+    width: 100%; /* Ensures the time input fills the available space within its container */
+  }
+  
+  .select-job-message {
+    margin-left: 20px;
+    font-style: italic;
+    color: #888;
+    margin-right: 10px; /* Adds space between the message and the time box */
+    text-align: left; /* Ensures the message stays left aligned */
+    order: -1; /* Ensures the message appears first (to the left) */
+  }
+  
+  .time-wrapper {
+    width: 50%; /* Ensures the time input takes up the right half of the form */
+    text-align: right; /* Aligns the input to the right */
+    display: flex;
+    flex-direction: column; /* Ensures the label and input stack vertically */
+  }

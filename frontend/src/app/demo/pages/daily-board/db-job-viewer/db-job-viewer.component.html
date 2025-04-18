@@ -1,0 +1,116 @@
+<h3>Job Viewer</h3>
+
+<div *ngIf="selectedJob" class="job-card">
+  <div class="job-header">
+    <h2>{{ selectedJob.projectName }}</h2>
+    <p class="subheader">Job #: {{ selectedJob.jobNumber }} | Date: {{ selectedJob.date }}</p>
+  </div>
+
+  <div class="section">
+    <h3>Contract Info</h3>
+    <p><strong>Prime Contractor:</strong> {{ selectedJob.primeContractor }}</p>
+    <p><strong>Project ID:</strong> {{ selectedJob.projectIdNumber }}</p>
+    <p><strong>Prime Project #:</strong> {{ selectedJob.primeContractorProjectNumber }}</p>
+    <p><strong>Contractor to Invoice:</strong> {{ selectedJob.contractorToBeInvoiced }}</p>
+    <p><strong>Contractor Project #:</strong> {{ selectedJob.contractorToBeInvoicedProjectNumber }}</p>
+    <p><strong>Contract #:</strong> {{ selectedJob.contractNumber }}</p>
+    <p><strong>Job Type:</strong> {{ selectedJob.jobType }}</p>
+    <p *ngIf="selectedJob.reportingRequirement"><strong>Reporting:</strong> {{ selectedJob.reportingRequirement }}</p>
+  </div>
+
+  <div class="section">
+    <h3>Rates by Class Code</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Code</th>
+          <th>Class</th>
+          <th>Base</th>
+          <th>Fringe</th>
+          <th>Std Rate</th>
+          <th>OT Rate</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let rate of selectedJob.ratesByClassCode">
+          <td>{{ rate.code }}</td>
+          <td>{{ rate.class }}</td>
+          <td>${{ rate.baseRate }}</td>
+          <td>${{ rate.fringeRate }}</td>
+          <td>${{ rate.stdTimeRate }}</td>
+          <td>${{ rate.otRate }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h3>Material & Trucking</h3>
+    <p><strong>Material:</strong> {{ selectedJob.materialToBeMoved }}</p>
+
+    <div class="flex-tables">
+      <div>
+        <h4>Invoicing Rates</h4>
+        <ul>
+          <li *ngFor="let rate of selectedJob.invoicingRates">
+            {{ rate.type }} ({{ rate.unit }}): ${{ rate.rate }}
+          </li>
+        </ul>
+      </div>
+      <div>
+        <h4>Pay Rates</h4>
+        <ul>
+          <li *ngFor="let rate of selectedJob.payRates">
+            {{ rate.type }} ({{ rate.unit }}): ${{ rate.rate }}
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>Schedule & Locations</h3>
+    <p><strong>Start Time:</strong> {{ selectedJob.startTime }}</p>
+
+    <h4>Loading</h4>
+    <p><strong>Address:</strong> {{ selectedJob.loading.address }}</p>
+    <ul>
+      <li *ngFor="let key of loadingOptionKeys">
+        {{ key }}: {{ selectedJob.loading.options[key] }}
+      </li>
+    </ul>
+
+    <h4>Unloading</h4>
+    <p><strong>Address:</strong> {{ selectedJob.unloading.address }}</p>
+    <ul>
+      <li *ngFor="let key of unloadingOptionKeys">
+        {{ key }}: {{ selectedJob.unloading.options[key] }}
+      </li>
+    </ul>
+
+    <div *ngIf="selectedJob.backhaul">
+      <h4>Backhaul</h4>
+      <p><strong>Loading:</strong> {{ selectedJob.backhaulInfo.loadingAddress }}</p>
+      <p><strong>Unloading:</strong> {{ selectedJob.backhaulInfo.unloadingAddress }}</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>Foremen</h3>
+    <div *ngFor="let foreman of selectedJob.jobForeman">
+      <p><strong>Name:</strong> {{ foreman.name }}</p>
+      <p><strong>Phone:</strong> {{ foreman.phone }}</p>
+      <hr *ngIf="selectedJob.jobForeman.length > 1" />
+    </div>
+  </div>
+  
+
+  <div class="section">
+    <h3>Notes</h3>
+    <p>{{ selectedJob.notes }}</p>
+  </div>
+</div>
+
+<div *ngIf="!selectedJob">
+  <p>No job found for Job #: {{ jobNumber }}</p>
+</div>

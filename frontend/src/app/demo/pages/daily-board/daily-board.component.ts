@@ -6,7 +6,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { FormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog'; // Import MatDialogModule
 import { MatDialog } from '@angular/material/dialog'; // Import MatDialog service
-import { DispatchDialogComponent } from '../dispatch/dispatch-dialog/dispatch-dialog.component'; // Corrected import path
+import { DbDispatchDialogComponent, DispatchDialogData } from './db-dispatch-dialog/db-dispatch-dialog.component';
+import { RouterModule } from '@angular/router';
+
 
 @Component({
   selector: 'app-daily-board',
@@ -18,8 +20,9 @@ import { DispatchDialogComponent } from '../dispatch/dispatch-dialog/dispatch-di
     MatCardModule, 
     MatTableModule, 
     MatTooltipModule, 
-    FormsModule, 
-    MatDialogModule // Use MatDialogModule here
+    FormsModule,
+    RouterModule,
+    MatDialogModule 
   ],  
   providers: [DatePipe] // Add DatePipe to the providers array
 })
@@ -30,12 +33,12 @@ export class DailyBoardComponent implements OnInit {
 
   jobs = [
     {
-      date: "2025-04-10",
+      date: "2025-04-18",
       jobName: "Highway Expansion",
       jobNumber: "J202501",
       material: "Asphalt",
-      startLocation: "Site A",
-      endLocation: "Site B",
+      startLocation: "5500 Wayzata Blvd, Golden Valley, MN 55416",
+      endLocation: "4201 W 78th St, Bloomington, MN 55435",
       foremen: [
         { name: "John Doe", phone: "555-111-2222" },
         { name: "Jane Smith", phone: "555-333-4444" }
@@ -76,6 +79,9 @@ export class DailyBoardComponent implements OnInit {
     }
   ];
 
+  drivers = ['Driver 1', 'Driver 2', 'Driver 3'];
+  trucks = ['Truck 1', 'Truck 2', 'Truck 3'];
+  
   filteredJobs = this.jobs;
 
   filterJobs() {
@@ -90,12 +96,24 @@ export class DailyBoardComponent implements OnInit {
     this.filterJobs();
   }
 
-  // Open the dispatch dialog when the user clicks on a row
-  openDialog(): void {
-    const dialogRef = this.dialog.open(DispatchDialogComponent, {
-      width: '400px', // Set dialog width
-    });
+ //open dialog and pass the data over at same time
+  openDialog(aJobNumber): void {
 
+    // Find the job with the matching job number
+    const selectedJob = this.jobs.find(job => job.jobNumber === aJobNumber);
+    const dialogRef = this.dialog.open<
+      DbDispatchDialogComponent,
+      DispatchDialogData,
+      any
+    >(DbDispatchDialogComponent, {
+      width: '400px',
+      data: {
+        selectedJob, 
+        drivers: this.drivers,
+        trucks:  this.trucks
+      }
+    });
+  
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         console.log('Dialog result:', result);
