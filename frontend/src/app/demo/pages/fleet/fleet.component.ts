@@ -57,11 +57,11 @@ export class FleetComponent implements OnInit {
       }));
     });    
   }
-
+  
   Openpopup() {
     const dialogRef = this.selectedTab === 'trucks'
-      ? this.dialog.open(TruckdialogComponent, { width: '85%', height: 'fit' })
-      : this.dialog.open(DriverdialogComponent, { width: '85%', height: '85%' });
+      ? this.dialog.open(TruckdialogComponent, { width: '450px', })
+      : this.dialog.open(DriverdialogComponent, { width: '475px', height: '85%' });
 
     dialogRef.afterClosed().subscribe(() => {
       this.fetchData(); // Refresh data after closing popup
