@@ -44,3 +44,28 @@
     border-color: #bbb;        /* darker borders to match */
   }
   
+  .section-title {
+    font-weight: bold;
+    font-size: 18px;
+    color: #6b7280;
+    margin-bottom: 10px;
+    display: block;
+  }
+  
+  .option-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .option-label {
+    width: 200px; /* ✅ Set a fixed width */
+    color: #6b7280;
+    font-size: 16px;
+  }
+  
+  .option-select {
+    flex: 1; /* ✅ Fill the remaining space nicely */
+    max-width: 150px; /* optional: control how big the dropdown is */
+    padding: 5px;
+  }

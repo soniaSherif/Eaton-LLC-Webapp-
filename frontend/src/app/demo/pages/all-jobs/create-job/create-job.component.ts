@@ -15,6 +15,7 @@ import { NgStepperModule } from 'angular-ng-stepper';
   styleUrls: ['./create-job.component.scss']
 })
 export class CreateJobComponent {
+
   jobForm = new FormGroup({
     // Project Details
     project: new FormControl(''),
@@ -39,8 +40,8 @@ export class CreateJobComponent {
     jobDescription: new FormControl(''),
     jobNumber: new FormControl(''),
     material: new FormControl(''),
-    numberTruckType: new FormControl(''),
     truckTypes: new FormArray([]),
+    
     //truckTypeRate: new FormControl(''),
     invoiceType: new FormControl(''),
     itoMtoRate: new FormControl(''),
@@ -53,21 +54,49 @@ export class CreateJobComponent {
 
     // Loading and Unloading Details
     loadingAddress: new FormControl(''),
+
+    loadingOption: new FormControl(''),
     logWeight: new FormControl(''),
     ticketNumber: new FormControl(''),
     ticketPhoto: new FormControl(''),
     signature: new FormControl(''),
     trackLoadingTime: new FormControl(''),
+
+    // Unloading options
     unloadingAddress: new FormControl(''),
+    unloadLogWeight: new FormControl(''),
+    unloadTicketNumber: new FormControl(''),
+    unloadTicketPhoto: new FormControl(''),
+    unloadSignature: new FormControl(''),
+
     backhaulOption: new FormControl(''),
     jobPhaseForeman: new FormControl(''),    
     additionalNotes: new FormControl('')
   });
 
+  
+
   isOtherContractor: boolean = false;
   isOtherContractorProjectNumber: boolean = false;
   isPrevailing: boolean = false;
   isNonPrevailing: boolean = false;
+  availableTruckTypes: string[] = ['Belly', 'Side', 'End', 'Quint', 'Quad', 'Tri'];
+
+  loadingOptions = [
+    { label: 'Log Weight', controlName: 'logWeight' },
+    { label: 'Ticket Number', controlName: 'ticketNumber' },
+    { label: 'Ticket Photo', controlName: 'ticketPhoto' },
+    { label: 'Signature', controlName: 'signature' },
+    { label: 'Track Loading Time', controlName: 'trackLoadingTime' }
+  ];
+
+  unloadingOptions = [
+    { label: 'Log Weight', controlName: 'unloadLogWeight' },
+    { label: 'Ticket Number', controlName: 'unloadTicketNumber' },
+    { label: 'Ticket Photo', controlName: 'unloadTicketPhoto' },
+    { label: 'Signature', controlName: 'unloadSignature' }
+  ];
+
 
   // Getter for the truckTypes FormArray
   get truckTypes(): FormArray {
@@ -89,6 +118,36 @@ export class CreateJobComponent {
     }));
   }
 
+  onTruckTypeChange(event: any) {
+    const selectedTypes = this.truckTypes;
+  
+    if (event.target.checked) {
+      selectedTypes.push(new FormGroup({
+        type: new FormControl(event.target.value),
+        rate: new FormControl(''),
+        unit: new FormControl('')
+      }));
+    } else {
+      const index = selectedTypes.controls.findIndex(
+        (group: any) => group.value.type === event.target.value
+      );
+      selectedTypes.removeAt(index);
+    }
+  }
+
+
+  /*onTruckTypeChange(event: any) {
+    const selectedTypes = this.jobForm.get('truckTypes') as FormArray;
+  
+    if (event.target.checked) {
+      selectedTypes.push(new FormControl(event.target.value));
+    } else {
+      const index = selectedTypes.controls.findIndex(x => x.value === event.target.value);
+      selectedTypes.removeAt(index);
+    }
+  }
+    */
+
 
   constructor(private router: Router) {
     // Listen for changes in the contractorInvoice dropdown
@@ -106,6 +165,9 @@ export class CreateJobComponent {
         ['602', '604', '607'].forEach(code => this.addClassCode(code));
       }
     });
+    
+
+
   }
 
   submitJob() {
