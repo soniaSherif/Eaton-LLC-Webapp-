@@ -14,16 +14,22 @@ import { DatePipe } from '@angular/common';
   providers: [DatePipe]
 })
 export class DispatchComponent {
-  selectedDate: string = new Date().toISOString().split('T')[0]; // Default to current date in yyyy-mm-dd format
+  selectedDate: string; // Stores the selected date
   assignments = [
-    { job: 'HW72', driver: 'John Doe', truck_type: 'Semi', date: '2025-03-13', selected: false },
-    { job: 'I-32', driver: 'Jane Doe', truck_type: 'Belly Dump', date: '2025-06-25', selected: false },
-    { job: 'HW73', driver: 'Alice Smith', truck_type: 'Flatbed', date: '2025-03-13', selected: false }
+    { job: 'HW72', driver: 'John Doe', truck_type: 'Semi', jobDate: '2025-03-13', time: '10:30', selected: false },
+    { job: 'I-32', driver: 'Jane Doe', truck_type: 'Belly Dump', jobDate: '2025-06-25', time: '14:00', selected: false },
+    { job: 'HW73', driver: 'Alice Smith', truck_type: 'Flatbed', jobDate: '2025-03-13', time: '10:30', selected: false }
   ];
 
-  filteredAssignments = this.filterAssignmentsByDate(this.selectedDate); // Filter initially by the current date
+  filteredAssignments: any[] = [];
 
-  constructor(private datePipe: DatePipe, public dialog: MatDialog) {}
+  constructor(private datePipe: DatePipe, public dialog: MatDialog) {
+    // Initialize with the current date in 'yyyy-MM-dd' format
+    this.selectedDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd') || '';
+
+    // Initially filter assignments by today's date
+    this.filteredAssignments = this.filterAssignmentsByDate(this.selectedDate);
+  }
 
   // Open the dispatch dialog
   openDialog(): void {
@@ -35,21 +41,30 @@ export class DispatchComponent {
   // Toggle selection of all assignments
   toggleAllSelection(event: any) {
     const checked = event.target.checked;
-    this.assignments.forEach(customer => customer.selected = checked);
+    this.assignments.forEach(assignment => assignment.selected = checked);
   }
 
-  // Get the formatted date
+  // Format the job date for user-friendly display
   getFormattedDate(date: string): string {
     return this.datePipe.transform(date, 'MMMM d, yyyy') || '';
   }
 
-  // Filter assignments based on selected date
+  // Format the time in AM/PM format
+  getFormattedTime(time: string): string {
+    const hours = parseInt(time.split(':')[0], 10);
+    const minutes = time.split(':')[1];
+    const period = hours >= 12 ? 'PM' : 'AM';
+    const formattedHours = hours % 12 || 12; // Convert 0 or 24 hour format to 12-hour format
+    return `${formattedHours}:${minutes} ${period}`;
+  }
+
+  // Called when user changes the date input; updates the filtered list
   filterAssignments() {
     this.filteredAssignments = this.filterAssignmentsByDate(this.selectedDate);
   }
 
-  // Helper function to filter assignments by date
+  // Return only assignments matching the selected date (job date filter)
   filterAssignmentsByDate(date: string) {
-    return this.assignments.filter(assignment => assignment.date === date);
+    return this.assignments.filter(assignment => assignment.jobDate === date);
   }
 }

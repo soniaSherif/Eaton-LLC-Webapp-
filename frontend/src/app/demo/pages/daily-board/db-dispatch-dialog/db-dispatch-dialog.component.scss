@@ -4,9 +4,10 @@
     justify-content: space-between;
     align-items: center;
     background-color: #04a9f5;
-    color: white;
+    color: f9f9f9;
     padding: 15px;
-    border-radius: 5px 5px 0 0;
+    border-radius: 0px 0px 0 0;
+    text-align: center;
   }
   
   .dialog-header h2 {
@@ -14,6 +15,13 @@
     font-size: 24px;
   }
   
+  .job-info {
+    text-align: center;     /* center the text */
+    font-size: 1rem;     /* larger font */
+    font-weight: 600;       /* optional: make it stand out */
+    margin: 0rem 0;         /* space above and below */
+  }
+
   .close-btn {
     font-size: 30px;
     background: none;
