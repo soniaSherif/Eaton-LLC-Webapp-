@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { FormGroup, FormControl, FormArray, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, FormControl, FormArray, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CdkStepperModule } from '@angular/cdk/stepper';
 import { NgStepperModule } from 'angular-ng-stepper';
 //import { tick } from '@angular/core/testing';
@@ -10,7 +10,7 @@ import { NgStepperModule } from 'angular-ng-stepper';
 @Component({
   selector: 'app-create-job',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, CdkStepperModule, NgStepperModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, CdkStepperModule, NgStepperModule],
   templateUrl: './create-job.component.html',
   styleUrls: ['./create-job.component.scss']
 })
@@ -52,9 +52,9 @@ export class CreateJobComponent {
     jobStartTime: new FormControl(''),
     
 
-    // Loading and Unloading Details
-    loadingAddress: new FormControl(''),
-
+    // Loading options
+    loadingAddresses: new FormControl(''),
+    backhaulLoadingAddresses: new FormControl(''),
     loadingOption: new FormControl(''),
     logWeight: new FormControl(''),
     ticketNumber: new FormControl(''),
@@ -63,14 +63,31 @@ export class CreateJobComponent {
     trackLoadingTime: new FormControl(''),
 
     // Unloading options
-    unloadingAddress: new FormControl(''),
+    unloadingAddresses: new FormControl(''),
+    backhaulUnloadingAddresses: new FormControl(''),
     unloadLogWeight: new FormControl(''),
     unloadTicketNumber: new FormControl(''),
     unloadTicketPhoto: new FormControl(''),
     unloadSignature: new FormControl(''),
 
+    // Loading address details
+    loadingCity: new FormControl(''),
+    loadingZipCode: new FormControl(''),
+    loadingLocationName: new FormControl(''),
+    loadingLatitude: new FormControl(''),
+    loadingLongitude: new FormControl(''),
+
+     // Unloading address details
+    unloadingCity: new FormControl(''),
+    unloadingZipCode: new FormControl(''),
+    unloadingLocationName: new FormControl(''),
+    unloadingLatitude: new FormControl(''),
+    unloadingLongitude: new FormControl(''),
+
+    isBackhaulEnabled: new FormControl(false),
     backhaulOption: new FormControl(''),
-    jobPhaseForeman: new FormControl(''),    
+    jobForemanName: new FormControl(''), 
+    jobForemanContact: new FormControl(''),      
     additionalNotes: new FormControl('')
   });
 
@@ -81,6 +98,209 @@ export class CreateJobComponent {
   isPrevailing: boolean = false;
   isNonPrevailing: boolean = false;
   availableTruckTypes: string[] = ['Belly', 'Side', 'End', 'Quint', 'Quad', 'Tri'];
+
+  // Dropdown options for addresses (will show in the dropdown)
+  loadingAddressOptions: string[] = [];
+  unloadingAddressOptions: string[] = [];
+  backhaulLoadingAddressOptions: string[] = [];
+  backhaulUnloadingAddressOptions: string[] = [];
+
+  // Bools for if add new address button is clicked
+  showNewLoadingAddress: boolean = false;
+  showNewUnloadingAddress: boolean = false;
+
+  // Temporarily hold new address
+  newLoadingAddress: string = '';
+  newUnloadingAddress: string = '';
+  newBackhaulLoadingAddress: string = '';
+  newBackhaulUnloadingAddress: string = '';
+
+  countryOptions: string[] = ['United States'];
+  stateOptions: string[] = [
+    'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut',
+    'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa',
+    'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan',
+    'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire',
+    'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio',
+    'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota',
+    'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia',
+    'Wisconsin', 'Wyoming'
+  ];
+
+  
+  // Temporary values for country and state, city, etc.
+  loadingCountry: string = 'United States';
+  loadingState: string = '';
+  loadingCity: string = '';
+  loadingZipCode: string = '';
+  loadingLocationName: string = '';
+  loadingLatitude: string = '';
+  loadingLongitude: string = '';
+  loadingLocationType: string = '';
+
+  unloadingCountry: string = 'United States';
+  unloadingState: string = '';
+  unloadingCity: string = '';
+  unloadingZipCode: string = '';
+  unloadingLocationName: string = '';
+  unloadingLatitude: string = '';
+  unloadingLongitude: string = '';
+  unloadingLocationType: string = '';
+
+  locationTypeOptions: string[] = [
+    'Building Material',
+    'Cement',
+    'Distrubution Center',
+    'Job Site',
+    'Landfill',
+    'Mine',
+    'Not Set',
+    'Plant',
+    'Quarry',
+    'Yard'
+  ];
+
+   // Backhaul address options
+  showNewBackhaulLoadingAddress: boolean = false;
+  showNewBackhaulUnloadingAddress: boolean = false;
+  backhaulLoadingAddress: string = '';
+  backhaulLoadingCountry: string = 'United States';
+  backhaulLoadingState: string = '';
+  backhaulLoadingCity: string = '';
+  backhaulLoadingZipCode: string = '';
+  backhaulLoadingLocationName: string = '';
+  backhaulLoadingLatitude: string = '';
+  backhaulLoadingLongitude: string = '';
+  backhaulLoadingLocationType: string = '';
+
+  backhaulUnloadingAddress: string = '';
+  backhaulUnloadingCountry: string = 'United States';
+  backhaulUnloadingState: string = '';
+  backhaulUnloadingCity: string = '';
+  backhaulUnloadingZipCode: string = '';
+  backhaulUnloadingLocationName: string = '';
+  backhaulUnloadingLatitude: string = '';
+  backhaulUnloadingLongitude: string = '';
+  backhaulUnloadingLocationType: string = '';
+
+  addLoadingAddress() {
+    if (this.newLoadingAddress.trim()) {
+      const fullAddress = `${this.newLoadingAddress.trim()}, ${this.loadingCity}, ${this.loadingState}, ${this.loadingZipCode}, ${this.loadingCountry}, ${this.loadingLocationName}, ${this.loadingLatitude}, ${this.loadingLongitude}, ${this.loadingLocationType}`;
+      
+      // Push the combined string into the array
+      this.loadingAddressOptions.push(fullAddress);
+      this.jobForm.get('loadingAddresses')?.setValue(fullAddress);
+      
+      // Reset the fields
+      this.newLoadingAddress = '';
+      this.loadingCity = '';
+      this.loadingState = '';
+      this.loadingZipCode = '';
+      this.loadingCountry = 'United States'; 
+      this.loadingLocationType = '';
+      this.loadingLocationName = '';
+      this.loadingLatitude = '';
+      this.loadingLongitude = '';
+      this.showNewLoadingAddress = false;
+    }
+  }
+  
+  // Method to add a new unloading address
+  addUnloadingAddress() {
+    if (this.newUnloadingAddress.trim()) {
+      const fullAddress = `${this.newUnloadingAddress.trim()}, ${this.unloadingCity}, ${this.unloadingState}, ${this.unloadingZipCode}, ${this.unloadingCountry}, ${this.unloadingLocationName}, ${this.unloadingLatitude}, ${this.unloadingLongitude}, ${this.unloadingLocationType}`;
+    
+      // Push the combined string into the array
+      this.unloadingAddressOptions.push(fullAddress);
+      this.jobForm.get('unloadingAddresses')?.setValue(fullAddress);
+    
+      // Reset fields
+      this.newUnloadingAddress = '';
+      this.unloadingCity = '';
+      this.unloadingZipCode = '';
+      this.unloadingLocationName = '';
+      this.unloadingLatitude = '';
+      this.unloadingLongitude = '';
+      this.unloadingLocationType = '';
+      this.unloadingState = '';
+      this.unloadingCountry = 'United States';
+      this.showNewUnloadingAddress = false;
+    }
+  }
+
+  addBackhaulLoadingAddress() {
+    if (this.newBackhaulLoadingAddress.trim()) {
+      const fullAddress = `${this.newBackhaulLoadingAddress.trim()}, ${this.backhaulLoadingCity}, ${this.backhaulLoadingState}, ${this.backhaulLoadingZipCode}, ${this.backhaulLoadingCountry}, ${this.backhaulLoadingLocationName}, ${this.backhaulLoadingLatitude}, ${this.backhaulLoadingLongitude}, ${this.backhaulLoadingLocationType}`;
+  
+      // Push the combined string into the array
+      this.backhaulLoadingAddressOptions.push(fullAddress);
+      this.jobForm.get('backhaulLoadingAddresses')?.setValue(fullAddress);
+  
+      // Reset the fields
+      this.newBackhaulLoadingAddress = '';
+      this.backhaulLoadingCity = '';
+      this.backhaulLoadingState = '';
+      this.backhaulLoadingZipCode = '';
+      this.backhaulLoadingCountry = 'United States';
+      this.backhaulLoadingLocationName = '';
+      this.backhaulLoadingLatitude = '';
+      this.backhaulLoadingLongitude = '';
+      this.backhaulLoadingLocationType = '';
+      this.showNewBackhaulLoadingAddress = false;
+    }
+  }
+
+  addBackhaulUnloadingAddress() {
+    if (this.newBackhaulUnloadingAddress.trim()) {
+      const fullAddress = `${this.newBackhaulUnloadingAddress.trim()}, ${this.backhaulUnloadingCity}, ${this.backhaulUnloadingState}, ${this.backhaulUnloadingZipCode}, ${this.backhaulUnloadingCountry}, ${this.backhaulUnloadingLocationName}, ${this.backhaulUnloadingLatitude}, ${this.backhaulUnloadingLongitude}, ${this.backhaulUnloadingLocationType}`;
+  
+      // Push the combined string into the array
+      this.backhaulUnloadingAddressOptions.push(fullAddress);
+      this.jobForm.get('backhaulUnloadingAddresses')?.setValue(fullAddress);
+  
+      // Reset the fields
+      this.newBackhaulUnloadingAddress = '';
+      this.backhaulUnloadingCity = '';
+      this.backhaulUnloadingState = '';
+      this.backhaulUnloadingZipCode = '';
+      this.backhaulUnloadingCountry = 'United States';
+      this.backhaulUnloadingLocationName = '';
+      this.backhaulUnloadingLatitude = '';
+      this.backhaulUnloadingLongitude = '';
+      this.backhaulUnloadingLocationType = '';
+      this.showNewBackhaulUnloadingAddress = false;
+    }
+  }
+
+
+  /* Reset the loading fields after adding or closing
+  resetLoadingFields() {
+    this.newLoadingAddress = '';
+    this.loadingCity = '';
+    this.loadingState = '';
+    this.loadingZipCode = '';
+    this.loadingLocationName = '';
+    this.loadingLatitude = '';
+    this.loadingLongitude = '';
+    this.loadingLocationType = '';
+    this.showNewLoadingAddress = false;
+  }
+  */
+
+  /*
+  // Reset the unloading fields after adding or closing
+  resetUnloadingFields() {
+    this.newUnloadingAddress = '';
+    this.unloadingCity = '';
+    this.unloadingState = '';
+    this.unloadingZipCode = '';
+    this.unloadingLocationName = '';
+    this.unloadingLatitude = '';
+    this.unloadingLongitude = '';
+    this.unloadingLocationType = '';
+    this.showNewUnloadingAddress = false;
+  }
+  */
 
   loadingOptions = [
     { label: 'Log Weight', controlName: 'logWeight' },
@@ -106,6 +326,10 @@ export class CreateJobComponent {
   // Getter for the classCodes FormArray
   get classCodes(): FormArray {
     return this.jobForm.get('classCodes') as FormArray;
+  }
+
+  get isBackhaulEnabled(): boolean {
+    return this.jobForm.get('isBackhaulEnabled')?.value;
   }
 
   addClassCode(code: string) {

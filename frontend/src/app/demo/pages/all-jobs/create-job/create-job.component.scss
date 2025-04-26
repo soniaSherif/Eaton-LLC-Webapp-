@@ -69,3 +69,9 @@
     max-width: 150px; /* optional: control how big the dropdown is */
     padding: 5px;
   }
+
+  .add-new-address-btn {
+    width: 100%; /* Makes the button full width */
+    margin-top: -10px; /* Moves the button closer to the select */
+    margin-bottom: 30px; /* Provides space between the button and the next element */
+  }
