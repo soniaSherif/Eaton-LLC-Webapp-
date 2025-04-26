@@ -21,5 +21,57 @@
     justify-content: space-between;
     margin-top: 20px;
   }
+
+  table {
+    table-layout: auto;
+    width: 100%;
+  }
   
+  th, td {
+    word-wrap: break-word;
+    white-space: normal;
+  }
+
+  dark-table {
+    background-color: #e0e0e0; /* dark background */
+    color: #111;               /* white text */
+  }
   
+  .dark-table th,
+  .dark-table td {
+    background-color: #e0e0e0;
+    color: #111;
+    border-color: #bbb;        /* darker borders to match */
+  }
+  
+  .section-title {
+    font-weight: bold;
+    font-size: 18px;
+    color: #6b7280;
+    margin-bottom: 10px;
+    display: block;
+  }
+  
+  .option-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .option-label {
+    width: 200px; /* ✅ Set a fixed width */
+    color: #6b7280;
+    font-size: 16px;
+  }
+  
+  .option-select {
+    flex: 1; /* ✅ Fill the remaining space nicely */
+    max-width: 150px; /* optional: control how big the dropdown is */
+    padding: 5px;
+  }
+
+  .add-new-address-btn {
+    width: 100%; /* Makes the button full width */
+    margin-top: -10px; /* Moves the button closer to the select */
+    margin-bottom: 30px; /* Provides space between the button and the next element */
+  }
