@@ -1,38 +1,38 @@
 <div class="d-flex justify-content-between align-items-center mb-3">
-  <h3>Dispatch Assignments</h3>
-  <div class="d-flex align-items-center">
-    <input type="date" [(ngModel)]="selectedDate" (change)="filterAssignments()" class="form-control custom-date-input" [value]="selectedDate">
-    <button class="btn btn-primary custom-button" (click)="openDialog()">+ Dispatch Driver</button>
-  </div>
-</div>
-
-
-
-
-
-<div class="card">
-<div class="card-body">
-    <div class="table-responsive">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th><input type="checkbox" (change)="toggleAllSelection($event)"></th>
-                    <th>JOB</th>
-                    <th>DRIVER</th>
-                    <th>TRUCK TYPE</th>
-                    <th>DATE</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let assignment of filteredAssignments">
-                    <td><input type="checkbox" [(ngModel)]="assignment.selected"></td>
-                    <td>{{ assignment.job }}</td>
-                    <td>{{ assignment.driver }}</td>
-                    <td>{{ assignment.truck_type }}</td>
-                    <td>{{ getFormattedDate(assignment.date) }}</td>
-                </tr>
-            </tbody>
-        </table>
+    <h3>Dispatch Assignments</h3>
+    <div class="d-flex align-items-center">
+      <!-- Date Filter -->
+      <input type="date" [(ngModel)]="selectedDate" (change)="filterAssignments()" class="form-control custom-date-input" [value]="selectedDate">
+      <button class="btn btn-primary custom-button" (click)="openDialog()">+ Dispatch Driver</button>
     </div>
-</div>
-</div>
+  </div>
+  
+  <div class="card">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th><input type="checkbox" (change)="toggleAllSelection($event)"></th>
+              <th>JOB</th>
+              <th>DRIVER</th>
+              <th>TRUCK TYPE</th>
+              <th>DATE</th> <!-- Display Job Date -->
+              <th>TIME</th> <!-- Display Time in AM/PM Format -->
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let assignment of filteredAssignments">
+              <td><input type="checkbox" [(ngModel)]="assignment.selected"></td>
+              <td>{{ assignment.job }}</td>
+              <td>{{ assignment.driver }}</td>
+              <td>{{ assignment.truck_type }}</td>
+              <td>{{ getFormattedDate(assignment.jobDate) }}</td> <!-- Job Date -->
+              <td>{{ getFormattedTime(assignment.time) }}</td> <!-- AM/PM Time -->
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  

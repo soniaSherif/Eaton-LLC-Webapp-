@@ -1,7 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
-from django.contrib.postgres.fields import ArrayField
+from django.contrib.postgres.fields import ArrayField, JSONField
+from django.db.models import JSONField
 from django.contrib.auth.models import User
+
 
 user = models.ForeignKey(User, on_delete=models.CASCADE)
 
@@ -86,31 +88,54 @@ class DriverTruckAssignment(models.Model):
 
 
 class Job(models.Model):
-    job_title = models.CharField(max_length=255)
-    project_title = models.CharField(max_length=255)
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    job_number = models.IntegerField()
-    order_number = models.IntegerField()
+    project = models.CharField(max_length=255)
+    prime_contractor = models.CharField(max_length=255)
+    prime_contractor_project_number = models.CharField(max_length=255)
+    contractor_invoice = models.CharField(max_length=255)
+    new_contractor_invoice = models.CharField(max_length=255, blank=True, null=True)
+    contractor_invoice_project_number = models.CharField(max_length=255)
+    new_contractor_invoice_project_number = models.CharField(max_length=255, blank=True, null=True)
+    prevailing_or_not = models.CharField(max_length=50)
+    sap_or_sp_number = models.CharField(max_length=255, blank=True, null=True)
+    report_requirement = models.TextField(blank=True, null=True)
+    contract_number = models.CharField(max_length=255, blank=True, null=True)
+    prevailing_wage_class_codes = JSONField(default=list, blank=True)
+    project_id = models.CharField(max_length=255, blank=True, null=True)
+    job_description = models.TextField()
+    job_number = models.CharField(max_length=255)
     material = models.CharField(max_length=255)
-    driver = models.ForeignKey(Driver, on_delete=models.CASCADE)
-    truck = models.ForeignKey(Truck, on_delete=models.CASCADE)
-    rate_type = models.CharField(max_length=50)
-    rate = models.IntegerField()
-    haul_rate_type = models.CharField(max_length=50)
-    haul_rate = models.IntegerField()
-    amount = models.IntegerField()
-    start_date = models.DateField()
-    end_date = models.DateField()
-    date = models.DateTimeField()
-    start_time = models.TimeField()
-    end_time = models.TimeField()
-    truck_type = ArrayField(models.TextField(), blank=True, default=list)
-    loading_address = models.TextField()
-    unloading_address = models.TextField()
+    truck_types = JSONField(default=list, blank=True)
+    job_date = models.DateField()
+    shift_start = models.TimeField()
+    loading_address = models.ForeignKey('Address', on_delete=models.CASCADE, related_name='loading_jobs')
+    unloading_address = models.ForeignKey('Address', on_delete=models.CASCADE, related_name='unloading_jobs')
+    is_backhaul_enabled = models.BooleanField(default=False)
+    backhaul_loading_address = models.ForeignKey('Address', on_delete=models.CASCADE, related_name='backhaul_loading_jobs', blank=True, null=True)
+    backhaul_unloading_address = models.ForeignKey('Address', on_delete=models.CASCADE, related_name='backhaul_unloading_jobs', blank=True, null=True)
+
+    job_foreman_name = models.CharField(max_length=255)
+    job_foreman_contact = models.CharField(max_length=255)
+    additional_notes = models.TextField(blank=True, null=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Job {self.job_number} - {self.job_title}"
+        return f"Job {self.job_number} - {self.project}"
+
+class Address(models.Model):
+    street_address = models.CharField(max_length=255)
+    country = models.CharField(max_length=100)
+    state = models.CharField(max_length=100)
+    city = models.CharField(max_length=100)
+    zip_code = models.CharField(max_length=20)
+    location_name = models.CharField(max_length=255, blank=True, null=True)
+    latitude = models.DecimalField(max_digits=9, decimal_places=6)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6)
+    location_type = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"{self.street_address}, {self.city}"
+
 
 
 class Comment(models.Model):

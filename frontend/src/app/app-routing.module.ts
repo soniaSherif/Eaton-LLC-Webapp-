@@ -74,7 +74,11 @@ const routes: Routes = [
         loadComponent: () => import('./demo/pages/end-of-day-report/end-of-day-report.component').then((c) => c.EndOfDayReportComponent)
 
       },
+      {
+        path: 'db-job-viewer/:jobNumber',
+        loadComponent: () => import('./demo/pages/daily-board/db-job-viewer/db-job-viewer.component').then((c) => c.DbJobViewerComponent)
 
+      },
 
     ]
   },

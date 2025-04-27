@@ -1,1 +1,109 @@
-<p>daily-board works!</p>
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h3>Daily Board</h3>
+  <input type="date" [(ngModel)]="selectedDate" (change)="filterJobs()" [value]="selectedDate" class="form-control custom-date-input">
+</div>
+
+<div class="daily-board">
+  <div *ngIf="filteredJobs.length === 0" class="no-jobs-message">
+    <p>No jobs available for the selected date.</p>
+  </div>
+
+  <mat-card class="job-card" *ngFor="let job of filteredJobs">
+    <mat-card-header>
+      <div class="job-info">
+        <div class="job-details">
+          
+          <mat-card-title class="job-title">
+            <a
+              [routerLink]="['/db-job-viewer', job.jobNumber]"
+              class="job-link"
+              style="font-weight: bold; color: black; text-decoration: none;"
+            >
+              {{ job.jobName }} ({{ job.jobNumber }})
+            </a>
+          </mat-card-title>
+          
+          <mat-card-subtitle class="job-location">
+            <a 
+              [attr.href]="'https://www.google.com/maps/search/?api=1&query=' + job.startLocation" 
+              target="_blank" 
+              rel="noopener"
+              style="text-decoration: none; color: #1976d2;">
+              {{ job.startLocation.split(',')[1] }}
+            </a>
+            →
+            <a 
+              [attr.href]="'https://www.google.com/maps/search/?api=1&query=' + job.endLocation" 
+              target="_blank" 
+              rel="noopener"
+              style="text-decoration: none; color: #1976d2;">
+              {{ job.endLocation.split(',')[1] }}
+            </a>
+          </mat-card-subtitle>
+          
+          
+          
+          
+          <mat-card-subtitle class="job-material">
+            {{ job.material }} 
+          </mat-card-subtitle>
+        </div>
+        <div class="foremen">
+          <p *ngFor="let foreman of job.foremen">
+            Foreman:
+            <span matTooltip="{{ foreman.phone }}" matTooltipPosition="above" class="foreman-name">
+              {{ foreman.name }}
+            </span>
+          </p>
+        </div>
+      </div>
+    </mat-card-header>
+
+    <!-- Button under the foreman, above the table -->
+    <div style="display: flex; justify-content: flex-end; margin-top: 0px; margin-right: 1rem; margin-bottom: 0.5rem; margin-left: 1rem;">
+      <button class="btn btn-primary" (click)="openDialog(job.jobNumber)"
+        style="height: 1.5rem; width: 2.5rem; display: flex; justify-content: center; align-items: center; padding: 0;">
+        +
+      </button>
+    </div>
+
+    <mat-card-content>
+      <table mat-table [dataSource]="job.assignments" class="mat-elevation-z2" style="width: 100%;">
+        
+        <!-- Start Time Column -->
+        <ng-container matColumnDef="startTime">
+          <th mat-header-cell *matHeaderCellDef style="font-weight: bold; color: black;"> Start Time </th>
+          <td mat-cell *matCellDef="let assignment">
+            {{ (job.date + 'T' + assignment.startTime) | date: 'shortTime' }}
+          </td>
+        </ng-container>
+
+        <!-- Truck Column -->
+        <ng-container matColumnDef="truckName">
+          <th mat-header-cell *matHeaderCellDef style="font-weight: bold; color: black;"> Truck </th>
+          <td mat-cell *matCellDef="let assignment">{{ assignment.truckName }}</td>
+        </ng-container>
+
+        <!-- Driver Column -->
+        <ng-container matColumnDef="driverName">
+          <th mat-header-cell *matHeaderCellDef style="font-weight: bold; color: black;"> Driver </th>
+          <td mat-cell *matCellDef="let assignment">{{ assignment.driverName }}</td>
+        </ng-container>
+
+        <!-- Phone Column -->
+        <ng-container matColumnDef="driverPhone">
+          <th mat-header-cell *matHeaderCellDef style="font-weight: bold; color: black;"> Phone </th>
+          <td mat-cell *matCellDef="let assignment">{{ assignment.driverPhone }}</td>
+        </ng-container>
+
+        <!-- Header & Row Definitions -->
+        <thead>
+          <tr mat-header-row *matHeaderRowDef="['startTime', 'truckName', 'driverName', 'driverPhone']"></tr>
+        </thead>
+        <tbody>
+          <tr mat-row *matRowDef="let assignment; columns: ['startTime', 'truckName', 'driverName', 'driverPhone']"></tr>
+        </tbody>
+      </table>
+    </mat-card-content>
+  </mat-card>
+</div>
