@@ -1,6 +1,11 @@
 from rest_framework import serializers
-from .models import Job, Customer, Driver, Role, User, UserRole, Comment, Truck, DriverTruckAssignment, Operator
+from .models import Job, Customer, Driver, Role, User, UserRole, Comment, Truck, DriverTruckAssignment, Operator, Address
 from django.contrib.auth import get_user_model
+
+class AddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Address
+        fields = '__all__'
 
 class JobSerializer(serializers.ModelSerializer):
     class Meta:

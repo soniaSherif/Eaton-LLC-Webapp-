@@ -217,7 +217,7 @@
             <input type="date" formControlName="jobDate" class="form-control">
         
             <label>Shift Start Time</label>
-            <input type="time" formControlName="shiftStart" class="form-control">
+            <input type="time" formControlName="jobStartTime" class="form-control">
           </div>
           <div class="stepper-buttons">
             <button cdkStepperPrevious class="btn btn-secondary">← Previous</button>
@@ -240,8 +240,8 @@
             <select formControlName="loadingAddresses" class="form-control">
               <option value="">Select a loading address</option>
               <!-- Later dynamically populate more options here -->
-              <option *ngFor="let address of loadingAddressOptions" [value]="address">
-                {{ address }}
+              <option *ngFor="let address of loadingAddressOptions" [ngValue]="address.id">
+                {{ address.location_name }}
               </option>
             </select>
 
@@ -251,19 +251,19 @@
             </button>
             
             <div *ngIf="showNewLoadingAddress" class="mt-2">
-              <input type="text" [(ngModel)]="newLoadingAddress" placeholder="Enter new loading address" class="form-control mb-2">
+              <input type="text" formControlName="newLoadingAddress" placeholder="Enter new loading address" class="form-control mb-2">
               
               <!-- Country Dropdown -->
               <label for="loading-country">Country</label>
-              <select [(ngModel)]="loadingCountry" class="form-control mb-2" id="loading-country">
+              <select formControlName="loadingCountry" class="form-control mb-2" id="loading-country">
                 <option value="United States">United States</option>
               </select>
                 
 
               <!-- State Dropdown -->
               <label for="loading-state">State</label>
-              <select [(ngModel)]="loadingState" class="form-control mb-2" id="loading-state">
-                <ng-container *ngIf="!loadingState">
+              <select formControlName="loadingState" class="form-control mb-2" id="loading-state">
+                <ng-container *ngIf="!jobForm.get('loadingState')?.value">
                   <option>Select a state</option>
                 </ng-container>
                 <option *ngFor="let state of stateOptions" [value]="state">
@@ -272,40 +272,44 @@
               </select>
 
                <!-- City Textbox -->
-              <label for="loading-city">City</label>
-              <input type="text" [(ngModel)]="loadingCity" formControlName="loadingCity" placeholder="Enter city" class="form-control mb-2">
-
-              <!-- Zip Code Textbox -->
-              <label for="loading-zipcode">Zip Code</label>
-              <input type="text" [(ngModel)]="loadingZipCode" formControlName="loadingZipCode" placeholder="Enter zip code" class="form-control mb-2">
-
-              <!-- Location Name Textbox -->
-              <label for="loading-location-name">Location Name</label>
-              <input type="text" [(ngModel)]="loadingLocationName" formControlName="loadingLocationName" placeholder="Enter location name" class="form-control mb-2">
-
-              <!-- Latitude Textbox -->
-              <label for="loading-latitude">Latitude</label>
-              <input type="text" [(ngModel)]="loadingLatitude" formControlName="loadingLatitude" placeholder="Enter latitude" class="form-control mb-2">
-
-              <!-- Longitude Textbox -->
-              <label for="loading-longitude">Longitude</label>
-              <input type="text" [(ngModel)]="loadingLongitude" formControlName="loadingLongitude" placeholder="Enter longitude" class="form-control mb-2">
               
-              <!-- Loading Location Type Dropdown -->
-              <label for="loading-location-type">Location Type</label>
-              <select [(ngModel)]="loadingLocationType" class="form-control mb-2" id="loading-location-type">
-                <ng-container *ngIf="!loadingLocationType">
-                  <option disabled selected hidden>Select a location type</option>
-                </ng-container>
-                <option *ngFor="let type of locationTypeOptions" [value]="type">
-                  {{ type }}
-                </option>
-              </select>
               
-              <button type="button" class="btn btn-sm btn-primary w-100" (click)="addLoadingAddress()">
-                Add
-              </button>
-            </div>
+             
+
+            <!-- City Textbox -->
+            <label for="loading-city">City</label>
+            <input type="text" formControlName="loadingCity" placeholder="Enter city" class="form-control mb-2" id="loading-city">
+
+            <!-- Zip Code Textbox -->
+            <label for="loading-zipcode">Zip Code</label>
+            <input type="text" formControlName="loadingZipCode" placeholder="Enter zip code" class="form-control mb-2" id="loading-zipcode">
+
+            <!-- Location Name Textbox -->
+            <label for="loading-location-name">Location Name</label>
+            <input type="text" formControlName="loadingLocationName" placeholder="Enter location name" class="form-control mb-2" id="loading-location-name">
+
+            <!-- Latitude Textbox -->
+            <label for="loading-latitude">Latitude</label>
+            <input type="text" formControlName="loadingLatitude" placeholder="Enter latitude" class="form-control mb-2" id="loading-latitude">
+
+            <!-- Longitude Textbox -->
+            <label for="loading-longitude">Longitude</label>
+            <input type="text" formControlName="loadingLongitude" placeholder="Enter longitude" class="form-control mb-2" id="loading-longitude">
+
+            <!-- Loading Location Type Dropdown -->
+            <label for="loading-location-type">Location Type</label>
+            <select formControlName="loadingLocationType" class="form-control mb-2" id="loading-location-type">
+              <option value="" disabled selected hidden>Select a location type</option>
+              <option *ngFor="let type of locationTypeOptions" [value]="type">
+                {{ type }}
+              </option>
+            </select>
+
+            <button type="button" class="btn btn-sm btn-primary w-100" (click)="addLoadingAddress()">
+              Add
+            </button>
+          </div>
+
 
             <!-- Select Loading Options -->
             <div class="form-group">
@@ -329,8 +333,8 @@
           <select formControlName="unloadingAddresses" class="form-control">
             <option value="">Select an unloading address</option>
             <!-- Later dynamically populate more options here -->
-            <option *ngFor="let address of unloadingAddressOptions" [value]="address">
-              {{ address }}
+            <option *ngFor="let address of unloadingAddressOptions" [ngValue]="address.id">
+              {{ address.location_name}}
             </option>
           </select>
 
@@ -339,55 +343,53 @@
             Add a New Address
           </button>
           <div *ngIf="showNewUnloadingAddress" class="mt-2">
-            <input type="text" [(ngModel)]="newUnloadingAddress" placeholder="Enter new unloading address" class="form-control mb-2">
-
+            <!-- New Unloading Address -->
+            <input type="text" formControlName="newUnloadingAddress" placeholder="Enter new unloading address" class="form-control mb-2">
+          
             <!-- Country Dropdown -->
             <label for="unloading-country">Country</label>
-            <select [(ngModel)]="unloadingCountry" class="form-control mb-2" id="unloading-country">
+            <select formControlName="unloadingCountry" class="form-control mb-2" id="unloading-country">
               <option value="United States">United States</option>
             </select>
-
+          
             <!-- State Dropdown -->
             <label for="unloading-state">State</label>
-            <select [(ngModel)]="unloadingState" class="form-control mb-2" id="unloading-state">
-              <ng-container *ngIf="!unloadingState">
-                <option disabled selected hidden>Select a state</option>
-              </ng-container>
+            <select formControlName="unloadingState" class="form-control mb-2" id="unloading-state">
+              <option value="" disabled selected hidden>Select a state</option>
               <option *ngFor="let state of stateOptions" [value]="state">
                 {{ state }}
               </option>
             </select>
-
+          
             <!-- City Textbox -->
             <label for="unloading-city">City</label>
-            <input type="text" [(ngModel)]="unloadingCity" formControlName="unloadingCity" placeholder="Enter city" class="form-control mb-2">
-
+            <input type="text" formControlName="unloadingCity" placeholder="Enter city" class="form-control mb-2" id="unloading-city">
+          
             <!-- Zip Code Textbox -->
             <label for="unloading-zipcode">Zip Code</label>
-            <input type="text" [(ngModel)]="unloadingZipCode" formControlName="unloadingZipCode" placeholder="Enter zip code" class="form-control mb-2">
-
+            <input type="text" formControlName="unloadingZipCode" placeholder="Enter zip code" class="form-control mb-2" id="unloading-zipcode">
+          
             <!-- Location Name Textbox -->
             <label for="unloading-location-name">Location Name</label>
-            <input type="text" [(ngModel)]="unloadingLocationName" formControlName="unloadingLocationName" placeholder="Enter location name" class="form-control mb-2">
-
+            <input type="text" formControlName="unloadingLocationName" placeholder="Enter location name" class="form-control mb-2" id="unloading-location-name">
+          
             <!-- Latitude Textbox -->
             <label for="unloading-latitude">Latitude</label>
-            <input type="text" [(ngModel)]="unloadingLatitude" formControlName="unloadingLatitude" placeholder="Enter latitude" class="form-control mb-2">
-
+            <input type="text" formControlName="unloadingLatitude" placeholder="Enter latitude" class="form-control mb-2" id="unloading-latitude">
+          
             <!-- Longitude Textbox -->
             <label for="unloading-longitude">Longitude</label>
-            <input type="text" [(ngModel)]="unloadingLongitude" formControlName="unloadingLongitude" placeholder="Enter longitude" class="form-control mb-2">
-              
+            <input type="text" formControlName="unloadingLongitude" placeholder="Enter longitude" class="form-control mb-2" id="unloading-longitude">
+          
             <!-- Unloading Location Type Dropdown -->
             <label for="unloading-location-type">Location Type</label>
-            <select [(ngModel)]="unloadingLocationType" class="form-control mb-2" id="unloading-location-type">
-              <ng-container *ngIf="!unloadingLocationType">
-                <option disabled selected hidden>Select a location type</option>
-              </ng-container>
+            <select formControlName="unloadingLocationType" class="form-control mb-2" id="unloading-location-type">
+              <option value="" disabled selected hidden>Select a location type</option>
               <option *ngFor="let type of locationTypeOptions" [value]="type">
                 {{ type }}
               </option>
             </select>
+          
             
 
             <button type="button" class="btn btn-sm btn-primary w-100" (click)="addUnloadingAddress()">
@@ -422,57 +424,59 @@
 
             <!-- Existing Address Dropdown -->
             <label>Choose Backhaul Loading Address</label>
-            <select formControlName="backhaulLoadingAddresses" class="form-control mb-2">
-              <option value="">Select an address</option>
-              <option *ngFor="let addr of backhaulLoadingAddressOptions" [value]="addr">{{ addr }}</option>
+            <select formControlName="backhaulLoadingAddresses" class="form-control">
+              <option value="">Select backhaul loading address</option>
+              <option *ngFor="let address of backhaulLoadingAddressOptions" [ngValue]="address.id">
+                {{ address.location_name }}
+              </option>
             </select>
 
             <!-- Add New Address Toggle -->
             <button type="button" (click)="showNewBackhaulLoadingAddress = !showNewBackhaulLoadingAddress" class="btn btn-sm btn-primary add-new-address-btn">
               {{ showNewBackhaulLoadingAddress ? 'Cancel' : 'Add New Backhaul Loading Address' }}
             </button>
-
             <!-- New Address Form -->
             <div *ngIf="showNewBackhaulLoadingAddress" class="mt-2">
-                
               <!-- Backhaul Loading Address -->
-              <input type="text" [(ngModel)]="newBackhaulLoadingAddress" placeholder="Street Address" class="form-control mb-2" />
-                
+              <input type="text" formControlName="newBackhaulLoadingAddress" placeholder="Street Address" class="form-control mb-2" />
+              
               <!-- Backhaul Loading Country -->
               <label for="backhaul-loading-country">Country</label>               
-              <select [(ngModel)]="backhaulLoadingCountry" class="form-control mb-2" id="backhaul-loading-country">
+              <select formControlName="backhaulLoadingCountry" class="form-control mb-2" id="backhaul-loading-country">
                 <option *ngFor="let country of countryOptions" [value]="country">{{ country }}</option>
               </select>
-                
+              
               <!-- Backhaul Loading State -->
               <label for="backhaul-loading-state">State</label>
-              <select [(ngModel)]="backhaulLoadingState" class="form-control mb-2" id="backhaul-loading-state">
+              <select formControlName="backhaulLoadingState" class="form-control mb-2" id="backhaul-loading-state">
+                <option value="" disabled selected hidden>Select a state</option>
                 <option *ngFor="let state of stateOptions" [value]="state">{{ state }}</option>
               </select>
 
               <!-- Backhaul Loading City -->
               <label for="backhaul-loading-city">City</label>
-              <input type="text" [(ngModel)]="backhaulLoadingCity" class="form-control mb-2" placeholder="City" id="backhaul-loading-city" />
+              <input type="text" formControlName="backhaulLoadingCity" class="form-control mb-2" placeholder="City" id="backhaul-loading-city" />
 
               <!-- Backhaul Loading Zip Code -->
               <label for="backhaul-loading-zipcode">Zip Code</label>
-              <input type="text" [(ngModel)]="backhaulLoadingZipCode" class="form-control mb-2" placeholder="Zip Code" id="backhaul-loading-zipcode" />
-                
+              <input type="text" formControlName="backhaulLoadingZipCode" class="form-control mb-2" placeholder="Zip Code" id="backhaul-loading-zipcode" />
+              
               <!-- Backhaul Loading Location Name -->
               <label for="backhaul-loading-location-name">Location Name</label>
-              <input type="text" [(ngModel)]="backhaulLoadingLocationName" class="form-control mb-2" placeholder="Location Name" id="backhaul-loading-location-name" />
+              <input type="text" formControlName="backhaulLoadingLocationName" class="form-control mb-2" placeholder="Location Name" id="backhaul-loading-location-name" />
 
               <!-- Backhaul Loading Latitude -->
               <label for="backhaul-loading-latitude">Latitude</label>
-              <input type="text" [(ngModel)]="backhaulLoadingLatitude" class="form-control mb-2" placeholder="Latitude" id="backhaul-loading-latitude" />
+              <input type="text" formControlName="backhaulLoadingLatitude" class="form-control mb-2" placeholder="Latitude" id="backhaul-loading-latitude" />
 
               <!-- Backhaul Loading Longitude -->
               <label for="backhaul-loading-longitude">Longitude</label>
-              <input type="text" [(ngModel)]="backhaulLoadingLongitude" class="form-control mb-2" placeholder="Longitude" id="backhaul-loading-longitude" />
+              <input type="text" formControlName="backhaulLoadingLongitude" class="form-control mb-2" placeholder="Longitude" id="backhaul-loading-longitude" />
 
               <!-- Backhaul Loading Location Type -->
               <label for="backhaul-loading-location-type">Location Type</label>
-              <select [(ngModel)]="backhaulLoadingLocationType" class="form-control mb-2" id="backhaul-loading-location-type">
+              <select formControlName="backhaulLoadingLocationType" class="form-control mb-2" id="backhaul-loading-location-type">
+                <option value="" disabled selected hidden>Select a location type</option>
                 <option *ngFor="let option of locationTypeOptions" [value]="option">{{ option }}</option>
               </select>
 
@@ -481,16 +485,18 @@
                 Add
               </button> 
             </div>
-          </div>
-
+</div>
+            
           <!-- Backhaul Unloading Section -->
           <div *ngIf="isBackhaulEnabled" class="section">
             <label class="section-title">Backhaul Unloading Address</label>
   
             <label>Choose Backhaul Unloading Address</label>
-            <select formControlName="backhaulUnloadingAddresses" class="form-control mb-2">
-              <option value="">Select an address</option>
-              <option *ngFor="let addr of backhaulUnloadingAddressOptions" [value]="addr">{{ addr }}</option>
+            <select formControlName="backhaulUnloadingAddresses" class="form-control">
+              <option value="">Select backhaul unloading address</option>
+              <option *ngFor="let address of backhaulUnloadingAddressOptions" [ngValue]="address.id">
+                {{ address.location_name }}
+              </option>
             </select>
 
             <button type="button" (click)="showNewBackhaulUnloadingAddress = !showNewBackhaulUnloadingAddress" class="btn btn-sm btn-primary add-new-address-btn">
@@ -498,35 +504,35 @@
             </button>
 
             <div *ngIf="showNewBackhaulUnloadingAddress" class="mt-2">
-            <input type="text" [(ngModel)]="newBackhaulUnloadingAddress" placeholder="Street Address" class="form-control mb-2" />
+            <input type="text" formControlName="newBackhaulUnloadingAddress" placeholder="Street Address" class="form-control mb-2" />
 
             <label for="backhaul-unloading-country">Country</label>
-            <select [(ngModel)]="backhaulUnloadingCountry" class="form-control mb-2" id="backhaul-unloading-country">
+            <select formControlName="backhaulUnloadingCountry" class="form-control mb-2" id="backhaul-unloading-country">
               <option *ngFor="let country of countryOptions" [value]="country">{{ country }}</option>
             </select>
 
             <label for="backhaul-unloading-state">State</label>
-            <select [(ngModel)]="backhaulUnloadingState" class="form-control mb-2" id="backhaul-unloading-state">
+            <select formControlName="backhaulUnloadingState" class="form-control mb-2" id="backhaul-unloading-state">
               <option *ngFor="let state of stateOptions" [value]="state">{{ state }}</option>
             </select>
 
             <label for="backhaul-unloading-city">City</label>
-            <input type="text" [(ngModel)]="backhaulUnloadingCity" class="form-control mb-2" placeholder="City" id="backhaul-unloading-city" />
+            <input type="text" formControlName="backhaulUnloadingCity" class="form-control mb-2" placeholder="City" id="backhaul-unloading-city" />
 
             <label for="backhaul-unloading-zipcode">Zip Code</label>
-            <input type="text" [(ngModel)]="backhaulUnloadingZipCode" class="form-control mb-2" placeholder="Zip Code" id="backhaul-unloading-zipcode" />
+            <input type="text" formControlName="backhaulUnloadingZipCode" class="form-control mb-2" placeholder="Zip Code" id="backhaul-unloading-zipcode" />
 
             <label for="backhaul-unloading-location-name">Location Name</label>
-            <input type="text" [(ngModel)]="backhaulUnloadingLocationName" class="form-control mb-2" placeholder="Location Name" id="backhaul-unloading-location-name" />
+            <input type="text" formControlName="backhaulUnloadingLocationName" class="form-control mb-2" placeholder="Location Name" id="backhaul-unloading-location-name" />
 
             <label for="backhaul-unloading-latitude">Latitude</label>
-            <input type="text" [(ngModel)]="backhaulUnloadingLatitude" class="form-control mb-2" placeholder="Latitude" id="backhaul-unloading-latitude" />
+            <input type="text" formControlName="backhaulUnloadingLatitude" class="form-control mb-2" placeholder="Latitude" id="backhaul-unloading-latitude" />
 
             <label for="backhaul-unloading-longitude">Longitude</label>
-            <input type="text" [(ngModel)]="backhaulUnloadingLongitude" class="form-control mb-2" placeholder="Longitude" id="backhaul-unloading-longitude" />
+            <input type="text" formControlName="backhaulUnloadingLongitude" class="form-control mb-2" placeholder="Longitude" id="backhaul-unloading-longitude" />
 
             <label for="backhaul-unloading-location-type">Location Type</label>
-            <select [(ngModel)]="backhaulUnloadingLocationType" class="form-control mb-2" id="backhaul-unloading-location-type">
+            <select formControlName="backhaulUnloadingLocationType" class="form-control mb-2" id="backhaul-unloading-location-type">
               <option *ngFor="let option of locationTypeOptions" [value]="option">{{ option }}</option>
             </select>
 

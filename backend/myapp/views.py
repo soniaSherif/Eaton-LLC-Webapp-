@@ -7,12 +7,12 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from django.contrib.auth import get_user_model
 from .models import (
-    Job, Customer, Driver, Role, UserRole, Comment, Truck, DriverTruckAssignment, Operator
+    Job, Customer, Driver, Role, UserRole, Comment, Truck, DriverTruckAssignment, Operator, Address
 )
 from .serializers import (
     JobSerializer, CustomerSerializer, DriverSerializer, RoleSerializer,
     UserSerializer, UserRoleSerializer, CommentSerializer, TruckSerializer,
-    DriverTruckAssignmentSerializer, OperatorSerializer
+    DriverTruckAssignmentSerializer, OperatorSerializer, AddressSerializer
 )
 
 # For user model
@@ -22,7 +22,12 @@ User = get_user_model()
 def home(request):
     return HttpResponse("Hello, this is the home page!")
 
+
 # ViewSets for basic CRUD APIs
+class AddressViewSet(viewsets.ModelViewSet):
+    queryset = Address.objects.all()
+    serializer_class = AddressSerializer
+    
 class JobViewSet(viewsets.ModelViewSet):
     queryset = Job.objects.all()
     serializer_class = JobSerializer

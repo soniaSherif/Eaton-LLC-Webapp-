@@ -6,7 +6,7 @@ from . import views
 from .views import (
     JobViewSet, CustomerViewSet, DriverViewSet, RoleViewSet,
     UserViewSet, UserRoleViewSet, CommentViewSet, TruckViewSet,
-    DriverTruckAssignmentViewSet, RegisterView, CustomTokenObtainPairView, OperatorViewSet,
+    DriverTruckAssignmentViewSet, RegisterView, CustomTokenObtainPairView, OperatorViewSet, AddressViewSet,
     CustomTokenRefreshView, protected_view, assign_truck_to_driver, unassigned_trucks
 )
 
@@ -19,6 +19,7 @@ router.register(r'users', UserViewSet)
 router.register(r'userroles', UserRoleViewSet)
 router.register(r'comments', CommentViewSet)
 router.register(r'trucks', TruckViewSet)
+router.register(r'addresses', AddressViewSet)
 router.register(r'driver-truck-assignments', DriverTruckAssignmentViewSet)
 router.register(r'operators', OperatorViewSet, basename='operator')
 
