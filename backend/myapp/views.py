@@ -7,12 +7,12 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from django.contrib.auth import get_user_model
 from .models import (
-    Job, Customer, Driver, Role, UserRole, Comment, Truck, DriverTruckAssignment, Operator, Address
+    Job, Customer, Driver, Role, UserRole, Comment, Truck, DriverTruckAssignment, Operator, Address, JobDriverAssignment
 )
 from .serializers import (
     JobSerializer, CustomerSerializer, DriverSerializer, RoleSerializer,
     UserSerializer, UserRoleSerializer, CommentSerializer, TruckSerializer,
-    DriverTruckAssignmentSerializer, OperatorSerializer, AddressSerializer
+    DriverTruckAssignmentSerializer, OperatorSerializer, AddressSerializer, JobDriverAssignmentSerializer
 )
 
 # For user model
@@ -29,9 +29,30 @@ class AddressViewSet(viewsets.ModelViewSet):
     serializer_class = AddressSerializer
     
 class JobViewSet(viewsets.ModelViewSet):
-    queryset = Job.objects.all()
     serializer_class = JobSerializer
+    # add this back in so DRF can infer basename automatically
+    queryset = Job.objects.select_related(
+        'loading_address',
+        'unloading_address',
+        'backhaul_loading_address',
+        'backhaul_unloading_address',
+    )
 
+    def get_queryset(self):
+        qs = self.queryset  # use the class-level queryset
+        date = self.request.query_params.get('date')
+        if date:
+            qs = qs.filter(job_date=date)
+        return qs
+
+class JobDriverAssignmentViewSet(viewsets.ModelViewSet):
+    queryset         = JobDriverAssignment.objects.select_related(
+                         'job',
+                         'driver_truck__driver',
+                         'driver_truck__truck'
+                       )
+    serializer_class = JobDriverAssignmentSerializer
+    
 class CustomerViewSet(viewsets.ModelViewSet):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer

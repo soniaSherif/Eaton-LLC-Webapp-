@@ -1,45 +1,45 @@
 <div class="dialog-header">
-    <h2>Add Assignment</h2>
-    <button class="close-btn" (click)="closeDialog()">&times;</button>
+  <h2>Add Assignment</h2>
+  <button class="close-btn" (click)="closeDialog()">&times;</button>
+</div>
+
+<form (ngSubmit)="submitForm()" class="dispatch-form">
+  <!-- Job info -->
+  <div class="form-group job-info">
+    {{ selectedJob.project }} ({{ selectedJob.job_number }})
   </div>
-  
-  <form (ngSubmit)="submitForm()" class="dispatch-form">
-    <!-- Job display (no more dropdown) -->
-    <div class="form-group">
-    
-      <div class="job-info">
-        {{ selectedJob.jobName }} ({{ selectedJob.jobNumber }})
-      </div>
+
+  <!-- Driver dropdown (drivers-with-trucks) -->
+  <div class="form-group">
+    <label for="dta">Driver:</label>
+    <select id="dta" class="form-control"
+            [(ngModel)]="chosenDTAId" name="chosenDTAId" required>
+      <option [ngValue]="null" disabled>– select driver –</option>
+      <option 
+        *ngFor="let dta of driverTruckAssignments" 
+        [ngValue]="dta.id"
+      >
+        {{ dta.driver }} ({{ dta.truck_type }})
+      </option>
+    </select>
+  </div>
+
+  <!-- Non-editable Truck display -->
+  <div class="form-group">
+    <label>Truck:</label>
+    <input class="form-control" [value]="selectedTruckNumber" disabled />
+  </div>
+
+  <!-- Time picker -->
+  <div class="form-group">
+    <label>Time / Date:</label>
+    <div class="time-date-wrapper">
+      <span class="job-date">{{ getJobDate() }}</span>
+      <input type="time" class="form-control" [(ngModel)]="chosenTime" name="chosenTime" required>
     </div>
-  
-    <!-- Driver Dropdown -->
-    <div class="form-group">
-      <label for="driver">Driver:</label>
-      <select id="driver" name="driver" class="form-control" [(ngModel)]="chosenDriver">
-        <option *ngFor="let driver of drivers" [value]="driver">{{ driver }}</option>
-      </select>
-    </div>
-  
-    <!-- Truck Dropdown -->
-    <div class="form-group">
-      <label for="truck">Truck:</label>
-      <select id="truck" name="truck" class="form-control" [(ngModel)]="chosenTruck">
-        <option *ngFor="let truck of trucks" [value]="truck">{{ truck }}</option>
-      </select>
-    </div>
-  
-    <!-- Time Picker for Assignment and Date Display -->
-    <div class="form-group">
-      <label for="time" class="time-label">Time:</label>
-      <div class="time-date-wrapper">
-        <span *ngIf="selectedJob" class="job-date">{{ getJobDate() }}</span> <!-- Display the date of the selected job -->
-        <div class="time-wrapper">
-          <input type="time" id="time" name="time" class="form-control" [(ngModel)]="chosenTime">
-        </div>
-        <span *ngIf="!selectedJob" class="select-job-message">Please select a job</span>
-      </div>
-    </div>
-  
-    <button type="submit" class="btn btn-primary">Dispatch</button>
-  </form>
-  
+  </div>
+
+  <button type="submit" class="btn btn-primary" [disabled]="!chosenDTAId || !chosenTime">
+    Dispatch
+  </button>
+</form>

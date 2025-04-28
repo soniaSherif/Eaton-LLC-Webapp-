@@ -85,6 +85,7 @@ class DriverTruckAssignment(models.Model):
 
     def __str__(self):
         return f"{self.driver.name} assigned to {self.truck.truck_number}"
+    
 
 
 class Job(models.Model):
@@ -112,15 +113,39 @@ class Job(models.Model):
     is_backhaul_enabled = models.BooleanField(default=False)
     backhaul_loading_address = models.ForeignKey('Address', on_delete=models.CASCADE, related_name='backhaul_loading_jobs', blank=True, null=True)
     backhaul_unloading_address = models.ForeignKey('Address', on_delete=models.CASCADE, related_name='backhaul_unloading_jobs', blank=True, null=True)
-
     job_foreman_name = models.CharField(max_length=255)
     job_foreman_contact = models.CharField(max_length=255)
     additional_notes = models.TextField(blank=True, null=True)
-
     created_at = models.DateTimeField(auto_now_add=True)
+    driver_truck_assignments = models.ManyToManyField(
+        DriverTruckAssignment,
+        through='JobDriverAssignment',
+        related_name='jobs'
+    )
 
     def __str__(self):
         return f"Job {self.job_number} - {self.project}"
+
+class JobDriverAssignment(models.Model):
+    job  = models.ForeignKey(
+        Job,
+        on_delete=models.CASCADE,
+        related_name='driver_assignments'
+    )
+    # only drivers who are in DriverTruckAssignment can be picked
+    driver_truck = models.ForeignKey(
+        DriverTruckAssignment,
+        on_delete=models.CASCADE,
+        related_name='job_assignments'
+    )
+    assigned_at   = models.DateTimeField(auto_now_add=True)
+    unassigned_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        unique_together = ('job', 'driver_truck')  # prevent duplicates
+
+    def __str__(self):
+        return f"{self.driver_truck.driver.name} → {self.job.job_number}"
 
 class Address(models.Model):
     street_address = models.CharField(max_length=255)

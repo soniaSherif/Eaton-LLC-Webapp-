@@ -7,7 +7,8 @@ import { FormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog'; // Import MatDialogModule
 import { MatDialog } from '@angular/material/dialog'; // Import MatDialog service
 import { DbDispatchDialogComponent, DispatchDialogData } from './db-dispatch-dialog/db-dispatch-dialog.component';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { JobService } from 'src/app/services/job.service';
 
 
 @Component({
@@ -27,97 +28,64 @@ import { RouterModule } from '@angular/router';
   providers: [DatePipe] // Add DatePipe to the providers array
 })
 export class DailyBoardComponent implements OnInit {
-  constructor(private datePipe: DatePipe, private dialog: MatDialog) {} // Inject MatDialog service
+  constructor(private router: Router, private jobService: JobService, private datePipe: DatePipe, private dialog: MatDialog) {} // Inject MatDialog service
 
   selectedDate: string = this.datePipe.transform(new Date(), 'yyyy-MM-dd') || '';
-
-  jobs = [
-    {
-      date: "2025-04-18",
-      jobName: "Highway Expansion",
-      jobNumber: "J202501",
-      material: "Asphalt",
-      startLocation: "5500 Wayzata Blvd, Golden Valley, MN 55416",
-      endLocation: "4201 W 78th St, Bloomington, MN 55435",
-      foremen: [
-        { name: "John Doe", phone: "555-111-2222" },
-        { name: "Jane Smith", phone: "555-333-4444" }
-      ],
-      assignments: [
-        {
-          startTime: "08:00",
-          truckName: "Truck 101",
-          driverName: "Mike Johnson",
-          driverPhone: "555-123-4567"
-        },
-        {
-          startTime: "09:30",
-          truckName: "Truck 202",
-          driverName: "Sarah Lee",
-          driverPhone: "555-987-6543"
-        }
-      ]
-    },
-    {
-      date: "2025-04-03",
-      jobName: "Warehouse Construction",
-      jobNumber: "J202502",
-      material: "Concrete",
-      startLocation: "Plant X",
-      endLocation: "Warehouse Y",
-      foremen: [
-        { name: "Robert Brown", phone: "555-555-6666" }
-      ],
-      assignments: [
-        {
-          startTime: "07:45",
-          truckName: "Truck 303",
-          driverName: "Emily Davis",
-          driverPhone: "555-222-3333"
-        }
-      ]
-    }
-  ];
 
   drivers = ['Driver 1', 'Driver 2', 'Driver 3'];
   trucks = ['Truck 1', 'Truck 2', 'Truck 3'];
   
-  filteredJobs = this.jobs;
-
-  filterJobs() {
-    if (this.selectedDate) {
-      this.filteredJobs = this.jobs.filter(job => job.date === this.selectedDate);
-    } else {
-      this.filteredJobs = this.jobs;
-    }
-  }
+  jobs: any[] = [];
+  filteredJobs: any[] = [];
 
   ngOnInit() {
-    this.filterJobs();
+     // load jobs for today's date on init
+     this.applyFilter();   
+  }
+  applyFilter() {
+    this.jobService.getJobsByDate(this.selectedDate).subscribe({
+      next: jobs => {
+        // keep the raw list for dispatching lookups
+        this.jobs = jobs;
+
+        // ensure each job has an assignments array
+        this.filteredJobs = jobs.map(job => ({
+          ...job,
+          assignments: Array.isArray(job.driver_assignments) ? job.driver_assignments : []
+        }));
+      },
+      error: err => console.error('Error fetching jobs by date', err)
+    });
   }
 
+  editJob(jobId: number) {
+    console.log("pressed")
+    this.router.navigate(['/job-edit', jobId]);
+  }
  //open dialog and pass the data over at same time
-  openDialog(aJobNumber): void {
+ openDialog(aJobNumber: string): void {
+  const selectedJob = this.jobs.find(job => job.jobNumber === aJobNumber);
 
-    // Find the job with the matching job number
-    const selectedJob = this.jobs.find(job => job.jobNumber === aJobNumber);
-    const dialogRef = this.dialog.open<
-      DbDispatchDialogComponent,
-      DispatchDialogData,
-      any
-    >(DbDispatchDialogComponent, {
-      width: '400px',
-      data: {
-        selectedJob, 
-        drivers: this.drivers,
-        trucks:  this.trucks
-      }
-    });
-  
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        console.log('Dialog result:', result);
-      }
-    });
-  }
+  const dialogRef = this.dialog.open<
+    DbDispatchDialogComponent,
+    DispatchDialogData
+  >(DbDispatchDialogComponent, {
+    width: '400px',
+    data: {
+      selectedJob,
+      // ← remove these:
+      // drivers: this.drivers,
+      // trucks:  this.trucks
+    }
+  });
+
+  dialogRef.afterClosed().subscribe(result => {
+    if (result) {
+      console.log('Dialog result:', result);
+      // probably re-load your assignments here
+      this.applyFilter();
+    }
+  });
+}
+
 }
