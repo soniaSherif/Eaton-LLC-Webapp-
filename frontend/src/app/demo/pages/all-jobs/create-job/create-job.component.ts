@@ -496,8 +496,8 @@ export class CreateJobComponent implements OnInit {
       })),
       job_date: formData.jobDate,
       shift_start: formData.jobStartTime || "00:00:00",
-      loading_address: formData.loadingAddresses,    // Make sure you pass ID!
-      unloading_address: formData.unloadingAddresses, // Make sure you pass ID!
+      loading_address: formData.loadingAddresses,
+      unloading_address: formData.unloadingAddresses, 
       is_backhaul_enabled: formData.isBackhaulEnabled,
       backhaul_loading_address: formData.backhaulLoadingAddresses || null,
       backhaul_unloading_address: formData.backhaulUnloadingAddresses || null,

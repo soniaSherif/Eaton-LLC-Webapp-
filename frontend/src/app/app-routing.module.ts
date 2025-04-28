@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AdminComponent } from './theme/layout/admin/admin.component';
 import { GuestComponent } from './theme/layout/guest/guest.component';
+import { DbJobViewerComponent } from './demo/pages/daily-board/db-job-viewer/db-job-viewer.component';
+import {EditJobsComponent} from './demo/pages/all-jobs/edit-job/edit-jobs.component'
 
 const routes: Routes = [
   {
@@ -75,10 +77,9 @@ const routes: Routes = [
 
       },
       {
-        path: 'db-job-viewer/:jobNumber',
-        loadComponent: () => import('./demo/pages/daily-board/db-job-viewer/db-job-viewer.component').then((c) => c.DbJobViewerComponent)
-
+        path: 'db-job-viewer/:id', component: DbJobViewerComponent
       },
+      { path: 'job-edit/:id',    component: EditJobsComponent },
 
     ]
   },
