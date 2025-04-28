@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { CustomerService } from '../../../services/customer.service'; // adjust path if needed
+import { CustomerService } from '../../services/customer.service'; // adjust path if needed
 
 @Component({
   selector: 'app-customer',
