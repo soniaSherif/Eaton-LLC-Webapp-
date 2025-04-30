@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { CdkStepperModule } from '@angular/cdk/stepper';
 import { NgStepperModule } from 'angular-ng-stepper';
-import { CustomerService } from '../../../../services/customer.service';
+import { CustomerService } from '../../../services/customer.service';
 import Swal from 'sweetalert2'; // ✅ Replaced toastr with SweetAlert
 
 @Component({
