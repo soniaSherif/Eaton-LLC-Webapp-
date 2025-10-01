@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+# from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.contrib.postgres.fields import ArrayField, JSONField
 from django.db.models import JSONField
 from django.contrib.auth.models import User
@@ -89,7 +89,9 @@ class DriverTruckAssignment(models.Model):
 
 
 class Job(models.Model):
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, default=1)
     project = models.CharField(max_length=255)
+    prime_contractor_id = models.ForeignKey(Operator, on_delete=models.CASCADE, related_name='prime_contractor_jobs', default=1)
     prime_contractor = models.CharField(max_length=255)
     prime_contractor_project_number = models.CharField(max_length=255)
     contractor_invoice = models.CharField(max_length=255)
@@ -154,8 +156,8 @@ class Address(models.Model):
     city = models.CharField(max_length=100)
     zip_code = models.CharField(max_length=20)
     location_name = models.CharField(max_length=255, blank=True, null=True)
-    latitude = models.DecimalField(max_digits=9, decimal_places=6)
-    longitude = models.DecimalField(max_digits=9, decimal_places=6)
+    latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
     location_type = models.CharField(max_length=100)
 
     def __str__(self):
@@ -176,3 +178,37 @@ class Comment(models.Model):
 #         ).exclude(id=self.id)
 #         if conflict.exists():
 #             raise ValidationError("Truck is already assigned to another driver.")
+
+class Invoice(models.Model):
+    job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='invoices')
+    invoice_number = models.CharField(max_length=100)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    issued_date = models.DateField()
+    due_date = models.DateField()
+    status = models.CharField(max_length=50)
+    invoice_date = models.DateField()
+    Customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    subtotal = models.DecimalField(max_digits=10, decimal_places=2)
+    tax = models.DecimalField(max_digits=10, decimal_places=2)
+    total = models.DecimalField(max_digits=10, decimal_places=2)
+    notes = models.TextField(blank=True, null=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Invoice {self.invoice_number} for Job {self.job.job_number}"
+    
+
+class InvoiceItem(models.Model):
+    invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE, related_name='items')
+    job = models.ForeignKey(Job, on_delete=models.CASCADE)
+    rate = models.CharField(max_length=100)
+    load_type = models.CharField(max_length=100)
+    description = models.CharField(max_length=255)
+    quantity = models.IntegerField()
+    unit_price = models.DecimalField(max_digits=10, decimal_places=2)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return f"Item {self.description} for Invoice {self.invoice.invoice_number}"
+    
