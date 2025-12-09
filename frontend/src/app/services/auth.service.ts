@@ -6,17 +6,21 @@ import { Observable, tap } from 'rxjs';
 
 interface TokenResponse { access: string; refresh: string; }
 
-@Injectable({ providedIn: 'root' })
-export class AuthService {
-  private api = environment.apiBaseUrl; // e.g. http://localhost:8000/api/
+  @Injectable({ providedIn: 'root' })
+  export class AuthService {
+    private api = environment.apiBaseUrl;
+    private usernameKey = 'username';
 
   constructor(private http: HttpClient) {}
 
-  login(username: string, password: string): Observable<TokenResponse> {
-    return this.http.post<TokenResponse>(`${this.api}login/`, { username, password }).pipe(
-      tap(tokens => this.saveTokens(tokens))
-    );
-  }
+    login(username: string, password: string): Observable<TokenResponse> {
+      return this.http.post<TokenResponse>(`${this.api}login/`, { username, password }).pipe(
+        tap(tokens => {
+          this.saveTokens(tokens);
+          localStorage.setItem(this.usernameKey, username);
+        })
+      );
+    }
 
   register(username: string, email: string, password: string) {
     return this.http.post(`${this.api}register/`, { username, email, password });
@@ -32,13 +36,15 @@ export class AuthService {
     localStorage.setItem('refresh', t.refresh);
   }
 
-  get access()  { return localStorage.getItem('access'); }
-  get refreshT() { return localStorage.getItem('refresh'); }
+    get access()  { return localStorage.getItem('access'); }
+    get refreshT() { return localStorage.getItem('refresh'); }
+    get username() { return localStorage.getItem(this.usernameKey); }
 
-  logout() {
-    localStorage.removeItem('access');
-    localStorage.removeItem('refresh');
-  }
+    logout() {
+      localStorage.removeItem('access');
+      localStorage.removeItem('refresh');
+      localStorage.removeItem(this.usernameKey);
+    }
 
   isLoggedIn(): boolean {
     return !!this.access;
