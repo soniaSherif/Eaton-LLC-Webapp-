@@ -1,6 +1,8 @@
 <div class="">
   <a [routerLink]="['/dashboard/default/']" class="b-brand">
-    <img src="assets/images/truck-logo.png" alt="Eaton Trucking Logo" style="height: 30px; margin-right: 10px;">
+    <div class="b-bg">
+      <i class="feather icon-trending-up"></i>
+    </div>
     <span class="b-title">Eaton Trucking</span>
   </a>
   <a href="javascript:" class="mobile-menu" [ngClass]="{ on: navCollapsed }" id="mobile-collapse" (click)="navCollapse()"><span></span></a>

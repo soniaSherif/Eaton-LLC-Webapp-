@@ -1,0 +1,40 @@
+.view-customer-container {
+  padding: 20px;
+}
+
+.card {
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+  padding: 12px 20px;
+  
+  h5 {
+    margin: 0;
+    color: #2c3e50;
+    font-weight: 500;
+  }
+}
+
+.card-body {
+  padding: 20px;
+}
+
+label.text-muted.small {
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+  display: block;
+}
+
+p {
+  font-size: 1rem;
+  color: #333;
+}
+

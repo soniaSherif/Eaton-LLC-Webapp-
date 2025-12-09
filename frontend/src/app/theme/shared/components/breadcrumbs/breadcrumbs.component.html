@@ -15,10 +15,12 @@
             </div>
             <ul class="breadcrumb">
               <li class="breadcrumb-item">
-                <a [routerLink]="['/pay-reports']">
-                  @if (type === 'theme2') { <i class="feather icon-home"></i> }
-                  @if (type === 'theme1') { {{ 'Home' }} }
-                </a>
+                @if (type === 'theme2') {
+                  <a [routerLink]="['/dashboard/default/']"><i class="feather icon-home"></i></a>
+                }
+                @if (type === 'theme1') {
+                  <a [routerLink]="['/dashboard/default/']">{{ 'Home' }}</a>
+                }
               </li>
               @for (breadcrumb of navigationList; track breadcrumb) {
                 @if (breadcrumb.url !== false) {

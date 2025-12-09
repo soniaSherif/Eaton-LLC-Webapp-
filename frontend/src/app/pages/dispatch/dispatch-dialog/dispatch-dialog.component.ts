@@ -1,7 +1,7 @@
-import { Component, Inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { CommonModule } from '@angular/common';
 import { DatePipe } from '@angular/common';
 
 @Component({
@@ -9,15 +9,16 @@ import { DatePipe } from '@angular/common';
   templateUrl: './dispatch-dialog.component.html',
   styleUrls: ['./dispatch-dialog.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, MatDialogModule],
-  providers: [DatePipe]
+  imports: [FormsModule, CommonModule], // Add FormsModule here
+  providers: [DatePipe] // Inject DatePipe to format date
 })
 export class DispatchDialogComponent {
-  selectedJob: any = null;
+  constructor(public dialogRef: MatDialogRef<DispatchDialogComponent>, private datePipe: DatePipe) {}
+
+  selectedJob: any = null; // Ensure it's initialized as null to avoid null reference errors
   selectedDriver: string = '';
   selectedTruck: string = '';
-  selectedDate: string = '';
-  selectedTime: string = '';
+  selectedTime: string = ''; // Store only the time
 
   jobs = [
     { jobName: 'Job 1', jobNumber: 'HW72', date: '2025-03-13' },
@@ -27,15 +28,8 @@ export class DispatchDialogComponent {
   drivers = ['Driver 1', 'Driver 2', 'Driver 3'];
   trucks = ['Truck 1', 'Truck 2', 'Truck 3'];
 
-  constructor(
-    private datePipe: DatePipe,
-    public dialogRef: MatDialogRef<DispatchDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any
-  ) {
-    // Initialize with current date
-    const now = new Date();
-    this.selectedDate = data?.selectedDate || this.datePipe.transform(now, 'yyyy-MM-dd') || '';
-    this.selectedTime = this.datePipe.transform(now, 'HH:mm') || '';
+  ngOnInit() {
+    // Initialize with hardcoded data for now
   }
 
   // Close the dialog
@@ -49,11 +43,12 @@ export class DispatchDialogComponent {
       job: this.selectedJob,
       driver: this.selectedDriver,
       truck: this.selectedTruck,
-      date: this.selectedDate,
-      time: this.selectedTime
+      time: this.selectedTime // Use time instead of date
     };
 
     console.log('Form Submitted:', formData);
+
+    // Close the dialog after submitting
     this.dialogRef.close(formData);
   }
 
@@ -62,6 +57,6 @@ export class DispatchDialogComponent {
     if (this.selectedJob && this.selectedJob.date) {
       return this.datePipe.transform(this.selectedJob.date, 'MMMM d, yyyy') || '';
     }
-    return '';
+    return ''; // Return an empty string if no job is selected or if the date is not set
   }
 }

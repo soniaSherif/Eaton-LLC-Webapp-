@@ -7,13 +7,9 @@ import packageInfo from '../../package.json';
 export const environment = {
   appVersion: packageInfo.version,
   production: false,
-<<<<<<< HEAD
-  apiBaseUrl: 'http://127.0.0.1:8000/api/'
-=======
   apiBaseUrl: 'http://localhost:8000/api/',
-  googleMapsKey: ''
+  googleMapsKey: 'AIzaSyCjX2LDRK8NC3z2MI9R8VGg4MIOIzmvDNQ'
 
->>>>>>> ac782541 (Merge pull request #5 from soniaSherif/backend_betty)
 };
 /*
  * For easier debugging in development mode, you can import the following file
