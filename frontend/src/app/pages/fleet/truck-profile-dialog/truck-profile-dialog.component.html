@@ -1,0 +1,46 @@
+<div class="truck-profile-dialog">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h3>Truck Details</h3>
+    <button type="button" class="btn-close" (click)="close()"></button>
+  </div>
+
+  <!-- nice separator -->
+  <hr class="divider" />
+
+  <!-- BODY -->
+  <div class="body">
+
+    <div class="section">
+      <h5>Basic Info</h5>
+      <p><strong>Truck Type:</strong> {{ data.truck?.truck_type || data.truck?.type }}</p>
+      <p><strong>Truck #:</strong> {{ data.truck?.truck_number || data.truck?.number }}</p>
+      <p><strong>License Plate:</strong> {{ data.truck?.license_plate || data.truck?.license }}</p>
+      <p><strong>Carrier:</strong> {{ data.truck?.carrier }}</p>
+      <p><strong>Market:</strong> {{ marketDisplay }}</p>
+
+    </div>
+
+    <div class="section">
+      <h5>Plate</h5>
+      <p><strong>Expiry Date:</strong> {{ data.truck?.plate_expiry_date }}</p>
+      <p>
+        <strong>Status:</strong> {{ data.truck?.plate_status }}
+        <span *ngIf="data.truck?.plate_days_left !== null">
+          ({{ data.truck?.plate_days_left }}d)
+        </span>
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer text-end">
+    <button type="button" class="btn btn-secondary" (click)="close()">
+      Close
+    </button>
+  </div>
+
+</div>
+

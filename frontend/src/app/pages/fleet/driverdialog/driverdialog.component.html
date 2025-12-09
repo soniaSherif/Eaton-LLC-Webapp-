@@ -1,8 +1,8 @@
 
-  <h1 class="title">Add a Driver
-    <button (click)="closepopup()" class="close-button">x</button>
-  </h1>
-
+  <h1 class="title">
+  {{ isEditMode ? 'Edit Driver' : 'Add a Driver' }}
+  <button (click)="closepopup()" class="close-button">x</button>
+</h1>
 <form (ngSubmit) = "submitForm()" class="add-driver-form">
   
     <div class="form-row">
@@ -48,13 +48,67 @@
                required>
       </div>
     </div>
-  
+          <!-- License Dates -->
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">License Issue Date</label>
+        <input
+          type="date"
+          class="form-control"
+          name="license_issue_date"
+          [(ngModel)]="selectedLicenseIssueDate"
+        />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">License Expiry Date <span class="text-danger">*</span></label>
+        <input
+          type="date"
+          class="form-control"
+          name="license_expiry_date"
+          [(ngModel)]="selectedLicenseExpiryDate"
+          required
+          #dlExpiry="ngModel"
+        />
+        <!-- Required error -->
+        <small class="text-danger" *ngIf="dlExpiry.invalid && dlExpiry.touched">
+          Expiry date is required.
+        </small>
+        <!-- Cross-field check -->
+        <small class="text-danger"
+          *ngIf="selectedLicenseIssueDate && selectedLicenseExpiryDate && (selectedLicenseIssueDate > selectedLicenseExpiryDate)">
+          Issue date cannot be after expiry date.
+        </small>
+      </div>
+    </div>
+        <!-- Medical Card Expiry Date (NEW) -->
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">
+          Medical Card Expiry Date <span class="text-danger">*</span>
+        </label>
+        <input
+          type="date"
+          class="form-control"
+          name="medical_card_expiry_date"
+          [(ngModel)]="selectedMedicalCardExpiryDate"
+          required
+          #medExpiry="ngModel"
+        />
+        <small class="text-danger" *ngIf="medExpiry.invalid && medExpiry.touched">
+          Medical card expiry date is required.
+        </small>
+      </div>
+    </div>
+
+
     <div class="form-row">
       <div class="form-group">
         <label for="username">Username</label>
         <input type="text" 
                id="username" 
                name="username" 
+
                placeholder="Username"
                [(ngModel)]="selectedUsername"
                required>
@@ -161,8 +215,9 @@
       </div>
     </div> -->
     
-    <form (ngSubmit)="submitForm()" class="add-driver-form">
-    
+<!--<form (ngSubmit)="submitForm()" class="add-driver-form"> -->
+    <div class="add-driver-form">
+
       <!-- DRIVER INFO -->
       <!-- ... your existing driver fields (First name, Last name, Email, etc.) ... -->
     
@@ -282,9 +337,26 @@
       </div>
     
       <!-- SUBMIT -->
-      <div class="form-actions mt-4">
-        <button type="submit" class="btn btn-primary">Add Driver</button>
+      <!-- Edit mode: show Delete + Save Changes -->
+      <div class="form-actions mt-4" *ngIf="isEditMode; else addDriverButtons">
+        <button type="button" class="btn btn-outline-danger me-2" (click)="deleteDriver()">
+          Delete
+        </button>
+        <button type="submit" class="btn btn-primary">
+          Save Changes
+        </button>
       </div>
+
+      <!-- Add mode: show Add Driver -->
+      <ng-template #addDriverButtons>
+        <div class="form-actions mt-4">
+          <button type="submit" class="btn btn-primary">
+            Add Driver
+          </button>
+        </div>
+      </ng-template>
+
+    </div> 
     </form>
     
   

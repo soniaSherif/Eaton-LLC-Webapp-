@@ -1,0 +1,84 @@
+<div class="driver-edit-dialog">
+  <div class="header">
+    <h3>Edit Driver</h3>
+    <button type="button" class="btn-close" (click)="cancel()"></button>
+  </div>
+
+  <form (ngSubmit)="save()">
+    <div class="body">
+      <div class="row">
+        <div class="col">
+          <label class="form-label">Name</label>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="edited.name"
+            name="name"
+            required
+          />
+        </div>
+        <div class="col">
+          <label class="form-label">CDL #</label>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="edited.driver_license"
+            name="cdl"
+          />
+        </div>
+      </div>
+
+      <div class="row mt-3">
+        <div class="col">
+          <label class="form-label">Phone</label>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="edited.phone_number"
+            name="phone"
+          />
+        </div>
+        <div class="col">
+          <label class="form-label">Address</label>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="edited.address"
+            name="address"
+          />
+        </div>
+      </div>
+
+      <div class="row mt-3">
+        <div class="col">
+          <label class="form-label">License Expiry Date</label>
+          <input
+            type="date"
+            class="form-control"
+            [(ngModel)]="edited.license_expiry_date"
+            name="license_expiry_date"
+          />
+        </div>
+        <div class="col">
+          <label class="form-label">Medical Card Expiry Date</label>
+          <input
+            type="date"
+            class="form-control"
+            [(ngModel)]="edited.medical_card_expiry_date"
+            name="medical_card_expiry_date"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="footer text-end mt-4">
+      <button type="button" class="btn btn-secondary me-2" (click)="cancel()">
+        Cancel
+      </button>
+      <button type="submit" class="btn btn-primary">
+        Save Changes
+      </button>
+    </div>
+  </form>
+</div>
+

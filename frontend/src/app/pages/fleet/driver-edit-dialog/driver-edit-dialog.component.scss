@@ -1,0 +1,19 @@
+.driver-edit-dialog {
+  min-width: 520px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.row {
+  display: flex;
+  gap: 1rem;
+}
+
+.col {
+  flex: 1;
+}

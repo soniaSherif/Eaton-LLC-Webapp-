@@ -62,6 +62,7 @@ class Truck(models.Model):
     carrier = models.TextField()
     truck_number = models.CharField(max_length=100)
     license_plate = models.CharField(max_length=50)
+    plate_expiry_date = models.DateField(null=True, blank=True)
     market = ArrayField(models.TextField(), blank=True, default=list)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -76,10 +77,14 @@ class Driver(models.Model):
     email_address = models.TextField()
     phone_number = models.TextField()
     driver_license = models.CharField(max_length=100)
+    license_issue_date = models.DateField(null=True, blank=True)
+    license_expiry_date = models.DateField(null=True, blank=True)
     contact_info = models.TextField()
     address = models.TextField()
     truck_count = models.IntegerField(default=1)
     created_at = models.DateTimeField(auto_now_add=True)
+    medical_card_expiry_date = models.DateField(null=True, blank=True)
+    
 
     def __str__(self):
         return self.name

@@ -9,6 +9,7 @@ import { MatDialog } from '@angular/material/dialog'; // Import MatDialog servic
 import { DbDispatchDialogComponent, DispatchDialogData } from './db-dispatch-dialog/db-dispatch-dialog.component';
 import { Router, RouterModule } from '@angular/router';
 import { JobService } from 'src/app/services/job.service';
+import { environment } from 'src/environments/environment';
 
 
 @Component({
@@ -87,5 +88,51 @@ export class DailyBoardComponent implements OnInit {
     }
   });
 }
+ getStaticMapUrl(job: any): string | null {
+  const key = environment.googleMapsKey;
+  const o = job?.loading_address_info;
+  const d = job?.unloading_address_info;
 
+  if (!o || !d) {
+    console.warn('Missing address info for job', job?.id, { o, d });
+    return null;
+  }
+
+  const oLat = Number(o.latitude);
+  const oLng = Number(o.longitude);
+  const dLat = Number(d.latitude);
+  const dLng = Number(d.longitude);
+
+  if (
+    Number.isNaN(oLat) || Number.isNaN(oLng) ||
+    Number.isNaN(dLat) || Number.isNaN(dLng)
+  ) {
+    console.warn('Invalid coordinates for job', job?.id, { o, d });
+    return null;
+  }
+
+  if (!key) {
+    console.warn('Missing googleMapsKey in environment');
+    return null;
+  }
+
+  const origin = `${oLat},${oLng}`;
+  const dest   = `${dLat},${dLng}`;
+  const size   = '640x360';
+  const scale  = 2;
+
+  const markers =
+    `markers=color:green|label:S|${origin}` +
+    `&markers=color:red|label:E|${dest}`;
+
+  const path =
+    `path=weight:5|color:0x1e88e5|${origin}|${dest}`;
+
+  const url =
+    `https://maps.googleapis.com/maps/api/staticmap?size=${size}` +
+    `&scale=${scale}&maptype=roadmap&${markers}&${path}&key=${key}`;
+
+  console.log('Static map URL for job', job?.id, url);
+  return url;
+}
 }

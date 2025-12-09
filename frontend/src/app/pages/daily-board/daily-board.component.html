@@ -57,7 +57,25 @@
         </div>
       </div>
     </mat-card-header>
-
+    <!-- Static map preview -->
+    <!-- 
+    <div class="map-preview" *ngIf="getStaticMapUrl(job) as mapUrl">
+  <a
+    [href]="'https://www.google.com/maps/dir/?api=1'
+          + '&origin=' + job.loading_address_info.latitude + ',' + job.loading_address_info.longitude
+          + '&destination=' + job.unloading_address_info.latitude + ',' + job.unloading_address_info.longitude"
+    target="_blank"
+    rel="noopener"
+  >
+    <img
+      [src]="mapUrl"
+      alt="Route map"
+      loading="lazy"
+    />
+  </a>
+</div>
+-->
+    
     <!-- Button under the foreman, above the table -->
     <div style="display: flex; justify-content: flex-end; margin-top: 0px; margin-right: 1rem; margin-bottom: 0.5rem; margin-left: 1rem;">
       <button

@@ -1,0 +1,32 @@
+.truck-profile-dialog {
+  min-width: 450px;
+  padding: 20px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.divider {
+  margin: 0 0 20px 0;
+  border: 0;
+  border-top: 1px solid #ddd;
+}
+
+.body {
+  padding: 0 5px;
+}
+
+.section {
+  margin-bottom: 20px;
+}
+
+.section h5 {
+  margin-bottom: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
