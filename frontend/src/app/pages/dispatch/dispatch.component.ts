@@ -25,6 +25,11 @@ export class DispatchComponent implements OnInit, OnDestroy {
   selected: AssignmentRow[] = [];
   private subscription?: Subscription;
 
+  // Filter state
+  filters = {
+    search: '' // Search by job, driver, or truck type
+  };
+
   constructor(
     private datePipe: DatePipe,
     public dialog: MatDialog,
@@ -72,8 +77,7 @@ export class DispatchComponent implements OnInit, OnDestroy {
 
   loadAssignments(): void {
     this.assignments = this.storageService.getAllAssignments().map(a => ({ ...a, selected: false }));
-    this.filteredAssignments = this.filterAssignmentsByDate(this.selectedDate);
-    this.onSelect();
+    this.applyFilters();
   }
 
   openDialog(): void {
@@ -100,7 +104,29 @@ export class DispatchComponent implements OnInit, OnDestroy {
   }
 
   filterAssignments() {
-    this.filteredAssignments = this.filterAssignmentsByDate(this.selectedDate);
+    this.applyFilters();
+  }
+
+  // Apply both date and search filters
+  applyFilters(): void {
+    const searchTerm = this.filters.search.toLowerCase().trim();
+    let filtered = this.assignments;
+
+    // Apply date filter first (original functionality - DO NOT TOUCH)
+    filtered = this.filterAssignmentsByDate(this.selectedDate);
+
+    // Apply search filter
+    if (searchTerm) {
+      filtered = filtered.filter(assignment => {
+        const matchesJob = assignment.job?.toLowerCase().includes(searchTerm) || false;
+        const matchesDriver = assignment.driver?.toLowerCase().includes(searchTerm) || false;
+        const matchesTruck = assignment.truck_type?.toLowerCase().includes(searchTerm) || false;
+        return matchesJob || matchesDriver || matchesTruck;
+      });
+    }
+
+    this.filteredAssignments = filtered;
+    this.onSelect();
   }
 
   filterAssignmentsByDate(date: string) {
