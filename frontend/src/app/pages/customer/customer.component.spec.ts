@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { of, throwError } from 'rxjs';
+import { RouterTestingModule } from '@angular/router/testing';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { of, throwError, Subject } from 'rxjs';
 import { CustomerComponent } from './customer.component';
 import { CustomerService } from '../../services/customer.service';
 
@@ -9,13 +11,17 @@ describe('CustomerComponent', () => {
   let fixture: ComponentFixture<CustomerComponent>;
   let customerService: jasmine.SpyObj<CustomerService>;
   let router: jasmine.SpyObj<Router>;
+  let routerEvents: Subject<any>;
 
   beforeEach(async () => {
     const customerServiceSpy = jasmine.createSpyObj('CustomerService', ['getCustomers']);
-    const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
+    routerEvents = new Subject();
+    const routerSpy = jasmine.createSpyObj('Router', ['navigate'], {
+      events: routerEvents.asObservable()
+    });
 
     await TestBed.configureTestingModule({
-      imports: [CustomerComponent],
+      imports: [CustomerComponent, RouterTestingModule, NoopAnimationsModule],
       providers: [
         { provide: CustomerService, useValue: customerServiceSpy },
         { provide: Router, useValue: routerSpy }
@@ -41,7 +47,7 @@ describe('CustomerComponent', () => {
     fixture.detectChanges();
 
     expect(component.customers.length).toBeGreaterThan(0);
-    expect(component.customers[0].company_name).toBe('Jake');
+    expect(component.customers[0].company_name).toBe('API Customer');
     expect(customerService.getCustomers).toHaveBeenCalled();
   });
 
@@ -87,9 +93,12 @@ describe('CustomerComponent', () => {
   });
 
   it('should handle API error gracefully', () => {
+    // Suppress console.error for this test
+    spyOn(console, 'error');
     customerService.getCustomers.and.returnValue(throwError(() => new Error('API Error')));
     
     expect(() => fixture.detectChanges()).not.toThrow();
-    expect(component.customers.length).toBeGreaterThan(0); // Should still have hardcoded customers
+    expect(component.error).toBe('Failed to load customers. Please try again.');
+    expect(component.customers.length).toBe(0); // Empty array on error
   });
 });
