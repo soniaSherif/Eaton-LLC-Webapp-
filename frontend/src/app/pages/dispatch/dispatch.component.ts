@@ -1,9 +1,18 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DispatchDialogComponent } from './dispatch-dialog/dispatch-dialog.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
+
+interface AssignmentRow {
+  job?: string;
+  driver?: string;
+  truck_type?: string;
+  jobDate: string;
+  time: string;
+  selected?: boolean;
+}
 
 @Component({
   selector: 'app-dispatch',
@@ -18,7 +27,6 @@ export class DispatchComponent implements OnInit, OnDestroy {
   assignments: AssignmentRow[] = [];
   filteredAssignments: AssignmentRow[] = [];
   selected: AssignmentRow[] = [];
-  private subscription?: Subscription;
 
   // Filter state
   filters = {
@@ -27,28 +35,38 @@ export class DispatchComponent implements OnInit, OnDestroy {
 
   constructor(
     private datePipe: DatePipe,
-    public dialog: MatDialog,
-    private router: Router,
-    private route: ActivatedRoute,
-    private storageService: DispatchAssignmentStorageService
+    public dialog: MatDialog
   ) {
     // Initialize with the current date in 'yyyy-MM-dd' format
     this.selectedDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd') || '';
   }
 
   ngOnInit(): void {
-    // Load assignments from service
+    // Load assignments from local store (replace with real data source when available)
     this.loadAssignments();
-    
-    // Subscribe to assignment updates
-    this.subscription = this.storageService.assignments$.subscribe(() => {
-      this.loadAssignments();
-    });
+  }
 
-  filteredAssignments: any[] = [];
+  ngOnDestroy(): void {
+    // No subscriptions to clean up currently
+  }
 
   loadAssignments(): void {
-    this.assignments = this.storageService.getAllAssignments().map(a => ({ ...a, selected: false }));
+    this.assignments = [
+      {
+        job: 'Demo Job 1',
+        driver: 'Driver A',
+        truck_type: 'Flatbed',
+        jobDate: this.selectedDate,
+        time: '09:00'
+      },
+      {
+        job: 'Demo Job 2',
+        driver: 'Driver B',
+        truck_type: 'Tanker',
+        jobDate: this.selectedDate,
+        time: '13:30'
+      }
+    ].map(a => ({ ...a, selected: false }));
     this.applyFilters();
   }
 
@@ -59,8 +77,9 @@ export class DispatchComponent implements OnInit, OnDestroy {
   }
 
   toggleAllSelection(event: any) {
-    const checked = event.target.checked;
+    const checked = (event.target as HTMLInputElement).checked;
     this.assignments.forEach(assignment => assignment.selected = checked);
+    this.onSelect();
   }
 
   getFormattedDate(date: string): string {
@@ -103,5 +122,9 @@ export class DispatchComponent implements OnInit, OnDestroy {
 
   filterAssignmentsByDate(date: string) {
     return this.assignments.filter(assignment => assignment.jobDate === date);
+  }
+
+  onSelect(): void {
+    this.selected = this.filteredAssignments.filter(a => a.selected);
   }
 }
