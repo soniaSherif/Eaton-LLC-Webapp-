@@ -44,6 +44,8 @@ export const routes: Routes = [
       { path: 'customers/create', loadComponent: () => import('./pages/customer/create-customer/create-customer.component').then(c => c.CreateCustomerComponent) },
       { path: 'daily-board', loadComponent: () => import('./pages/daily-board/daily-board.component').then(c => c.DailyBoardComponent) },
       { path: 'dispatch', loadComponent: () => import('./pages/dispatch/dispatch.component').then(c => c.DispatchComponent) },
+      { path: 'dispatch/view/:id', loadComponent: () => import('./pages/dispatch/view-dispatch-assignment/view-dispatch-assignment.component').then(c => c.ViewDispatchAssignmentComponent) },
+      { path: 'dispatch/edit/:id', loadComponent: () => import('./pages/dispatch/edit-dispatch-assignment/edit-dispatch-assignment.component').then(c => c.EditDispatchAssignmentComponent) },
       { path: 'pay-reports/new',  loadComponent: () => import('./pages/pay-reports/create-pay-report/create-pay-report.component').then(c => c.CreatePayReportComponent) },
       { path: 'pay-reports/:id',  loadComponent: () => import('./pages/pay-reports/open-pay-report/open-pay-report.component').then(c => c.OpenPayReportComponent) },
       { path: 'pay-reports',      loadComponent: () => import('./pages/pay-reports/pay-reports.component').then(c => c.PayReportsComponent) },

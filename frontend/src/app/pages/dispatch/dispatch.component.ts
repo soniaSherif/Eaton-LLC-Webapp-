@@ -1,9 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DispatchDialogComponent } from './dispatch-dialog/dispatch-dialog.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router, RouterModule, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { DatePipe } from '@angular/common';
+import { DispatchAssignmentStorageService, AssignmentData } from '../../services/dispatch-assignment-storage.service';
+import { Subscription, filter } from 'rxjs';
+
+type AssignmentRow = AssignmentData;
 
 @Component({
   selector: 'app-dispatch',
@@ -13,19 +18,62 @@ import { DatePipe } from '@angular/common';
   imports: [CommonModule, FormsModule],
   providers: [DatePipe]
 })
-export class DispatchComponent {
-  selectedDate: string;
-  assignments = [
-    { job: 'HW72', driver: 'John Doe', truck_type: 'Semi', jobDate: '2025-03-13', time: '10:30', selected: false },
-    { job: 'I-32', driver: 'Jane Doe', truck_type: 'Belly Dump', jobDate: '2025-06-25', time: '14:00', selected: false },
-    { job: 'HW73', driver: 'Alice Smith', truck_type: 'Flatbed', jobDate: '2025-03-13', time: '10:30', selected: false }
-  ];
+export class DispatchComponent implements OnInit, OnDestroy {
+  selectedDate: string; // Stores the selected date
+  assignments: AssignmentRow[] = [];
+  filteredAssignments: AssignmentRow[] = [];
+  selected: AssignmentRow[] = [];
+  private subscription?: Subscription;
 
-  filteredAssignments: any[] = [];
-
-  constructor(private datePipe: DatePipe, public dialog: MatDialog) {
+  constructor(
+    private datePipe: DatePipe,
+    public dialog: MatDialog,
+    private router: Router,
+    private route: ActivatedRoute,
+    private storageService: DispatchAssignmentStorageService
+  ) {
+    // Initialize with the current date in 'yyyy-MM-dd' format
     this.selectedDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd') || '';
+  }
+
+  ngOnInit(): void {
+    // Load assignments from service
+    this.loadAssignments();
+    
+    // Subscribe to assignment updates
+    this.subscription = this.storageService.assignments$.subscribe(() => {
+      this.loadAssignments();
+    });
+
+    // Check for date query parameter to restore previous selection
+    this.route.queryParams.subscribe(params => {
+      if (params['date']) {
+        this.selectedDate = params['date'];
+      }
+      // Filter assignments by the selected date
+      this.filteredAssignments = this.filterAssignmentsByDate(this.selectedDate);
+    });
+
+    // Reload when returning to this page
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      if (this.router.url === '/dispatch' || this.router.url.startsWith('/dispatch?')) {
+        this.loadAssignments();
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
+
+  loadAssignments(): void {
+    this.assignments = this.storageService.getAllAssignments().map(a => ({ ...a, selected: false }));
     this.filteredAssignments = this.filterAssignmentsByDate(this.selectedDate);
+    this.onSelect();
   }
 
   openDialog(): void {
@@ -57,5 +105,45 @@ export class DispatchComponent {
 
   filterAssignmentsByDate(date: string) {
     return this.assignments.filter(assignment => assignment.jobDate === date);
+  }
+
+  // View assignment
+  view(id: number | undefined): void {
+    if (id) {
+      this.router.navigate(['/dispatch/view', id], {
+        queryParams: { date: this.selectedDate }
+      });
+    }
+  }
+
+  // Edit assignment
+  edit(id: number | undefined): void {
+    if (id) {
+      this.router.navigate(['/dispatch/edit', id], {
+        queryParams: { date: this.selectedDate }
+      });
+    }
+  }
+
+  // Delete single assignment
+  delete(id: number | undefined): void {
+    if (!id) return;
+    
+    if (!confirm('Are you sure you want to delete this dispatch assignment?')) return;
+    
+    // Delete from service
+    this.storageService.deleteAssignment(id);
+    // loadAssignments will be called automatically via subscription
+  }
+
+  // Bulk delete
+  deleteSelected(): void {
+    if (!this.selected.length) return;
+    if (!confirm(`Are you sure you want to delete ${this.selected.length} selected assignment(s)?`)) return;
+    
+    const ids = this.selected.map(s => s.id).filter(id => id !== undefined) as number[];
+    // Delete from service
+    this.storageService.deleteAssignments(ids);
+    // loadAssignments will be called automatically via subscription
   }
 }
