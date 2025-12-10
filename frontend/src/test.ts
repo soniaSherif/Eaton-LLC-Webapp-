@@ -19,6 +19,12 @@ declare const require: {
 getTestBed().initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting());
 
 // Then we find all the tests.
-const context = require.context('./', true, /\.spec\.ts$/);
-// And load the modules.
-context.keys().forEach(context);
+// Check if require.context is available before using it
+if (typeof require.context !== 'undefined' && require.context) {
+  const context = require.context('./', true, /\.spec\.ts$/);
+  // And load the modules.
+  context.keys().forEach(context);
+} else {
+  // If require.context is not available, webpack will handle test discovery automatically
+  // No warning needed - this is expected behavior in webpack environments
+}
