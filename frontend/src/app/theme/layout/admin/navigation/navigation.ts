@@ -70,6 +70,12 @@ export const NavigationItems: NavigationItem[] = [
         icon: 'feather icon-file-text',
         children: [
           {
+            id: 'Pay Reports',
+            title: 'Pay Reports',
+            type: 'item',
+            url: '/pay-reports'
+          },
+          {
             id: 'Invoices Report',
             title: 'Invoices Report',
             type: 'item',

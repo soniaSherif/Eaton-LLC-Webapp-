@@ -4,7 +4,6 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { of, throwError, Subject } from 'rxjs';
 import { CustomerComponent } from './customer.component';
-import { CustomerService } from '../../services/customer.service';
 
 describe('CustomerComponent', () => {
   let component: CustomerComponent;
@@ -30,8 +29,7 @@ describe('CustomerComponent', () => {
 
     fixture = TestBed.createComponent(CustomerComponent);
     component = fixture.componentInstance;
-    customerService = TestBed.inject(CustomerService) as jasmine.SpyObj<CustomerService>;
-    router = TestBed.inject(Router) as jasmine.SpyObj<Router>;
+    fixture.detectChanges();
   });
 
   it('should create', () => {

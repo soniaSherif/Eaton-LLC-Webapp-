@@ -1,62 +1,190 @@
-<div class="container">
-    <h2>Customer Creator</h2>
+<div class="container"> 
+  <h2>Customer Creator</h2> 
   
-    <form [formGroup]="customerForm">
-      <ng-stepper #cdkStepper [linear]="true" class="custom-stepper" style="justify-content: center;">
-        <!-- Step 1: Contact Details -->
-        <cdk-step [stepControl]="customerForm.controls['project']">
-          <ng-template cdkStepLabel >
-            <div class="step-bullet" >1</div>
-            <div class="step-title">Customer Details</div>
-          </ng-template>
-          <div class="form-content" >
-            <label>Company Name *</label>
-            <input type="text" formControlName="companyName" class="form-control">
-        
-            <label>Contact Name</label>
-            <input type="text" formControlName="contactName" class="form-control">
-        
-            <label>Company DBA Name</label>
-            <input type="text" formControlName="companyDBAName" class="form-control">
-        
-            <label>Address</label>
-            <input type="text" formControlName="address" class="form-control">
-        
-            <label>City</label>
-            <input type="text" formControlName="city" class="form-control">
-        
-            <label>Phone Number *</label>
-            <input type="text" formControlName="phoneNumber" class="form-control">
+  
+  <form [formGroup]="customerForm"> 
+    <ng-stepper #cdkStepper [linear]="true" class="custom-stepper" style="justify-content: center;"> 
+      
+      
+      <!-- STEP 1: Company Details --> 
+       <cdk-step [stepControl]="customerForm"> 
+        <ng-template cdkStepLabel> 
+          <div class="step-bullet">1</div> <div class="step-title">Company Details</div> 
+        </ng-template> 
 
-            <label>Email *</label>
-            <input type="text" formControlName="email" class="form-control">
+        <div class="form-content"> 
+
+          <label>Company Name <span style="color:red">*</span></label> 
+          <input type="text" formControlName="companyName" class="form-control">
+
+          <!-- Inline error -->
+          <div class="text-danger" *ngIf="customerForm.get('companyName')?.touched && customerForm.get('companyName')?.hasError('required')">
+            Company Name is required.
           </div>
-          <div class="stepper-buttons">
-            <button cdkStepperNext class="btn btn-primary">Next →</button>
+
+          <label>Company Address <span style="color:red">*</span></label> 
+          <input type="text" formControlName="companyAddress" class="form-control"> 
+          
+          <!-- Inline error -->
+          <div class="text-danger" *ngIf="customerForm.get('companyAddress')?.touched && customerForm.get('companyAddress')?.hasError('required')">
+            Company Address is required.
+          </div>
+
+          <label>Company Phone <span style="color:red">*</span></label> 
+          <input type="text" formControlName="companyPhone" class="form-control"> 
+
+          <!-- Inline error -->
+          <div class="text-danger" *ngIf="customerForm.get('companyPhone')?.touched && customerForm.get('companyPhone')?.hasError('required')">
+            Company Phone is required.
+          </div>
+
+          
+
+          <h4> Company Dispatch Contact</h4>
+
+          <label>Name <span style="color:red">*</span></label>
+          <input type="text" formControlName="companyDispatchContact" class="form-control">
+
+          <!-- Inline error -->
+          <div class="text-danger" *ngIf="customerForm.get('companyDispatchContact')?.touched && customerForm.get('companyDispatchContact')?.hasError('required')">
+            Company Dispatch Name is required.
+          </div>
+
+          <label>Phone <span style="color:red">*</span></label>
+          <input type="text" formControlName="companyDispatchContactPhone" class="form-control">
+
+          <!-- Inline error -->
+          <div class="text-danger" *ngIf="customerForm.get('companyDispatchContactPhone')?.touched && customerForm.get('companyDispatchContactPhone')?.hasError('required')">
+            Company Dispatch Phone is required.
+          </div>
+
+          <label>Email <span style="color:red">*</span></label>
+          <input type="email" formControlName="companyDispatchContactEmail" class="form-control">
+
+          <!-- Inline error -->
+          <div class="text-danger" *ngIf="customerForm.get('companyDispatchContactEmail')?.touched && customerForm.get('companyDispatchContactEmail')?.hasError('required')">
+            Company Dispatch Email is required.
+          </div>
+
+          
+
+          <h4>Prevailing Wage Contact</h4>
+
+          <label>Name <span style="color:red">*</span></label>
+          <input type="text" formControlName="companyPrevailingWageContact" class="form-control">
+
+          <!-- Inline error -->
+          <div class="text-danger" *ngIf="customerForm.get('companyPrevailingWageContact')?.touched && customerForm.get('companyPrevailingWageContact')?.hasError('required')">
+            Prevailing Wage Name is required.
+          </div>
+
+          <label>Phone <span style="color:red">*</span></label>
+          <input type="text" formControlName="companyPrevailingWageContactPhone" class="form-control">
+
+          <!-- Inline error -->
+          <div class="text-danger" *ngIf="customerForm.get('companyPrevailingWageContactPhone')?.touched && customerForm.get('companyPrevailingWageContactPhone')?.hasError('required')">
+            Prevailing Wage Phone is required.
+          </div>
+
+          <label>Email <span style="color:red">*</span></label>
+          <input type="email" formControlName="companyPrevailingWageContactEmail" class="form-control">
+
+          <!-- Inline error -->
+          <div class="text-danger" *ngIf="customerForm.get('companyPrevailingWageContactEmail')?.touched && customerForm.get('companyPrevailingWageContactEmail')?.hasError('required')">
+            Prevailing Email is required.
+          </div>
+
+          
+
+          <h4>AP Contact</h4>
+
+          <label>Name <span style="color:red">*</span></label>
+          <input type="text" formControlName="companyAPContact" class="form-control">
+
+          <!-- Inline error -->
+          <div class="text-danger" *ngIf="customerForm.get('companyAPContact')?.touched && customerForm.get('companyAPContact')?.hasError('required')">
+            AP Name is required.
+          </div>
+
+          <label>Phone <span style="color:red">*</span></label>
+          <input type="text" formControlName="companyAPContactPhone" class="form-control">
+
+          <!-- Inline error -->
+          <div class="text-danger" *ngIf="customerForm.get('companyAPContactPhone')?.touched && customerForm.get('companyAPContactPhone')?.hasError('required')">
+            AP Phone is required.
+          </div>
+
+          <label>Email <span style="color:red">*</span></label>
+          <input type="email" formControlName="companyAPContactEmail" class="form-control">
+
+          <!-- Inline error -->
+          <div class="text-danger" *ngIf="customerForm.get('companyAPContactEmail')?.touched && customerForm.get('companyAPContactEmail')?.hasError('required')">
+            AP Email is required.
+          </div>
+          
+
+          <h4>Payment Terms and Sales Tax</h4>
+
+          <label>Payment Terms <span style="color:red">*</span></label>
+          <select formControlName="companyPaymentTerms" class="form-control">
+            <option value="" disabled>Select Payment Terms</option>
+            <option value="1% 10 Net 30">1% 10 Net 30</option>
+            <option value="2% 10 Net 30">2% 10 Net 30</option>
+            <option value="Consignment">Consignment</option>
+            <option value="Default">Default</option>
+            <option value="Due on Receipt">Due on Receipt</option>
+            <option value="Net 15">Net 15</option>
+            <option value="Net 30">Net 30</option>
+            <option value="Net 45">Net 45</option>
+          </select>
+
+          <!-- Inline error -->
+          <div class="text-danger" *ngIf="customerForm.get('companyPaymentTerms')?.touched && customerForm.get('companyPaymentTerms')?.hasError('required')">
+            Payment Terms is required.
+          </div>
+
+          <label for="companySalesTaxSetting" class="form-label">Sales Tax Setting <span style="color:red">*</span></label>
+          <select
+            id="companySalesTaxSetting"
+            formControlName="companySalesTaxSetting"
+            class="form-control"
+            required
+          >
+            <option value="" disabled selected>Select Sales Tax Setting</option>
+            <option value="Tax - Taxable Sales - Taxable">Tax - Taxable Sales - Taxable</option>
+            <option value="Non - Non-Taxable Sales - Non-Taxable">Non - Non-Taxable Sales - Non-Taxable</option>
+          </select>
+
+          <!-- Inline error -->
+          <div class="text-danger" *ngIf="customerForm.get('companySalesTaxSetting')?.touched && customerForm.get('companySalesTaxSetting')?.hasError('required')">
+            Sales Tax Settings is required.
+          </div>
         </div>
-        </cdk-step>  
-        <!-- Step 2: Additional Notes -->
-        <cdk-step>
-          <ng-template cdkStepLabel>
-            <div class="step-bullet">2</div>
-            <div class="step-title">Additional Notes</div>
-          </ng-template>
-          <div class="form-content">
-            <label>Notes</label>
-            <textarea formControlName="notes" class="form-control"></textarea>
-          </div>
-          <div class="stepper-buttons">
-            <button cdkStepperPrevious class="btn btn-secondary">← Previous</button>
-            <button class="btn btn-success" (click)="submitCustomer()">Submit Customer</button>
-          </div>
-        </cdk-step>
-  
-        <!-- Stepper Navigation Buttons -->
-        <div class="d-flex justify-content-between mt-3">
-            <button cdkStepperPrevious class="btn btn-secondary">← Previous</button>
-            <button cdkStepperNext class="btn btn-primary">Next →</button>
-            <button *ngIf="cdkStepper.selectedIndex === 1" class="btn btn-success" (click)="submitCustomer()">Submit Customer</button>
+
+        <div class="stepper-buttons">
+          <button class="btn btn-primary" type="button" (click)="nextStep(cdkStepper)">Next →</button>
         </div>
-      </ng-stepper>
-    </form>
-  </div>
+
+      </cdk-step>
+
+      <!-- STEP 2: Notes -->
+      <cdk-step>
+        <ng-template cdkStepLabel>
+          <div class="step-bullet">2</div>
+          <div class="step-title">Additional Notes</div>
+        </ng-template>
+
+        <div class="form-content">
+          <label>Notes</label>
+          <textarea formControlName="notes" class="form-control"></textarea>
+        </div>
+
+        <div class="stepper-buttons">
+          <button cdkStepperPrevious class="btn btn-secondary">← Previous</button>
+          <button class="btn btn-success" (click)="submitCustomer()">Submit Customer</button>
+        </div>
+      </cdk-step>
+
+    </ng-stepper>
+  </form>
+</div>

@@ -1,159 +1,57 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { FormGroup, FormControl, FormArray, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { CdkStepperModule } from '@angular/cdk/stepper';
 import { NgStepperModule } from 'angular-ng-stepper';
 import { AddressService } from 'src/app/services/address.service';
 import { JobService } from 'src/app/services/job.service';
-//import { tick } from '@angular/core/testing';
-//import { sign } from 'crypto';
+import { CustomerService } from 'src/app/services/customer.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-create-job',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, CdkStepperModule, NgStepperModule],
+  imports: [CommonModule, ReactiveFormsModule, CdkStepperModule, NgStepperModule],
   templateUrl: './create-job.component.html',
   styleUrls: ['./create-job.component.scss']
 })
-
-
 export class CreateJobComponent implements OnInit {
+  jobForm: FormGroup;
 
-  jobForm = new FormGroup({
-    // Project Details
-    project: new FormControl(''),
-    primeContractor: new FormControl(''),
-    primeContractorProjectNumber: new FormControl(''),
-    contractorInvoice: new FormControl(''),
-    newContractorInvoice: new FormControl(''),
-    contractorInvoiceProjectNumber: new FormControl(''),
-    newContractorInvoiceProjectNumber: new FormControl(''),
-    prevailingOrNot: new FormControl(''),
-    sapOrSpNumber: new FormControl(''),
-    reportRequirement: new FormControl(''),
-    contractNumber: new FormControl(''),
-    projectId: new FormControl(''),
-    classCodes: new FormArray([]),
-  
-    // Prevailing Wage Rate Details
-    baseRate: new FormControl(''),
-    fringeRate: new FormControl(''),
-    totalStandardTimeRate: new FormControl(''),
-    totalOverTimeRate: new FormControl(''),
-  
-    // Job Details
-    jobDescription: new FormControl(''),
-    jobNumber: new FormControl(''),
-    material: new FormControl(''),
-    truckTypes: new FormArray([]),
-    invoiceType: new FormControl(''),
-    itoMtoRate: new FormControl(''),
-    haulRate: new FormControl(''),
-  
-    // Job Schedule
-    jobDate: new FormControl(''),
-    jobStartTime: new FormControl(''),
+  // Form groups for each step 
+  step1FormGroup!: FormGroup;
+  step2FormGroup!: FormGroup;
+  step3FormGroup!: FormGroup;
+  step4FormGroup!: FormGroup;
 
-     // Loading/Unloading address selections 
-  loadingAddress: new FormControl(''),            
-  backhaulLoadingAddress: new FormControl(''),    
-  unloadingAddress: new FormControl(''),           
-  backhaulUnloadingAddress: new FormControl(''),   
-  
-    // Loading options
-    loadingAddresses: new FormControl(''),
-    backhaulLoadingAddresses: new FormControl(''),
-    loadingOption: new FormControl(''),
-    logWeight: new FormControl(''),
-    ticketNumber: new FormControl(''),
-    ticketPhoto: new FormControl(''),
-    signature: new FormControl(''),
-    trackLoadingTime: new FormControl(''),
-  
-    // Loading address fields
-    newLoadingAddress: new FormControl(''),
-    loadingCountry: new FormControl('United States'),
-    loadingState: new FormControl(''),
-    loadingCity: new FormControl(''),
-    loadingZipCode: new FormControl(''),
-    loadingLocationName: new FormControl(''),
-    loadingLatitude: new FormControl(''),
-    loadingLongitude: new FormControl(''),
-    loadingLocationType: new FormControl(''),
-  
-    // Unloading options
-    unloadingAddresses: new FormControl(''),
-    backhaulUnloadingAddresses: new FormControl(''),
-    unloadLogWeight: new FormControl(''),
-    unloadTicketNumber: new FormControl(''),
-    unloadTicketPhoto: new FormControl(''),
-    unloadSignature: new FormControl(''),
-  
-    // Unloading address fields
-    newUnloadingAddress: new FormControl(''),
-    unloadingCountry: new FormControl('United States'),
-    unloadingState: new FormControl(''),
-    unloadingCity: new FormControl(''),
-    unloadingZipCode: new FormControl(''),
-    unloadingLocationName: new FormControl(''),
-    unloadingLatitude: new FormControl(''),
-    unloadingLongitude: new FormControl(''),
-    unloadingLocationType: new FormControl(''),
-  
-    // Backhaul loading address fields
-    newBackhaulLoadingAddress: new FormControl(''),
-    backhaulLoadingCountry: new FormControl('United States'),
-    backhaulLoadingState: new FormControl(''),
-    backhaulLoadingCity: new FormControl(''),
-    backhaulLoadingZipCode: new FormControl(''),
-    backhaulLoadingLocationName: new FormControl(''),
-    backhaulLoadingLatitude: new FormControl(''),
-    backhaulLoadingLongitude: new FormControl(''),
-    backhaulLoadingLocationType: new FormControl(''),
-  
-    // Backhaul unloading address fields
-    newBackhaulUnloadingAddress: new FormControl(''),
-    backhaulUnloadingCountry: new FormControl('United States'),
-    backhaulUnloadingState: new FormControl(''),
-    backhaulUnloadingCity: new FormControl(''),
-    backhaulUnloadingZipCode: new FormControl(''),
-    backhaulUnloadingLocationName: new FormControl(''),
-    backhaulUnloadingLatitude: new FormControl(''),
-    backhaulUnloadingLongitude: new FormControl(''),
-    backhaulUnloadingLocationType: new FormControl(''),
-  
-    // Job Management
-    isBackhaulEnabled: new FormControl(false),
-    backhaulOption: new FormControl(''),
-    jobForemanName: new FormControl(''),
-    jobForemanContact: new FormControl(''),
-    additionalNotes: new FormControl('')
-  });
-  
-  
+  isOtherContractor = false;
+  isOtherContractorProjectNumber = false;
+  isPrevailing = false;
+  isAASHTOWare = false;
 
-  isOtherContractor: boolean = false;
-  isOtherContractorProjectNumber: boolean = false;
-  isPrevailing: boolean = false;
-  isNonPrevailing: boolean = false;
-  availableTruckTypes: string[] = ['Belly', 'Side', 'End', 'Quint', 'Quad', 'Tri'];
+  primeContractors: string[] = [];
+  filteredPrimeContractors: string[] = [];
 
-  // Dropdown options for addresses (will show in the dropdown)
-  loadingAddressOptions: any[] = [];
-  unloadingAddressOptions: any[] = [];
-  backhaulLoadingAddressOptions: any[] = [];
-  backhaulUnloadingAddressOptions: any[] = [];
+  invoicedContractors: string[] = [];
+  filteredInvoicedContractors: string[] = [];
 
-  // Bools for if add new address button is clicked
-  showNewLoadingAddress: boolean = false;
-  showNewUnloadingAddress: boolean = false;
-  showNewBackhaulLoadingAddress: boolean = false;
-  showNewBackhaulUnloadingAddress: boolean = false;
+  addressOptions = {
+    loading: [],
+    unloading: [],
+    backhaulLoading: [],
+    backhaulUnloading: []
+  };
 
+  showNewAddress = {
+    loading: false,
+    unloading: false,
+    backhaulLoading: false,
+    backhaulUnloading: false
+  };
 
-  countryOptions: string[] = ['United States'];
-  stateOptions: string[] = [
+  readonly prevailingOptions = ['AASHTOWare', 'LPC truck', 'salesforce'];
+  readonly states = [
     'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut',
     'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa',
     'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan',
@@ -163,209 +61,10 @@ export class CreateJobComponent implements OnInit {
     'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia',
     'Wisconsin', 'Wyoming'
   ];
-
-
-  locationTypeOptions: string[] = [
-    'Building Material',
-    'Cement',
-    'Distrubution Center',
-    'Job Site',
-    'Landfill',
-    'Mine',
-    'Not Set',
-    'Plant',
-    'Quarry',
-    'Yard'
+  readonly locationTypes = [
+    'Building Material', 'Cement', 'Distribution Center', 'Job Site', 'Landfill',
+    'Mine', 'Not Set', 'Plant', 'Quarry', 'Yard'
   ];
-
-  fetchLoadingAddresses() {
-    this.addressService.getAllAddresses().subscribe({
-      next: (addresses) => {
-        this.loadingAddressOptions = addresses;
-      },
-      error: (error) => {
-        console.error('Failed to fetch addresses:', error);
-      }
-    });
-  }
-  fetchUnloadingAddresses() {
-    this.addressService.getAllAddresses()
-        .subscribe(addrs => this.unloadingAddressOptions = addrs);
-  }
-  
-  
-
-  addLoadingAddress() {
-    const latitude = this.jobForm.get('loadingLatitude')?.value;
-    const longitude = this.jobForm.get('loadingLongitude')?.value;
-  
-    if (!latitude || !longitude) {
-      alert('Latitude and Longitude are required.');
-      return;
-    }
-  
-    const latitudeRegex = /^-?\d{1,3}\.\d{1,6}$/;
-    const longitudeRegex = /^-?\d{1,3}\.\d{1,6}$/;
-  
-    if (!latitudeRegex.test(latitude) || !longitudeRegex.test(longitude)) {
-      alert('Latitude and Longitude must be valid decimal numbers with up to 6 decimal places.');
-      return;
-    }
-    const newAddress = this.jobForm.get('newLoadingAddress')?.value?.trim();
-  
-    if (newAddress) {
-      const addressData = {
-        street_address: newAddress,
-        country: this.jobForm.get('loadingCountry')?.value,
-        state: this.jobForm.get('loadingState')?.value,
-        city: this.jobForm.get('loadingCity')?.value,
-        zip_code: this.jobForm.get('loadingZipCode')?.value,
-        location_name: this.jobForm.get('loadingLocationName')?.value,
-        latitude: this.jobForm.get('loadingLatitude')?.value,
-        longitude: this.jobForm.get('loadingLongitude')?.value,
-        location_type: this.jobForm.get('loadingLocationType')?.value
-      };
-  
-  
-      this.addressService.createAddress(addressData).subscribe({
-        next: (response) => {
-          console.log('Address created:', response);
-          this.fetchLoadingAddresses();
-          this.jobForm.patchValue({
-            newLoadingAddress: '',
-            loadingCountry: 'United States',
-            loadingState: '',
-            loadingCity: '',
-            loadingZipCode: '',
-            loadingLocationName: '',
-            loadingLatitude: '',
-            loadingLongitude: '',
-            loadingLocationType: ''
-          });
-          this.showNewLoadingAddress = false;
-        },
-        error: (error) => {
-          console.error('Failed to create address:', error);
-        }
-      });
-    }
-  }
-  
-  addUnloadingAddress() {
-    const street = this.jobForm.get('newUnloadingAddress')!.value.trim();
-    // … validate latitude/longitude, etc.
-  
-    const payload = {
-      street_address: street,
-      country: this.jobForm.get('unloadingCountry')!.value,
-      state:   this.jobForm.get('unloadingState')!.value,
-      city:    this.jobForm.get('unloadingCity')!.value,
-      zip_code:    this.jobForm.get('unloadingZipCode')!.value,
-      location_name: this.jobForm.get('unloadingLocationName')!.value,
-      latitude:  +this.jobForm.get('unloadingLatitude')!.value,
-      longitude: +this.jobForm.get('unloadingLongitude')!.value,
-      location_type: this.jobForm.get('unloadingLocationType')!.value
-    };
-  
-    this.addressService.createAddress(payload).subscribe({
-      next: (addr) => {
-        // addr should now have an `id` field
-        this.fetchUnloadingAddresses();          // reload the list from the server
-        this.jobForm.patchValue({
-          unloadingAddresses: addr.id,           // set the control to the new numeric ID
-          newUnloadingAddress: '',
-          unloadingCountry: 'United States',
-          unloadingState: '',
-          unloadingCity: '',
-          unloadingZipCode: '',
-          unloadingLocationName: '',
-          unloadingLatitude: '',
-          unloadingLongitude: '',
-          unloadingLocationType: ''
-        });
-        this.showNewUnloadingAddress = false;
-      },
-      error: (e) => console.error('Could not create unloading address', e)
-    });
-  }
-  
-  addBackhaulLoadingAddress() {
-    const newAddress = this.jobForm.get('newBackhaulLoadingAddress')?.value?.trim();
-  
-    if (newAddress) {
-      const fullAddress = `${newAddress}, ${this.jobForm.get('backhaulLoadingCity')?.value}, ${this.jobForm.get('backhaulLoadingState')?.value}, ${this.jobForm.get('backhaulLoadingZipCode')?.value}, ${this.jobForm.get('backhaulLoadingCountry')?.value}, ${this.jobForm.get('backhaulLoadingLocationName')?.value}, ${this.jobForm.get('backhaulLoadingLatitude')?.value}, ${this.jobForm.get('backhaulLoadingLongitude')?.value}, ${this.jobForm.get('backhaulLoadingLocationType')?.value}`;
-  
-      this.backhaulLoadingAddressOptions.push(fullAddress);
-      this.jobForm.get('backhaulLoadingAddresses')?.setValue(fullAddress);
-  
-      this.jobForm.patchValue({
-        newBackhaulLoadingAddress: '',
-        backhaulLoadingCountry: 'United States',
-        backhaulLoadingState: '',
-        backhaulLoadingCity: '',
-        backhaulLoadingZipCode: '',
-        backhaulLoadingLocationName: '',
-        backhaulLoadingLatitude: '',
-        backhaulLoadingLongitude: '',
-        backhaulLoadingLocationType: ''
-      });
-      this.showNewBackhaulLoadingAddress = false;
-    }
-  }
-  
-  addBackhaulUnloadingAddress() {
-    const newAddress = this.jobForm.get('newBackhaulUnloadingAddress')?.value?.trim();
-  
-    if (newAddress) {
-      const fullAddress = `${newAddress}, ${this.jobForm.get('backhaulUnloadingCity')?.value}, ${this.jobForm.get('backhaulUnloadingState')?.value}, ${this.jobForm.get('backhaulUnloadingZipCode')?.value}, ${this.jobForm.get('backhaulUnloadingCountry')?.value}, ${this.jobForm.get('backhaulUnloadingLocationName')?.value}, ${this.jobForm.get('backhaulUnloadingLatitude')?.value}, ${this.jobForm.get('backhaulUnloadingLongitude')?.value}, ${this.jobForm.get('backhaulUnloadingLocationType')?.value}`;
-  
-      this.backhaulUnloadingAddressOptions.push(fullAddress);
-      this.jobForm.get('backhaulUnloadingAddresses')?.setValue(fullAddress);
-  
-      this.jobForm.patchValue({
-        newBackhaulUnloadingAddress: '',
-        backhaulUnloadingCountry: 'United States',
-        backhaulUnloadingState: '',
-        backhaulUnloadingCity: '',
-        backhaulUnloadingZipCode: '',
-        backhaulUnloadingLocationName: '',
-        backhaulUnloadingLatitude: '',
-        backhaulUnloadingLongitude: '',
-        backhaulUnloadingLocationType: ''
-      });
-      this.showNewBackhaulUnloadingAddress = false;
-    }
-  }
-  
-
-  /* Reset the loading fields after adding or closing
-  resetLoadingFields() {
-    this.newLoadingAddress = '';
-    this.loadingCity = '';
-    this.loadingState = '';
-    this.loadingZipCode = '';
-    this.loadingLocationName = '';
-    this.loadingLatitude = '';
-    this.loadingLongitude = '';
-    this.loadingLocationType = '';
-    this.showNewLoadingAddress = false;
-  }
-  */
-
-  /*
-  // Reset the unloading fields after adding or closing
-  resetUnloadingFields() {
-    this.newUnloadingAddress = '';
-    this.unloadingCity = '';
-    this.unloadingState = '';
-    this.unloadingZipCode = '';
-    this.unloadingLocationName = '';
-    this.unloadingLatitude = '';
-    this.unloadingLongitude = '';
-    this.unloadingLocationType = '';
-    this.showNewUnloadingAddress = false;
-  }
-  */
 
   loadingOptions = [
     { label: 'Log Weight', controlName: 'logWeight' },
@@ -382,13 +81,23 @@ export class CreateJobComponent implements OnInit {
     { label: 'Signature', controlName: 'unloadSignature' }
   ];
 
-
-  // Getter for the truckTypes FormArray
-  get truckTypes(): FormArray {
-    return this.jobForm.get('truckTypes') as FormArray;
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private addressService: AddressService,
+    private jobService: JobService,
+    private customerService: CustomerService
+  ) {
+    this.jobForm = this.createForm();
+    this.createStepFormGroups(); // NEW METHOD
+    this.setupFormListeners();
   }
 
-  // Getter for the classCodes FormArray
+  ngOnInit(): void {
+    this.fetchAddresses();
+    this.fetchCustomers();
+  }
+
   get classCodes(): FormArray {
     return this.jobForm.get('classCodes') as FormArray;
   }
@@ -397,130 +106,584 @@ export class CreateJobComponent implements OnInit {
     return this.jobForm.get('isBackhaulEnabled')?.value;
   }
 
-  addClassCode(code: string) {
-    this.classCodes.push(new FormGroup({
-      laborCode: new FormControl(code), // Pre-filled like 602, 604, 607
-      baseRate: new FormControl(''),
-      fringeRate: new FormControl(''),
-      totalStandardTimeRate: new FormControl(''),
-      totalOverTimeRate: new FormControl('')
+  // NEW METHOD: Create separate FormGroups for each step
+  private createStepFormGroups(): void {
+    // Step 1: Project Details
+    this.step1FormGroup = this.fb.group({
+      project: this.jobForm.get('project'),
+      primeContractor: this.jobForm.get('primeContractor'),
+      primeContractorProjectNumber: this.jobForm.get('primeContractorProjectNumber'),
+      contractorInvoice: this.jobForm.get('contractorInvoice'),
+      contractorInvoiceProjectNumber: this.jobForm.get('contractorInvoiceProjectNumber'),
+      prevailingOrNot: this.jobForm.get('prevailingOrNot')
+    });
+
+    // Step 2: Job Rate & Material
+    this.step2FormGroup = this.fb.group({
+      jobDescription: this.jobForm.get('jobDescription'),
+      jobNumber: this.jobForm.get('jobNumber'),
+      material: this.jobForm.get('material')
+    });
+
+    // Step 3: Loading & Unloading (no required fields, so use empty FormGroup)
+    this.step3FormGroup = this.fb.group({
+      placeholder: new FormControl('') // Dummy control to make stepper work
+    });
+
+    // Step 4: Additional Notes (no required fields)
+    this.step4FormGroup = this.fb.group({
+      placeholder: new FormControl('')
+    });
+  }
+
+  private createForm(): FormGroup {
+    return this.fb.group({
+      project: ['', Validators.required],
+      primeContractor: ['', Validators.required],
+      primeContractorProjectNumber: ['', Validators.required],
+      contractorInvoice: ['', Validators.required],
+      newContractorInvoice: [''],
+      contractorInvoiceProjectNumber: ['', Validators.required],
+      newContractorInvoiceProjectNumber: [''],
+      prevailingOrNot: ['', Validators.required],
+      prevailingType: [''],
+      sapOrSpNumber: [''],
+      reportRequirement: [''],
+      contractNumber: [''],
+      projectId: [''],
+      classCodes: this.fb.array([]),
+      
+      jobDescription: ['', Validators.required],
+      jobNumber: ['', Validators.required],
+      material: ['', Validators.required],
+      invoiceType: [''],
+      itoMtoRate: [''],
+      haulRate: [''],
+      
+      jobDate: [''],
+      jobStartTime: [''],
+      
+      loadingAddress: [''],
+      unloadingAddress: [''],
+      backhaulLoadingAddress: [''],
+      backhaulUnloadingAddress: [''],
+      
+      newLoadingAddress: [''],
+      loadingCountry: ['United States'],
+      loadingState: [''],
+      loadingCity: [''],
+      loadingZipCode: [''],
+      loadingLocationName: [''],
+      loadingLatitude: [''],
+      loadingLongitude: [''],
+      loadingLocationType: [''],
+      
+      newUnloadingAddress: [''],
+      unloadingCountry: ['United States'],
+      unloadingState: [''],
+      unloadingCity: [''],
+      unloadingZipCode: [''],
+      unloadingLocationName: [''],
+      unloadingLatitude: [''],
+      unloadingLongitude: [''],
+      unloadingLocationType: [''],
+      
+      newBackhaulLoadingAddress: [''],
+      backhaulLoadingCountry: ['United States'],
+      backhaulLoadingState: [''],
+      backhaulLoadingCity: [''],
+      backhaulLoadingZipCode: [''],
+      backhaulLoadingLocationName: [''],
+      backhaulLoadingLatitude: [''],
+      backhaulLoadingLongitude: [''],
+      backhaulLoadingLocationType: [''],
+      
+      newBackhaulUnloadingAddress: [''],
+      backhaulUnloadingCountry: ['United States'],
+      backhaulUnloadingState: [''],
+      backhaulUnloadingCity: [''],
+      backhaulUnloadingZipCode: [''],
+      backhaulUnloadingLocationName: [''],
+      backhaulUnloadingLatitude: [''],
+      backhaulUnloadingLongitude: [''],
+      backhaulUnloadingLocationType: [''],
+      
+      logWeight: [''],
+      ticketNumber: [''],
+      ticketPhoto: [''],
+      signature: [''],
+      trackLoadingTime: [''],
+      unloadLogWeight: [''],
+      unloadTicketNumber: [''],
+      unloadTicketPhoto: [''],
+      unloadSignature: [''],
+      
+      isBackhaulEnabled: [false],
+      backhaulOption: [''],
+      jobForemanName: [''],
+      jobForemanContact: [''],
+      additionalNotes: ['']
+    });
+  }
+
+  private setupFormListeners(): void {
+    this.jobForm.get('primeContractor')?.valueChanges.subscribe(value => {
+      if (value && value.trim().length > 0) {
+        this.filteredPrimeContractors = this.primeContractors.filter(contractor =>
+          contractor.toLowerCase().includes(value.toLowerCase())
+        );
+      } else if (value === '') {
+        this.filteredPrimeContractors = [...this.primeContractors];
+      } else {
+        this.filteredPrimeContractors = [];
+      }
+    });
+
+    this.jobForm.get('contractorInvoice')?.valueChanges.subscribe(value => {
+      if (value && value.trim().length > 0) {
+        this.filteredInvoicedContractors = this.invoicedContractors.filter(contractor =>
+          contractor.toLowerCase().includes(value.toLowerCase())
+        );
+      } else if (value === '') {
+        this.filteredInvoicedContractors = [...this.invoicedContractors];
+      } else {
+        this.filteredInvoicedContractors = [];
+      }
+      this.isOtherContractor = value === 'other';
+    });
+
+    this.jobForm.get('contractorInvoiceProjectNumber')?.valueChanges.subscribe(
+      value => this.isOtherContractorProjectNumber = value === 'other'
+    );
+
+    this.jobForm.get('prevailingOrNot')?.valueChanges.subscribe(value => {
+      this.isPrevailing = value === 'prevailing';
+      const prevailingTypeControl = this.jobForm.get('prevailingType');
+      
+      if (this.isPrevailing) {
+        prevailingTypeControl?.setValidators(Validators.required);
+        // Add prevailingType to step1FormGroup validation dynamically
+        this.step1FormGroup.addControl('prevailingType', prevailingTypeControl as FormControl);
+        if (this.classCodes.length === 0) {
+          ['602', '604', '607'].forEach(code => this.addClassCode(code));
+        }
+      } else {
+        prevailingTypeControl?.clearValidators();
+        this.jobForm.patchValue({ prevailingType: '' });
+        this.isAASHTOWare = false;
+        // Remove prevailingType from step1FormGroup validation
+        this.step1FormGroup.removeControl('prevailingType');
+        while (this.classCodes.length > 0) {
+          this.classCodes.removeAt(0);
+        }
+      }
+      prevailingTypeControl?.updateValueAndValidity();
+    });
+
+    this.jobForm.get('prevailingType')?.valueChanges.subscribe(value => {
+      this.isAASHTOWare = value === 'AASHTOWare';
+    });
+  }
+
+  selectPrimeContractor(contractor: string): void {
+    this.jobForm.patchValue({ primeContractor: contractor });
+    this.filteredPrimeContractors = [];
+  }
+
+  onPrimeContractorFocus(): void {
+    const currentValue = this.jobForm.get('primeContractor')?.value;
+    if (!currentValue || currentValue.trim() === '') {
+      this.filteredPrimeContractors = [...this.primeContractors];
+    }
+  }
+
+  onPrimeContractorBlur(): void {
+    setTimeout(() => {
+      this.filteredPrimeContractors = [];
+    }, 200);
+  }
+
+  selectInvoicedContractor(contractor: string): void {
+    this.jobForm.patchValue({ contractorInvoice: contractor });
+    this.filteredInvoicedContractors = [];
+  }
+
+  onInvoicedContractorFocus(): void {
+    const currentValue = this.jobForm.get('contractorInvoice')?.value;
+    if (!currentValue || currentValue.trim() === '') {
+      this.filteredInvoicedContractors = [...this.invoicedContractors];
+    }
+  }
+
+  onInvoicedContractorBlur(): void {
+    setTimeout(() => {
+      this.filteredInvoicedContractors = [];
+    }, 200);
+  }
+
+  private fetchAddresses(): void {
+    this.addressService.getAllAddresses().subscribe({
+      next: addresses => {
+        this.addressOptions.loading = addresses;
+        this.addressOptions.unloading = addresses;
+        this.addressOptions.backhaulLoading = addresses;
+        this.addressOptions.backhaulUnloading = addresses;
+      },
+      error: err => console.error('Failed to fetch addresses:', err)
+    });
+  }
+
+  private fetchCustomers(): void {
+    this.customerService.getCustomers().subscribe({
+      next: customers => {
+        this.primeContractors = customers.map(c => 
+          c.name || c.company_name || c.customer_name || c.business_name
+        ).filter(name => name);
+        
+        this.invoicedContractors = [...this.primeContractors];
+      },
+      error: err => console.error('Failed to fetch customers:', err)
+    });
+  }
+
+  addClassCode(code: string): void {
+    this.classCodes.push(this.fb.group({
+      laborCode: [code],
+      baseRate: [''],
+      fringeRate: [''],
+      totalStandardTimeRate: [''],
+      totalOverTimeRate: ['']
     }));
   }
 
-  onTruckTypeChange(event: any) {
-    const selectedTypes = this.truckTypes;
-  
-    if (event.target.checked) {
-      selectedTypes.push(new FormGroup({
-        type: new FormControl(event.target.value),
-        rate: new FormControl(''),
-        unit: new FormControl('')
-      }));
-    } else {
-      const index = selectedTypes.controls.findIndex(
-        (group: any) => group.value.type === event.target.value
-      );
-      selectedTypes.removeAt(index);
-    }
-  }
+  addLoadingAddress(): void {
+    const street = this.jobForm.get('newLoadingAddress')?.value?.trim();
+    if (!street) return;
 
+    const lat = this.jobForm.get('loadingLatitude')?.value;
+    const lng = this.jobForm.get('loadingLongitude')?.value;
 
-  /*onTruckTypeChange(event: any) {
-    const selectedTypes = this.jobForm.get('truckTypes') as FormArray;
-  
-    if (event.target.checked) {
-      selectedTypes.push(new FormControl(event.target.value));
-    } else {
-      const index = selectedTypes.controls.findIndex(x => x.value === event.target.value);
-      selectedTypes.removeAt(index);
-    }
-  }
-    */
-
-
-  constructor(private router: Router, private addressService: AddressService, private jobService: JobService) {
-    // Listen for changes in the contractorInvoice dropdown
-    this.jobForm.get('contractorInvoice')?.valueChanges.subscribe((value) => {
-      this.isOtherContractor = value === 'other'; // Show new contractor input if "Other" is selected
-    });
-    this.jobForm.get('contractorInvoiceProjectNumber')?.valueChanges.subscribe((value) => {
-      this.isOtherContractorProjectNumber = value === 'other'; // Show new contractor number input if "Other" is selected
-    });
-    this.jobForm.get('prevailingOrNot')?.valueChanges.subscribe((value) => {
-      this.isNonPrevailing = value === 'nonPrevailing'; // Show new SAP or SP number input if "Non-Prevailing" is selected
-      this.isPrevailing = value === 'prevailing'; 
-
-      if (this.isPrevailing && this.classCodes.length == 0) {
-        ['602', '604', '607'].forEach(code => this.addClassCode(code));
-      }
-
-    });
-    
-  }
-
-  submitJob() {
-    if (this.jobForm.invalid) {
-      alert('Please complete required fields.');
+    if (!this.validateCoordinates(lat, lng)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid Coordinates',
+        text: 'Latitude and Longitude must be valid decimal numbers with up to 6 decimal places.',
+        confirmButtonColor: '#d33'
+      });
       return;
     }
-  
-    const formData = this.jobForm.value;
-  
+
     const payload = {
-      project: formData.project,
-      prime_contractor: formData.primeContractor,
-      prime_contractor_project_number: formData.primeContractorProjectNumber,
-      contractor_invoice: formData.contractorInvoice,
-      new_contractor_invoice: formData.newContractorInvoice || null,
-      contractor_invoice_project_number: formData.contractorInvoiceProjectNumber,
-      new_contractor_invoice_project_number: formData.newContractorInvoiceProjectNumber || null,
-      prevailing_or_not: formData.prevailingOrNot,
-      sap_or_sp_number: formData.sapOrSpNumber || null,
-      report_requirement: formData.reportRequirement || null,
-      contract_number: formData.contractNumber || null,
-      prevailing_wage_class_codes: formData.classCodes.map(code => ({
+      street_address: street,
+      country: this.jobForm.get('loadingCountry')?.value,
+      state: this.jobForm.get('loadingState')?.value,
+      city: this.jobForm.get('loadingCity')?.value,
+      zip_code: this.jobForm.get('loadingZipCode')?.value,
+      location_name: this.jobForm.get('loadingLocationName')?.value,
+      latitude: lat,
+      longitude: lng,
+      location_type: this.jobForm.get('loadingLocationType')?.value
+    };
+
+    this.addressService.createAddress(payload).subscribe({
+      next: () => {
+        this.fetchAddresses();
+        this.resetLoadingForm();
+        this.showNewAddress.loading = false;
+      },
+      error: err => console.error('Failed to create loading address:', err)
+    });
+  }
+
+  addUnloadingAddress(): void {
+    const street = this.jobForm.get('newUnloadingAddress')?.value?.trim();
+    if (!street) return;
+
+    const lat = this.jobForm.get('unloadingLatitude')?.value;
+    const lng = this.jobForm.get('unloadingLongitude')?.value;
+
+    if (!this.validateCoordinates(lat, lng)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid Coordinates',
+        text: 'Latitude and Longitude must be valid decimal numbers with up to 6 decimal places.',
+        confirmButtonColor: '#d33'
+      });
+      return;
+    }
+
+    const payload = {
+      street_address: street,
+      country: this.jobForm.get('unloadingCountry')?.value,
+      state: this.jobForm.get('unloadingState')?.value,
+      city: this.jobForm.get('unloadingCity')?.value,
+      zip_code: this.jobForm.get('unloadingZipCode')?.value,
+      location_name: this.jobForm.get('unloadingLocationName')?.value,
+      latitude: lat,
+      longitude: lng,
+      location_type: this.jobForm.get('unloadingLocationType')?.value
+    };
+
+    this.addressService.createAddress(payload).subscribe({
+      next: addr => {
+        this.fetchAddresses();
+        this.jobForm.patchValue({ unloadingAddress: addr.id });
+        this.resetUnloadingForm();
+        this.showNewAddress.unloading = false;
+      },
+      error: err => console.error('Failed to create unloading address:', err)
+    });
+  }
+
+  addBackhaulLoadingAddress(): void {
+    const street = this.jobForm.get('newBackhaulLoadingAddress')?.value?.trim();
+    if (!street) return;
+
+    const lat = this.jobForm.get('backhaulLoadingLatitude')?.value;
+    const lng = this.jobForm.get('backhaulLoadingLongitude')?.value;
+
+    if (!this.validateCoordinates(lat, lng)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid Coordinates',
+        text: 'Latitude and Longitude must be valid decimal numbers with up to 6 decimal places.',
+        confirmButtonColor: '#d33'
+      });
+      return;
+    }
+
+    const payload = {
+      street_address: street,
+      country: this.jobForm.get('backhaulLoadingCountry')?.value,
+      state: this.jobForm.get('backhaulLoadingState')?.value,
+      city: this.jobForm.get('backhaulLoadingCity')?.value,
+      zip_code: this.jobForm.get('backhaulLoadingZipCode')?.value,
+      location_name: this.jobForm.get('backhaulLoadingLocationName')?.value,
+      latitude: lat,
+      longitude: lng,
+      location_type: this.jobForm.get('backhaulLoadingLocationType')?.value
+    };
+
+    this.addressService.createAddress(payload).subscribe({
+      next: () => {
+        this.fetchAddresses();
+        this.resetBackhaulLoadingForm();
+        this.showNewAddress.backhaulLoading = false;
+      },
+      error: err => console.error('Failed to create backhaul loading address:', err)
+    });
+  }
+
+  addBackhaulUnloadingAddress(): void {
+    const street = this.jobForm.get('newBackhaulUnloadingAddress')?.value?.trim();
+    if (!street) return;
+
+    const lat = this.jobForm.get('backhaulUnloadingLatitude')?.value;
+    const lng = this.jobForm.get('backhaulUnloadingLongitude')?.value;
+
+    if (!this.validateCoordinates(lat, lng)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid Coordinates',
+        text: 'Latitude and Longitude must be valid decimal numbers with up to 6 decimal places.',
+        confirmButtonColor: '#d33'
+      });
+      return;
+    }
+
+    const payload = {
+      street_address: street,
+      country: this.jobForm.get('backhaulUnloadingCountry')?.value,
+      state: this.jobForm.get('backhaulUnloadingState')?.value,
+      city: this.jobForm.get('backhaulUnloadingCity')?.value,
+      zip_code: this.jobForm.get('backhaulUnloadingZipCode')?.value,
+      location_name: this.jobForm.get('backhaulUnloadingLocationName')?.value,
+      latitude: lat,
+      longitude: lng,
+      location_type: this.jobForm.get('backhaulUnloadingLocationType')?.value
+    };
+
+    this.addressService.createAddress(payload).subscribe({
+      next: () => {
+        this.fetchAddresses();
+        this.resetBackhaulUnloadingForm();
+        this.showNewAddress.backhaulUnloading = false;
+      },
+      error: err => console.error('Failed to create backhaul unloading address:', err)
+    });
+  }
+
+  private validateCoordinates(lat: string, lng: string): boolean {
+    if (!lat || !lng) return false;
+    const regex = /^-?\d{1,3}\.\d{1,6}$/;
+    return regex.test(lat) && regex.test(lng);
+  }
+
+  private resetLoadingForm(): void {
+    this.jobForm.patchValue({
+      newLoadingAddress: '',
+      loadingCountry: 'United States',
+      loadingState: '',
+      loadingCity: '',
+      loadingZipCode: '',
+      loadingLocationName: '',
+      loadingLatitude: '',
+      loadingLongitude: '',
+      loadingLocationType: ''
+    });
+  }
+
+  private resetUnloadingForm(): void {
+    this.jobForm.patchValue({
+      newUnloadingAddress: '',
+      unloadingCountry: 'United States',
+      unloadingState: '',
+      unloadingCity: '',
+      unloadingZipCode: '',
+      unloadingLocationName: '',
+      unloadingLatitude: '',
+      unloadingLongitude: '',
+      unloadingLocationType: ''
+    });
+  }
+
+  private resetBackhaulLoadingForm(): void {
+    this.jobForm.patchValue({
+      newBackhaulLoadingAddress: '',
+      backhaulLoadingCountry: 'United States',
+      backhaulLoadingState: '',
+      backhaulLoadingCity: '',
+      backhaulLoadingZipCode: '',
+      backhaulLoadingLocationName: '',
+      backhaulLoadingLatitude: '',
+      backhaulLoadingLongitude: '',
+      backhaulLoadingLocationType: ''
+    });
+  }
+
+  private resetBackhaulUnloadingForm(): void {
+    this.jobForm.patchValue({
+      newBackhaulUnloadingAddress: '',
+      backhaulUnloadingCountry: 'United States',
+      backhaulUnloadingState: '',
+      backhaulUnloadingCity: '',
+      backhaulUnloadingZipCode: '',
+      backhaulUnloadingLocationName: '',
+      backhaulUnloadingLatitude: '',
+      backhaulUnloadingLongitude: '',
+      backhaulUnloadingLocationType: ''
+    });
+  }
+
+  // UPDATED METHOD: Simplified - let stepControl handle validation
+  nextStep(stepper: any): void {
+    const currentStepIndex = stepper.selectedIndex;
+    
+    // Get the current step's FormGroup
+    let currentStepForm: FormGroup | null = null;
+    switch(currentStepIndex) {
+      case 0:
+        currentStepForm = this.step1FormGroup;
+        break;
+      case 1:
+        currentStepForm = this.step2FormGroup;
+        break;
+      case 2:
+        currentStepForm = this.step3FormGroup;
+        break;
+      case 3:
+        currentStepForm = this.step4FormGroup;
+        break;
+    }
+
+    if (currentStepForm && currentStepForm.invalid) {
+      currentStepForm.markAllAsTouched();
+      Swal.fire({
+        icon: 'error',
+        title: 'Missing Required Fields',
+        text: 'Please fill out all required fields (marked with *) before proceeding.',
+        confirmButtonColor: '#3085d6'
+      });
+      return;
+    }
+
+    stepper.next();
+  }
+
+  submitJob(): void {
+    const requiredFields = Object.keys(this.jobForm.controls).filter(
+      key => {
+        const control = this.jobForm.get(key);
+        return control?.hasValidator(Validators.required) && control?.invalid;
+      }
+    );
+
+    if (requiredFields.length > 0) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Incomplete Form',
+        text: 'Please complete all required fields (marked with *) before submitting.',
+        confirmButtonColor: '#3085d6'
+      });
+      return;
+    }
+
+    const form = this.jobForm.value;
+    
+    const payload = {
+      project: form.project,
+      prime_contractor: form.primeContractor,
+      prime_contractor_project_number: form.primeContractorProjectNumber,
+      contractor_invoice: form.contractorInvoice,
+      new_contractor_invoice: form.newContractorInvoice || null,
+      contractor_invoice_project_number: form.contractorInvoiceProjectNumber,
+      new_contractor_invoice_project_number: form.newContractorInvoiceProjectNumber || null,
+      prevailing_or_not: form.prevailingOrNot,
+      prevailing_type: form.prevailingType || null,
+      sap_or_sp_number: form.sapOrSpNumber || null,
+      report_requirement: form.reportRequirement || null,
+      contract_number: form.contractNumber || null,
+      prevailing_wage_class_codes: form.classCodes?.map(code => ({
         class_code: code.laborCode,
         base_rate: code.baseRate || 0,
         fringe_rate: code.fringeRate || 0,
         total_standard_time_rate: code.totalStandardTimeRate || 0,
         total_overtime_rate: code.totalOverTimeRate || 0
-      })),
-      project_id: formData.projectId || null,
-      job_description: formData.jobDescription,
-      job_number: formData.jobNumber,
-      material: formData.material,
-      truck_types: formData.truckTypes.map(t => ({
-        type: t.type,
-        rate: t.rate || 0,
-        unit: t.unit || ''
-      })),
-      job_date: formData.jobDate,
-      shift_start: formData.jobStartTime || "00:00:00",
-      loading_address: formData.loadingAddresses,
-      unloading_address: formData.unloadingAddresses, 
-      is_backhaul_enabled: formData.isBackhaulEnabled,
-      backhaul_loading_address: formData.backhaulLoadingAddresses || null,
-      backhaul_unloading_address: formData.backhaulUnloadingAddresses || null,
-      job_foreman_name: formData.jobForemanName,
-      job_foreman_contact: formData.jobForemanContact,
-      additional_notes: formData.additionalNotes || null
+      })) || [],
+      project_id: form.projectId || null,
+      job_description: form.jobDescription,
+      job_number: form.jobNumber,
+      material: form.material,
+      job_date: form.jobDate || null,
+      shift_start: form.jobStartTime || '00:00:00',
+      loading_address: form.loadingAddress || null,
+      unloading_address: form.unloadingAddress || null,
+      is_backhaul_enabled: form.isBackhaulEnabled,
+      backhaul_loading_address: form.backhaulLoadingAddress || null,
+      backhaul_unloading_address: form.backhaulUnloadingAddress || null,
+      job_foreman_name: form.jobForemanName || null,
+      job_foreman_contact: form.jobForemanContact || null,
+      additional_notes: form.additionalNotes || null
     };
-  
+
     this.jobService.createJob(payload).subscribe({
-      next: (response) => {
-        console.log('Job created successfully!', response);
-        alert('Job created successfully!');
-        this.router.navigate(['/jobs']);
+      next: () => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'Job created successfully!',
+          confirmButtonColor: '#28a745'
+        }).then(() => this.router.navigate(['/all-jobs']));
       },
-      error: (error) => {
-        console.error('Failed to create job:', error);
-        alert('Failed to create job. Please check your input carefully.');
+      error: err => {
+        console.error('Failed to create job:', err);
+        Swal.fire({
+          icon: 'error',
+          title: 'Job Creation Failed',
+          text: 'Please check your input and try again.',
+          confirmButtonColor: '#d33'
+        });
       }
     });
-  }
-  
-  
-  ngOnInit() {
-    this.fetchLoadingAddresses();
   }
 }

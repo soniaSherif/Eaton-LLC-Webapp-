@@ -27,17 +27,18 @@
       <option *ngFor="let truck of trucks" [value]="truck">{{ truck }}</option>
     </select>
   </div>
+  
 
-  <!-- Time Picker for Assignment and Date Display -->
+  <!-- Date Input -->
   <div class="form-group">
-    <label for="time" class="time-label">Time:</label>
-    <div class="time-date-wrapper">
-      <span *ngIf="selectedJob" class="job-date">{{ getJobDate() }}</span> <!-- Display the date of the selected job -->
-      <div class="time-wrapper">
-        <input type="time" id="time" name="time" class="form-control" [(ngModel)]="selectedTime">
-      </div>
-      <span *ngIf="!selectedJob" class="select-job-message">Please select a job</span>
-    </div>
+    <label for="date">Date:</label>
+    <input type="date" id="date" name="date" class="form-control" [(ngModel)]="selectedDate">
+  </div>
+
+  <!-- Time Picker -->
+  <div class="form-group">
+    <label for="time">Time:</label>
+    <input type="time" id="time" name="time" class="form-control" [(ngModel)]="selectedTime">
   </div>
 
   <button type="submit" class="btn btn-primary">Dispatch</button>

@@ -2,8 +2,6 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { InvoicesReportComponent } from './invoices-report.component';
 
 describe('InvoicesReportComponent', () => {
@@ -12,7 +10,7 @@ describe('InvoicesReportComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, HttpClientTestingModule, NoopAnimationsModule, InvoicesReportComponent] // provide router stubs + http client + animations + component
+      imports: [RouterTestingModule, InvoicesReportComponent] // provide router stubs + component
     }).compileComponents();
 
     fixture = TestBed.createComponent(InvoicesReportComponent); // create

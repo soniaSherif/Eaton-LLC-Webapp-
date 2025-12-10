@@ -43,7 +43,8 @@ def test_customer(db):
         phone_number='555-1234',
         email='customer@test.com',
         address='123 Test St',
-        city='Test City'
+        city='Test City',
+        state='MN'
     )
 
 
@@ -168,15 +169,6 @@ def api_client():
 def authenticated_api_client(db, test_user, api_client):
     """Create an authenticated API client."""
     api_client.force_authenticate(user=test_user)
-    return api_client
-
-
-@pytest.fixture
-def jwt_authenticated_api_client(db, test_user, api_client):
-    """Create an API client authenticated with JWT token."""
-    from rest_framework_simplejwt.tokens import RefreshToken
-    refresh = RefreshToken.for_user(test_user)
-    api_client.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh.access_token}')
     return api_client
 
 

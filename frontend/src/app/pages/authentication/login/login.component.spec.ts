@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LoginComponent } from './login.component';
-import { Router, ActivatedRoute } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
+import { Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { AuthService } from '../../../services/auth.service';
 
@@ -9,32 +8,29 @@ class AuthServiceStub {
   login = jasmine.createSpy().and.returnValue(of(void 0));
 }
 
-class ActivatedRouteStub {
-  snapshot = {
-    queryParams: {}
-  };
+class RouterStub {
+  navigateByUrl = jasmine.createSpy('navigateByUrl');
 }
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
   let auth: AuthServiceStub;
-  let router: Router;
+  let router: RouterStub;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [LoginComponent, RouterTestingModule],
+      imports: [LoginComponent],
       providers: [
         { provide: AuthService, useClass: AuthServiceStub },
-        { provide: ActivatedRoute, useClass: ActivatedRouteStub },
+        { provide: Router, useClass: RouterStub },
       ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(LoginComponent);
     component = fixture.componentInstance;
     auth = TestBed.inject(AuthService) as unknown as AuthServiceStub;
-    router = TestBed.inject(Router);
-    spyOn(router, 'navigateByUrl');
+    router = TestBed.inject(Router) as unknown as RouterStub;
     fixture.detectChanges();
   });
 

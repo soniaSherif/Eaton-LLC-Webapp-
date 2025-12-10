@@ -1,52 +1,78 @@
-// src/app/services/auth.service.ts
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../environments/environment';
-import { Observable, tap } from 'rxjs';
+  // src/app/services/auth.service.ts
+  import { Injectable } from '@angular/core';
+  import { HttpClient } from '@angular/common/http';
+  import { environment } from '../../environments/environment';
+  import { Observable, tap } from 'rxjs';
 
-interface TokenResponse { access: string; refresh: string; }
+  interface TokenResponse { access: string; refresh: string; }
 
-@Injectable({ providedIn: 'root' })
-export class AuthService {
-  private api = environment.apiBaseUrl; // e.g. http://localhost:8000/api/
+  @Injectable({ providedIn: 'root' })
+  export class AuthService {
+    private api = environment.apiBaseUrl;
+    private usernameKey = 'username';
 
-  constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) {}
 
-  login(username: string, password: string): Observable<TokenResponse> {
-    return this.http.post<TokenResponse>(`${this.api}login/`, { username, password }).pipe(
-      tap(tokens => this.saveTokens(tokens))
+    login(username: string, password: string): Observable<TokenResponse> {
+      return this.http.post<TokenResponse>(`${this.api}login/`, { username, password }).pipe(
+        tap(tokens => {
+          this.saveTokens(tokens);
+          localStorage.setItem(this.usernameKey, username);
+        })
+      );
+    }
+
+    register(username: string, email: string, password: string) {
+      return this.http.post(`${this.api}register/`, { username, email, password });
+    }
+
+    refresh(refresh: string) {
+      return this.http.post<{ access: string }>(`${this.api}token/refresh/`, { refresh })
+        .pipe(tap(r => localStorage.setItem('access', r.access)));
+    }
+
+    saveTokens(t: TokenResponse) {
+      localStorage.setItem('access', t.access);
+      localStorage.setItem('refresh', t.refresh);
+    }
+
+    get access()  { return localStorage.getItem('access'); }
+    get refreshT() { return localStorage.getItem('refresh'); }
+    get username() { return localStorage.getItem(this.usernameKey); }
+
+    logout() {
+      localStorage.removeItem('access');
+      localStorage.removeItem('refresh');
+      localStorage.removeItem(this.usernameKey);
+    }
+
+    isLoggedIn(): boolean {
+      return !!this.access;
+    }
+      /** Request OTP email for password reset */
+  requestPasswordReset(email: string) {
+    // Backend expects { email }
+    return this.http.post<{ ok: boolean; message: string }>(
+      `${this.api}auth/password-reset/`,
+      { email }
     );
   }
 
-  register(username: string, email: string, password: string) {
-    return this.http.post(`${this.api}register/`, { username, email, password });
+  /** Verify OTP code */
+  verifyPasswordOtp(email: string, code: string) {
+    // Backend expects { email, code }
+    return this.http.post<{ valid: boolean }>(
+      `${this.api}auth/password-reset/verify/`,
+      { email, code }
+    );
   }
 
-  refresh(refresh: string) {
-    return this.http.post<{ access: string }>(`${this.api}token/refresh/`, { refresh })
-      .pipe(tap(r => localStorage.setItem('access', r.access)));
+  /** Confirm reset with new password */
+  resetPassword(email: string, code: string, new_password: string) {
+    // Backend expects { email, code, new_password }
+    return this.http.post<{ ok: boolean }>(
+      `${this.api}auth/password-reset/confirm/`,
+      { email, code, new_password }
+    );
   }
-
-  saveTokens(t: TokenResponse) {
-    localStorage.setItem('access', t.access);
-    localStorage.setItem('refresh', t.refresh);
-  }
-
-  get access()  { return localStorage.getItem('access'); }
-  get refreshT() { return localStorage.getItem('refresh'); }
-
-  logout() {
-    localStorage.removeItem('access');
-    localStorage.removeItem('refresh');
-  }
-
-  isLoggedIn(): boolean {
-    return !!this.access;
-  }
-  /** Request a password reset by email OR username (frontend uses a single field). */
-  requestPasswordReset(identifier: string) {
-    // If your backend expects { email }, change the key below to { email: identifier }.
-    return this.http.post<{ ok: boolean }>(`${this.api}password-reset/`, { identifier });
-  }
-
 }

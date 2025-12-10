@@ -1,0 +1,23 @@
+.modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,.45); backdrop-filter: blur(2px); z-index: 1040; }
+.modal-card { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: min(700px, 96vw); background: #fff; border-radius: 8px; box-shadow: 0 24px 64px rgba(0,0,0,.25); z-index: 1050; display: flex; flex-direction: column; max-height: 88vh; }
+.modal-card form { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+.modal-header-blue { background: #007bff; color: white; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; border-radius: 8px 8px 0 0; }
+.modal-title { margin: 0; font-size: 1.1rem; font-weight: 600; color: white; }
+.btn-close-white { width: 24px; height: 24px; border: 0; background: transparent; display: flex; align-items: center; justify-content: center; color: white; transition: all 0.2s ease; cursor: pointer; }
+.btn-close-white:hover { background: rgba(255,255,255,0.1); color: white; }
+.close-x { position: relative; width: 16px; height: 16px; display: inline-block; }
+.close-x::before, .close-x::after { content: ''; position: absolute; top: 50%; left: 50%; width: 16px; height: 2px; background: white; border-radius: 1px; }
+.close-x::before { transform: translate(-50%, -50%) rotate(45deg); }
+.close-x::after { transform: translate(-50%, -50%) rotate(-45deg); }
+.modal-body { padding: 24px 20px; overflow: auto; flex: 1; min-height: 0; }
+.modal-footer { padding: 16px 20px; border-top: 1px solid #eee; background: #f8f9fa; border-radius: 0 0 8px 8px; }
+.form-group { margin-bottom: 16px; }
+.form-label { display: block; margin-bottom: 6px; font-weight: 500; color: #333; font-size: 0.9rem; }
+.form-control, .form-select { width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 0.9rem; transition: border-color .15s ease, box-shadow .15s ease; }
+.form-control:focus, .form-select:focus { border-color: #007bff; outline: 0; box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25); }
+.form-control:disabled, .form-select:disabled { background-color: #f8f9fa; opacity: 1; }
+.btn-primary { background-color: #007bff; border-color: #007bff; color: white; }
+.btn-primary:hover:not(:disabled) { background-color: #0056b3; border-color: #0056b3; }
+.btn-primary:disabled { background-color: #6c757d; border-color: #6c757d; opacity: .65; }
+@media (max-width: 768px) { .modal-card { width: 95vw; margin: 10px; max-height: 90vh; } .modal-body { padding: 20px 16px; } .modal-footer { padding: 12px 16px; } }
+

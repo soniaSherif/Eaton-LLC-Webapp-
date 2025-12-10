@@ -53,6 +53,7 @@ __pycache__/
 # Virtual env
 venv/
 .venv/
+backend/venv/
 
 # Node
 node_modules/
@@ -73,9 +74,12 @@ __pycache__/
 venv/
 .venv/
 
+
 # Node
 node_modules/
 **/node_modules/
+frontend/node_modules/
+
 
 # Environment variables file
 .env
