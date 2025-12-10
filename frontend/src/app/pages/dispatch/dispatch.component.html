@@ -6,6 +6,16 @@
       <button class="btn btn-primary custom-button" (click)="openDialog()">+ Dispatch Driver</button>
     </div>
   </div>
+
+  <!-- Search Filter -->
+  <div class="mb-3 row g-2">
+    <div class="col-md-6">
+      <input class="form-control" 
+             placeholder="Search by job, driver, or truck type..." 
+             [(ngModel)]="filters.search" 
+             (ngModelChange)="applyFilters()">
+    </div>
+  </div>
   
   <div class="card">
     <div class="card-body">
