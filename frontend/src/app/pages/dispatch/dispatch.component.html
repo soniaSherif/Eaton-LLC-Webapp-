@@ -1,38 +1,69 @@
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h3>Dispatch Assignments</h3>
-    <div class="d-flex align-items-center">
-      <!-- Date Filter -->
-      <input type="date" [(ngModel)]="selectedDate" (change)="filterAssignments()" class="form-control custom-date-input" [value]="selectedDate">
-      <button class="btn btn-primary custom-button" (click)="openDialog()">+ Dispatch Driver</button>
+  <h3>Dispatch Assignments</h3>
+  <div class="d-flex align-items-center gap-2">
+    <button class="btn btn-outline-danger" 
+            [disabled]="selected.length === 0" 
+            (click)="deleteSelected()">
+      <i class="material-icons" style="font-size: 16px;">&#xE872;</i> Delete Selected
+    </button>
+    <!-- Date Filter -->
+    <input type="date" [(ngModel)]="selectedDate" (change)="filterAssignments()" class="form-control custom-date-input" [value]="selectedDate">
+    <button class="btn btn-primary custom-button" (click)="openDialog()">+ Dispatch Driver</button>
+  </div>
+</div>
+
+<!-- Search Filter -->
+<div class="mb-3 row g-2">
+  <div class="col-md-6">
+    <input class="form-control" 
+           placeholder="Search by job, driver, or truck type..." 
+           [(ngModel)]="filters.search" 
+           (ngModelChange)="applyFilters()">
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th><input type="checkbox" (change)="toggleAllSelection($event)"></th>
+            <th>JOB</th>
+            <th>DRIVER</th>
+            <th>TRUCK TYPE</th>
+            <th>DATE</th> <!-- Display Job Date -->
+            <th>TIME</th> <!-- Display Time in AM/PM Format -->
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let assignment of filteredAssignments; trackBy: trackById">
+            <td><input type="checkbox" [(ngModel)]="assignment.selected" (ngModelChange)="onSelect()"></td>
+            <td>{{ assignment.job }}</td>
+            <td>{{ assignment.driver }}</td>
+            <td>{{ assignment.truck_type }}</td>
+            <td>{{ getFormattedDate(assignment.jobDate) }}</td> <!-- Job Date -->
+            <td>{{ getFormattedTime(assignment.time) }}</td> <!-- AM/PM Time -->
+            <td>
+              <div class="action-buttons-row">
+                <a href="#" class="view" title="View" (click)="view(assignment.id); $event.preventDefault()" data-toggle="tooltip">
+                  <i class="material-icons">&#xE417;</i>
+                </a>
+                <a href="#" class="edit" title="Edit" (click)="edit(assignment.id); $event.preventDefault()" data-toggle="tooltip">
+                  <i class="material-icons">&#xE254;</i>
+                </a>
+                <a href="#" class="delete" title="Delete" (click)="delete(assignment.id); $event.preventDefault()" data-toggle="tooltip">
+                  <i class="material-icons">&#xE872;</i>
+                </a>
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="!filteredAssignments?.length">
+            <td colspan="7" class="text-center text-muted py-4">No dispatch assignments for this date.</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
-  
-  <div class="card">
-    <div class="card-body">
-      <div class="table-responsive">
-        <table class="table">
-          <thead>
-            <tr>
-              <th><input type="checkbox" (change)="toggleAllSelection($event)"></th>
-              <th>JOB</th>
-              <th>DRIVER</th>
-              <th>TRUCK TYPE</th>
-              <th>DATE</th> <!-- Display Job Date -->
-              <th>TIME</th> <!-- Display Time in AM/PM Format -->
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let assignment of filteredAssignments">
-              <td><input type="checkbox" [(ngModel)]="assignment.selected"></td>
-              <td>{{ assignment.job }}</td>
-              <td>{{ assignment.driver }}</td>
-              <td>{{ assignment.truck_type }}</td>
-              <td>{{ getFormattedDate(assignment.jobDate) }}</td> <!-- Job Date -->
-              <td>{{ getFormattedTime(assignment.time) }}</td> <!-- AM/PM Time -->
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-  
+</div>

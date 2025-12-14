@@ -1,0 +1,76 @@
+<div class="container">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <button class="btn btn-sm btn-link p-0" (click)="goBack()" style="font-size: 24px; text-decoration: none; color: #333;" title="Back">
+      ←
+    </button>
+    <h3>Edit Dispatch Assignment</h3>
+    <div></div> <!-- Spacer for alignment -->
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <div *ngIf="loading" class="text-center py-3">Loading...</div>
+      <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+      <form [formGroup]="assignmentForm" (ngSubmit)="submitForm()">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="job">Job Number *</label>
+              <input type="text" id="job" formControlName="job" class="form-control" 
+                     [class.is-invalid]="assignmentForm.get('job')?.invalid && assignmentForm.get('job')?.touched">
+              <div *ngIf="assignmentForm.get('job')?.invalid && assignmentForm.get('job')?.touched" class="invalid-feedback">
+                Job Number is required.
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="driver">Driver *</label>
+              <input type="text" id="driver" formControlName="driver" class="form-control" 
+                     [class.is-invalid]="assignmentForm.get('driver')?.invalid && assignmentForm.get('driver')?.touched">
+              <div *ngIf="assignmentForm.get('driver')?.invalid && assignmentForm.get('driver')?.touched" class="invalid-feedback">
+                Driver is required.
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="truck_type">Truck Type *</label>
+              <input type="text" id="truck_type" formControlName="truck_type" class="form-control" 
+                     [class.is-invalid]="assignmentForm.get('truck_type')?.invalid && assignmentForm.get('truck_type')?.touched">
+              <div *ngIf="assignmentForm.get('truck_type')?.invalid && assignmentForm.get('truck_type')?.touched" class="invalid-feedback">
+                Truck Type is required.
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="jobDate">Job Date *</label>
+              <input type="date" id="jobDate" formControlName="jobDate" class="form-control" 
+                     [class.is-invalid]="assignmentForm.get('jobDate')?.invalid && assignmentForm.get('jobDate')?.touched">
+              <div *ngIf="assignmentForm.get('jobDate')?.invalid && assignmentForm.get('jobDate')?.touched" class="invalid-feedback">
+                Job Date is required.
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="time">Time *</label>
+              <input type="time" id="time" formControlName="time" class="form-control" 
+                     [class.is-invalid]="assignmentForm.get('time')?.invalid && assignmentForm.get('time')?.touched">
+              <div *ngIf="assignmentForm.get('time')?.invalid && assignmentForm.get('time')?.touched" class="invalid-feedback">
+                Time is required.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="d-flex justify-content-end gap-2 mt-4">
+          <button type="button" class="btn btn-secondary" (click)="goBack()">Cancel</button>
+          <button type="submit" class="btn btn-primary" [disabled]="assignmentForm.invalid || loading">Save Assignment</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+

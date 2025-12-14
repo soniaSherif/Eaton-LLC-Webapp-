@@ -1,29 +1,129 @@
+<!-- 
+  PAGE HEADER SECTION
+  Contains the page title and primary action buttons
+-->
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h3>Customer List</h3>
+  <h3>Customers</h3>
+  <div class="d-flex gap-2">
+    <!-- 
+      BULK DELETE BUTTON
+      Only enabled when customers are selected
+    -->
+    <button class="btn btn-outline-danger" 
+            [disabled]="selected.length === 0" 
+            (click)="deleteSelected()">
+      <i class="material-icons" style="font-size: 16px;">&#xE872;</i> Delete Selected
+    </button>
+    <!-- 
+      CREATE NEW CUSTOMER BUTTON
+    -->
     <button class="btn btn-primary" (click)="addCustomer()">+ Add Customer</button>
+  </div>
 </div>
 
-<div class="card">
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th><input type="checkbox" (change)="toggleAllSelection($event)"></th>
-                        <th>NAME</th>
-                        <th>PHONE NUMBER</th>
-                        <th>EMAIL</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let customer of customers">
-                        <td><input type="checkbox" [(ngModel)]="customer.selected"></td>
-                        <td>{{ customer.company_name  }}</td>
-                        <td>{{ customer.phone_number }}</td>
-                        <td>{{ customer.email }}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+<!-- 
+  FILTER SECTION
+  Provides search control for the customer list
+-->
+<div class="mb-3 row g-2">
+  <!-- 
+    SEARCH FILTER
+    Text input for searching by company name, email, phone, address, or city
+  -->
+  <div class="col-md-12">
+    <input class="form-control" 
+           placeholder="Search by company name, email, phone, address, or city..." 
+           [(ngModel)]="filters.search" 
+           (ngModelChange)="applyFilters()">
+  </div>
 </div>
+
+<!-- 
+  ERROR MESSAGE
+  Displays error messages if any operation fails
+-->
+<div *ngIf="error" class="alert alert-danger" role="alert">
+  {{ error }}
+</div>
+
+<!-- 
+  LOADING INDICATOR
+-->
+<div *ngIf="loading" class="text-center py-4">
+  <div class="spinner-border" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
+
+<!-- 
+  CUSTOMER TABLE SECTION
+  Displays all customers in a responsive table format
+-->
+<app-card cardTitle="Customer List" [options]="false" blockClass="table-border-style">
+  <div class="table-responsive">
+    <table class="table">
+      <!-- 
+        TABLE HEADER
+        Defines column headers for the customer data
+        Includes checkbox column for bulk selection
+      -->
+      <thead>
+        <tr>
+          <th><input type="checkbox" (change)="toggleAllSelection($event)"></th>
+          <th>Company Name</th>
+          <th>Phone Number</th>
+          <th>Email</th>
+          <th>Address</th>
+          <th>City</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <!-- 
+        TABLE BODY
+        Iterates through filtered customers using Angular's *ngFor
+        Uses trackBy function for performance optimization
+      -->
+      <tbody>
+        <tr *ngFor="let customer of customers; trackBy: trackById">
+          <!-- 
+            SELECTION CHECKBOX
+            Allows users to select customers for bulk operations
+          -->
+          <td><input type="checkbox" [(ngModel)]="customer.selected" (ngModelChange)="onSelect()"/></td>
+          
+          <!-- CUSTOMER DATA COLUMNS -->
+          <td>{{ customer.company_name }}</td>
+          <td>{{ customer.phone_number || '-' }}</td>
+          <td>{{ customer.email || '-' }}</td>
+          <td>{{ customer.address || '-' }}</td>
+          <td>{{ customer.city || '-' }}</td>
+          
+          <!-- 
+            ACTION BUTTONS
+            Provides view, edit, and delete actions for each customer
+            Uses Material Icons for consistent iconography
+          -->
+          <td>
+            <div class="action-buttons-row">
+              <!-- VIEW BUTTON - Blue eye icon -->
+              <a href="#" class="view" title="View" (click)="view(customer.id); $event.preventDefault()" data-toggle="tooltip">
+                <i class="material-icons">&#xE417;</i>
+              </a>
+              <!-- EDIT BUTTON - Yellow pencil icon -->
+              <a href="#" class="edit" title="Edit" (click)="edit(customer.id); $event.preventDefault()" data-toggle="tooltip">
+                <i class="material-icons">&#xE254;</i>
+              </a>
+              <!-- DELETE BUTTON - Red trash icon -->
+              <a href="#" class="delete" title="Delete" (click)="delete(customer.id); $event.preventDefault()" data-toggle="tooltip">
+                <i class="material-icons">&#xE872;</i>
+              </a>
+            </div>
+          </td>
+        </tr>
+        <tr *ngIf="!customers?.length && !loading">
+          <td colspan="7" class="text-center text-muted py-4">No customers found.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</app-card>

@@ -6,7 +6,6 @@
   </div>
   
   <!-- Tabs for Trucks and Drivers -->
-  <!-- Tabs for Trucks and Drivers -->
 <div class="d-flex align-items-center mb-3">
     <button 
       class="btn me-2" 
@@ -21,8 +20,17 @@
       Drivers
     </button>
   </div>
-  
-  
+     <!-- Search box  -->
+  <div class="d-flex justify-content-start mb-3">
+    <input
+      type="text"
+      class="form-control fleet-search-input"
+      [(ngModel)]="searchTerm"
+      placeholder="Search"
+    />
+  </div>
+ 
+
   <!-- Fleet Table -->
   <div class="row">
     <div class="col-xl-12">
@@ -37,11 +45,21 @@
                 <th *ngIf="selectedTab === 'trucks'">LICENSE PLATE</th>
                 <th *ngIf="selectedTab === 'drivers'">ADDRESS</th>
                 <th>{{ selectedTab === 'trucks' ? 'Market' : 'PHONE' }}</th>
+                <th *ngIf="selectedTab === 'trucks'">PLATE STATUS</th>
+                <th *ngIf="selectedTab === 'drivers'">LICENSE STATUS</th>
+                <th *ngIf="selectedTab === 'drivers'">MEDICAL STATUS</th>
+                <th class="text-end">ACTIONS</th>
+
+
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let item of (selectedTab === 'trucks' ? fleetData.trucks : fleetData.drivers)">
-                <td><input type="checkbox" [(ngModel)]="item.selected"></td>
+              <tr
+                *ngFor="let item of (selectedTab === 'trucks'
+                  ? filteredTrucks
+                  : filteredDrivers)"
+              >
+               <td><input type="checkbox" [(ngModel)]="item.selected"></td>
                 <td>{{ item.type }}</td>
                 <td>{{ item.number }}</td>
             
@@ -50,6 +68,103 @@
                 <td *ngIf="selectedTab === 'drivers'">{{ item.address }}</td>
                 
                 <td>{{ selectedTab === 'trucks' ? item.market : item.phone }}</td>
+                <!-- TRUCKS: Plate expiry status -->
+                <td *ngIf="selectedTab === 'trucks'">
+                  <span class="status-badge"
+                        [ngClass]="{
+                          'status-expired': item.plate_status === 'Expired',
+                          'status-soon': item.plate_status === 'Expiring Soon',
+                          'status-valid': item.plate_status === 'Valid'
+                        }">
+                    {{ item.plate_status }}
+                    <ng-container *ngIf="item.plate_days_left !== null">
+                      ({{ item.plate_days_left }}d)
+                    </ng-container>
+                  </span>
+                </td>
+
+                <!-- DRIVERS: License expiry status -->
+                <td *ngIf="selectedTab === 'drivers'">
+                  <span class="status-badge"
+                        [ngClass]="{
+                          'status-expired': item.license_status === 'Expired',
+                          'status-soon': item.license_status === 'Expiring Soon',
+                          'status-valid': item.license_status === 'Valid'
+                        }">
+                    {{ item.license_status }}
+                    <ng-container *ngIf="item.license_days_left !== null">
+                      ({{ item.license_days_left }}d)
+                    </ng-container>
+                  </span>
+                </td>
+                <!-- DRIVERS: Medical Card expiry status -->
+                <td *ngIf="selectedTab === 'drivers'">
+                  <span class="status-badge"
+                        [ngClass]="{
+                          'status-expired': item.medical_status === 'Expired',
+                          'status-soon': item.medical_status === 'Expiring Soon',
+                          'status-valid': item.medical_status === 'Valid'
+                        }">
+                    {{ item.medical_status }}
+                    <ng-container *ngIf="item.medical_days_left !== null">
+                      ({{ item.medical_days_left }}d)
+                    </ng-container>
+                  </span>
+                </td>
+                
+                <!-- Row actions with custom three-dot menu (no Bootstrap JS needed) -->
+                <td class="text-end position-relative">
+                  <button
+                    type="button"
+                    class="fleet-kebab-btn"
+                    (click)="toggleRowMenu(item)"
+                  >
+                    &#8942;
+                  </button>
+
+                  <div
+                    class="fleet-row-menu"
+                    *ngIf="openMenuId === item.id"
+                  >
+                    <!-- DRIVER actions -->
+                    <button
+                      *ngIf="selectedTab === 'drivers'"
+                      class="fleet-row-menu-item"
+                      (click)="onEditDriverClick(item)"
+                    >
+                      Edit
+                    </button>
+
+                    <button
+                      *ngIf="selectedTab === 'drivers'"
+                      class="fleet-row-menu-item"
+                      (click)="onViewDriverProfileClick(item)"
+                    >
+                      View Driver Profile
+                    </button>
+
+                  <!-- TRUCK actions -->
+                  <button
+                    *ngIf="selectedTab === 'trucks'"
+                    class="fleet-row-menu-item"
+                    (click)="onEditTruckClick(item)"
+                  >
+                    Edit
+                  </button>
+
+                  <!-- ✅ NEW: View Truck instead of Remove -->
+                  <button
+                    *ngIf="selectedTab === 'trucks'"
+                    class="fleet-row-menu-item"
+                    (click)="onViewTruckClick(item)"
+                  >
+                    View Truck
+                  </button>
+                  </div>
+                </td>
+
+
+
               </tr>
             </tbody>
             

@@ -1,4 +1,5 @@
-<h1 class="title">Add a Truck
+<h1 class="title">
+  {{ isEditMode ? 'Edit Truck' : 'Add a Truck' }}
   <button (click)="closepopup()" class="close-button">x</button>
 </h1>
 
@@ -55,6 +56,22 @@
              name="license_plate"
              placeholder="License Plate" />
     </div>
+  </div>
+      <!-- Plate Expiry Date -->
+  <div class="form-group">
+    <label for="plateExpiry">Plate Expiry Date <span class="text-danger">*</span></label>
+    <input
+      type="date"
+      id="plateExpiry"
+      name="plate_expiry_date"
+      class="form-control"
+      [(ngModel)]="selectedPlate_expiry_date"
+      required
+      #plateExp="ngModel"
+    />
+    <small class="text-danger" *ngIf="plateExp.invalid && plateExp.touched">
+      Plate expiry date is required.
+    </small>
   </div>
 
   <div class="form-group">
@@ -123,5 +140,33 @@
 </div>
 
 
-  <button type="submit" class="btn btn-primary">Add a Truck</button>
+
+  <!-- Footer buttons: Edit vs Add -->
+  <div class="form-actions mt-4" *ngIf="isEditMode; else addTruckButtons">
+    <!-- Delete button (left) -->
+    <button
+      type="button"
+      class="btn btn-outline-danger me-2"
+      (click)="deleteTruck()">
+      Delete
+    </button>
+
+    <!-- Save Changes button (right) -->
+    <button
+      type="submit"
+      class="btn btn-primary">
+      Save Changes
+    </button>
+  </div>
+
+  <!-- Add mode: single blue "Add a Truck" button -->
+  <ng-template #addTruckButtons>
+    <div class="form-actions mt-4">
+      <button type="submit" class="btn btn-primary">
+        Add a Truck
+      </button>
+    </div>
+  </ng-template>
+
+
 </form>

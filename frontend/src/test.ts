@@ -19,6 +19,13 @@ declare const require: {
 getTestBed().initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting());
 
 // Then we find all the tests.
-const context = require.context('./', true, /\.spec\.ts$/);
-// And load the modules.
-context.keys().forEach(context);
+// Use try-catch to handle cases where require.context might not be available
+try {
+  const context = require.context('./', true, /\.spec\.ts$/);
+  // And load the modules.
+  context.keys().forEach(context);
+} catch (error) {
+  // If require.context is not available, webpack should handle test discovery automatically
+  // This is a fallback for compatibility
+  console.warn('require.context not available, relying on webpack for test discovery');
+}

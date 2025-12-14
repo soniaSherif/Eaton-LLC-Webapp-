@@ -21,7 +21,15 @@ export class TruckService {
   getUnassignedTrucks(): Observable<any[]> {
     return this.http.get<any[]>(`${environment.apiBaseUrl}unassigned-trucks/`);
   }
-  
+   deleteTruck(id: number): Observable<any> {
+    // Django REST: /api/trucks/<id>/
+    return this.http.delete(`${this.apiUrl}${id}/`);
+  }
+   updateTruck(id: number, data: any) {
+    // PUT /trucks/<id>/
+    return this.http.put(`${this.apiUrl}${id}/`, data);
+  }
+}
 
   
-}
+

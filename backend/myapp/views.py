@@ -5,22 +5,15 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from django.db.models import Q, Prefetch
-from rest_framework.decorators import action
-from django.utils.dateparse import parse_date
-from datetime import timedelta
-from decimal import Decimal
-from django.utils import timezone
-from .serializers import RequestOTPSerializer, VerifyOTPSerializer, ResetPasswordSerializer
-from .models import PasswordOTP
-from .emails import send_password_otp_email
+
 from django.contrib.auth import get_user_model
 from .models import (
-    Job, Customer, Driver, Role, UserRole, Comment, Truck, DriverTruckAssignment, Operator, Address, JobDriverAssignment,Invoice, InvoiceLine,PayReport, PayReportLine
+    Job, Customer, Driver, Role, UserRole, Comment, Truck, DriverTruckAssignment, Operator, Address, JobDriverAssignment,Invoice, InvoiceLine
 )
 from .serializers import (
     JobSerializer, CustomerSerializer, DriverSerializer, RoleSerializer,
     UserSerializer, UserRoleSerializer, CommentSerializer, TruckSerializer,
-    DriverTruckAssignmentSerializer, OperatorSerializer, AddressSerializer, JobDriverAssignmentSerializer,InvoiceSerializer, InvoiceLineSerializer, PayReportSerializer, PayReportLineSerializer
+    DriverTruckAssignmentSerializer, OperatorSerializer, AddressSerializer, JobDriverAssignmentSerializer,InvoiceSerializer, InvoiceLineSerializer
 )
 
 # For user model
@@ -39,7 +32,6 @@ class AddressViewSet(viewsets.ModelViewSet):
 class JobViewSet(viewsets.ModelViewSet):
     serializer_class = JobSerializer
     queryset = Job.objects.select_related(
-        'prime_contractor_customer',
         'loading_address',
         'unloading_address',
         'backhaul_loading_address',
@@ -54,7 +46,8 @@ class JobViewSet(viewsets.ModelViewSet):
         if date:
             qs = qs.filter(job_date=date)
         if customer_id:
-            qs = qs.filter(prime_contractor_customer_id=customer_id) # adjust if your FK path differs
+            # Filter jobs by customer through invoices (since Invoice has both customer and job FKs)
+            qs = qs.filter(invoices__customer_id=customer_id).distinct()
         if q:
             qs = qs.filter(Q(job_number__icontains=q) | Q(project__icontains=q))
         return qs
@@ -68,15 +61,9 @@ class JobDriverAssignmentViewSet(viewsets.ModelViewSet):
     serializer_class = JobDriverAssignmentSerializer
     
 class CustomerViewSet(viewsets.ModelViewSet):
-    queryset = Customer.objects.all().order_by('company_name')
+    queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
 
-    def get_queryset(self):
-        qs = super().get_queryset()
-        q = self.request.query_params.get('q')
-        if q:
-            qs = qs.filter(company_name__icontains=q)
-        return qs
 class DriverViewSet(viewsets.ModelViewSet):
     queryset = Driver.objects.all()
     serializer_class = DriverSerializer

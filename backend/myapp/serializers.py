@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from decimal import Decimal
-from .models import Job, Customer, Driver, Role, User, UserRole, Comment, Truck, DriverTruckAssignment, Operator, Address, JobDriverAssignment,Invoice,InvoiceLine,PayReport, PayReportLine
+from .models import Job, Customer, Driver, Role, User, UserRole, Comment, Truck, DriverTruckAssignment, Operator, Address, JobDriverAssignment,Invoice,InvoiceLine
 from django.contrib.auth import get_user_model
 
 class AddressSerializer(serializers.ModelSerializer):
@@ -48,13 +48,6 @@ class JobDriverAssignmentSerializer(serializers.ModelSerializer):
         
 class JobSerializer(serializers.ModelSerializer):
     # Writeable FK fields:
-    prime_contractor_customer = serializers.PrimaryKeyRelatedField(
-        queryset=Customer.objects.all(), allow_null=True, required=False
-    )
-    prime_contractor_name = serializers.CharField(
-        source='prime_contractor_customer.company_name', read_only=True
-    )
-
     loading_address           = serializers.PrimaryKeyRelatedField(
                                     queryset=Address.objects.all()
                                 )
@@ -86,8 +79,6 @@ class JobSerializer(serializers.ModelSerializer):
         model = Job
         fields = [
             'id',
-            'prime_contractor_customer',
-            'prime_contractor_name',
             'project',
             'prime_contractor',
             'prime_contractor_project_number',
@@ -124,7 +115,7 @@ class JobSerializer(serializers.ModelSerializer):
             'driver_assignments',
             'created_at',
         ]
-        read_only_fields = ['created_at', 'prime_contractor_name']
+        read_only_fields = ['created_at']
 
 class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
@@ -350,53 +341,3 @@ class InvoiceSerializer(serializers.ModelSerializer):
         
         return instance
 
-class PayReportLineSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PayReportLine
-        fields = [
-            'id', 'report', 'job', 'date',
-            'job_number', 'truck_number', 'trailer_number',
-            'loaded', 'unloaded',
-            'weight_or_hour', 'truck_paid',
-            'total', 'contractor_paid',
-            'trailer_rent', 'broker_charge',
-            'created_at',
-        ]
-        read_only_fields = ['id', 'total', 'contractor_paid', 'created_at']
-
-class PayReportSerializer(serializers.ModelSerializer):
-    driver_name = serializers.CharField(source='driver.name', read_only=True)
-    lines = PayReportLineSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = PayReport
-        fields = [
-            'id', 'driver', 'driver_name',
-            'week_start', 'week_end',
-            'fuel_program', 'fuel_pilot_or_kt', 'fuel_surcharge',
-            'total_weight_or_hours', 'total_truck_paid', 'total_amount', 'total_due',
-            'created_at', 'updated_at',
-            'lines',
-        ]
-        read_only_fields = [
-            'id',
-            'total_weight_or_hours', 'total_truck_paid', 'total_amount', 'total_due',
-            'created_at', 'updated_at',
-        ]
-    def validate(self, attrs):
-            ws = attrs.get('week_start', getattr(self.instance, 'week_start', None))
-            we = attrs.get('week_end',   getattr(self.instance, 'week_end',   None))
-            if ws and we and we < ws:
-                raise serializers.ValidationError({"week_end": "must be on/after week_start"})
-            return attrs
-class RequestOTPSerializer(serializers.Serializer):
-    email = serializers.EmailField()
-
-class VerifyOTPSerializer(serializers.Serializer):
-    email = serializers.EmailField()
-    code = serializers.RegexField(r"^\d{6}$")
-
-class ResetPasswordSerializer(serializers.Serializer):
-    email = serializers.EmailField()
-    code = serializers.RegexField(r"^\d{6}$")
-    new_password = serializers.CharField(min_length=8, write_only=True)

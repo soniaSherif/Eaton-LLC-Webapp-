@@ -15,3 +15,72 @@
   min-width: 9rem; /* Ensure the button is wide enough for the text */
   white-space: nowrap; /* Prevent text from wrapping onto the next line */
 }
+
+.gap-2 {
+  gap: 0.5rem;
+}
+
+// Row Action Buttons - Match the invoice page styling exactly
+.action-buttons-row {
+  white-space: nowrap;
+  
+  a {
+    color: #a0a5b1;
+    display: inline-block;
+    margin: 0 5px;
+    text-decoration: none;
+    
+    &.view {
+      color: #03A9F4;
+    }
+    
+    &.edit {
+      color: #FFC107;
+    }
+    
+    &.delete {
+      color: #E34724;
+    }
+    
+    i {
+      font-size: 19px;
+    }
+    
+    &:hover {
+      text-decoration: none;
+      opacity: 0.8;
+    }
+  }
+}
+
+// Fix column spacing - make Actions column wider
+.table td:last-child {
+  width: 130px !important;
+  min-width: 130px !important;
+}
+
+// Add distance between columns
+.table td:nth-last-child(2),
+.table th:nth-last-child(2) {
+  padding-right: 30px !important;
+}
+
+.table td:last-child,
+.table th:last-child {
+  padding-left: 20px !important;
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .action-buttons-row {
+    gap: 4px;
+    
+    a {
+      margin: 0 2px;
+      
+      i {
+        font-size: 16px;
+      }
+    }
+  }
+}

@@ -1,1 +1,0 @@
-contractor_paid

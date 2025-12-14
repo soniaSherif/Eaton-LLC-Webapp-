@@ -1,0 +1,83 @@
+<div class="view-assignment-container" *ngIf="assignment">
+  <!-- Header with actions -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex align-items-center gap-3">
+      <button class="btn btn-sm btn-link p-0" (click)="goBack()" style="font-size: 24px; text-decoration: none; color: #333;" title="Back">
+        ←
+      </button>
+      <h3 class="mb-0" style="color: #2c3e50; font-weight: 500;">Dispatch Assignment Details</h3>
+    </div>
+    <div class="d-flex gap-2">
+      <button class="btn btn-outline-warning" (click)="editAssignment()">
+        <i class="material-icons" style="font-size: 19px; vertical-align: middle;">&#xE254;</i>
+        Edit Assignment
+      </button>
+    </div>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="error" class="alert alert-danger" role="alert">
+    {{ error }}
+  </div>
+
+  <!-- Loading Indicator -->
+  <div *ngIf="loading" class="text-center py-4">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <!-- Assignment Information Card -->
+  <div class="card mb-3" *ngIf="assignment && !loading">
+    <div class="card-header">
+      <h5 class="mb-0">Job Information</h5>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class="text-muted small">Job Number</label>
+          <p class="mb-0 fw-bold">{{ assignment.job || '-' }}</p>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label class="text-muted small">Job Date</label>
+          <p class="mb-0">{{ formatDate(assignment.jobDate) || '-' }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Driver & Truck Information Card -->
+  <div class="card mb-3" *ngIf="assignment && !loading">
+    <div class="card-header">
+      <h5 class="mb-0">Driver & Truck Information</h5>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class="text-muted small">Driver</label>
+          <p class="mb-0 fw-bold">{{ assignment.driver || '-' }}</p>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label class="text-muted small">Truck Type</label>
+          <p class="mb-0">{{ assignment.truck_type || '-' }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Assignment Time Information Card -->
+  <div class="card mb-3" *ngIf="assignment && !loading">
+    <div class="card-header">
+      <h5 class="mb-0">Assignment Time</h5>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class="text-muted small">Time</label>
+          <p class="mb-0">{{ formatTime(assignment.time) || '-' }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

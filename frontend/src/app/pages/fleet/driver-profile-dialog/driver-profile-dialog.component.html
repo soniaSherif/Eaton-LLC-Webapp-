@@ -1,0 +1,55 @@
+<div class="driver-profile-dialog">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h3>Driver Details</h3>
+    <button type="button" class="btn-close" (click)="close()"></button>
+  </div>
+
+  <!-- DIVIDER LINE -->
+
+  <hr class="divider" />
+
+  <!-- BODY -->
+  <div class="body">
+
+    <div class="section">
+      <h5>Basic Info</h5>
+      <p><strong>Name:</strong> {{ data.driver?.type }}</p>
+      <p><strong>CDL #:</strong> {{ data.driver?.number }}</p>
+      <p><strong>Phone:</strong> {{ data.driver?.phone }}</p>
+      <p><strong>Address:</strong> {{ data.driver?.address }}</p>
+    </div>
+
+    <div class="section">
+      <h5>License</h5>
+      <p><strong>Expiry Date:</strong> {{ data.driver?.license_expiry_date }}</p>
+      <p>
+        <strong>Status:</strong> {{ data.driver?.license_status }}
+        <span *ngIf="data.driver?.license_days_left !== null">
+          ({{ data.driver?.license_days_left }}d)
+        </span>
+      </p>
+    </div>
+
+    <div class="section">
+      <h5>Medical Card</h5>
+      <p><strong>Expiry Date:</strong> {{ data.driver?.medical_expiry_date }}</p>
+      <p>
+        <strong>Status:</strong> {{ data.driver?.medical_status }}
+        <span *ngIf="data.driver?.medical_days_left !== null">
+          ({{ data.driver?.medical_days_left }}d)
+        </span>
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer text-end">
+    <button type="button" class="btn btn-secondary" (click)="close()">
+      Close
+    </button>
+  </div>
+
+</div>

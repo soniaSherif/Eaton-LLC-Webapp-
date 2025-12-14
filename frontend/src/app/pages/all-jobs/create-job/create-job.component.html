@@ -3,10 +3,8 @@
   
     <form [formGroup]="jobForm">
       <ng-stepper #cdkStepper [linear]="true" class="custom-stepper">
-
         <!-- Step 1: Job Details -->
         <cdk-step [stepControl]="jobForm.controls['project']">
-        
           <ng-template cdkStepLabel>
             <div class="step-bullet">1</div>
             <div class="step-title">Project Details</div>
@@ -15,106 +13,59 @@
 
             <!-- Input for Project Name -->
             <div class="form-group">
-              <label>Project <span style="color:red">*</span></label>
-              <input type="text" formControlName="project" class="form-control" required placeholder="Enter project">
-
-            <!-- Error message -->
-              <div class="text-danger" *ngIf="jobForm.get('project')?.touched && jobForm.get('project')?.hasError('required')">
-                Project name is required.
-              </div>
+              <label>Project</label>
+              <input type="text" formControlName="project" class="form-control">
             </div>
 
             <!-- Input for Prime Contractor -->
             <div class="form-group">
-              <label>Prime Contractor <span style="color:red">*</span></label>
-              <input type="text" list="primeContractors" formControlName="primeContractor" class="form-control" required placeholder="Enter prime contractor">
-                        
-              <datalist id="primeContractors">
-                <option value="Customer A">
-                <option value="Customer B">
-                <option value="Customer C">
-                <option value="Customer D">
-                <option value="Customer E">
-              </datalist>
-            
-              <!-- Error message -->
-              <div class="text-danger" *ngIf="jobForm.get('primeContractor')?.touched && jobForm.get('primeContractor')?.hasError('required')">
-                Prime Contractor is required.
-              </div>
+              <label>Prime Contractor</label>
+              <input type="text" formControlName="primeContractor" class="form-control">
             </div>
-              
 
-            <!-- Invoiced Contractor Dropdown -->
+            <!-- Input for Prime Contractor Project Number -->
             <div class="form-group">
-              <label>Invoiced Contractor <span style="color:red">*</span></label>
-              <input
-                type="text"
-                list="invoicedContractorsList"
-                formControlName="contractorInvoice"
-                class="form-control"
-                required
-                placeholder="Select or type contractor">
-
-              <datalist id="invoicedContractorsList">
-                <option value="Customer A">
-                <option value="Customer B">
-                <option value="Customer C">
-                <option value="Customer D">
-                <option value="Customer E">
-              </datalist>
-
-
-            <!-- Error message -->
-                <div class="text-danger" *ngIf="jobForm.get('contractorInvoice')?.invalid && jobForm.get('contractorInvoice')?.touched">
-                Invoiced Contractor is required.
-              </div>
+              <label>Prime Contractor Project Number</label>
+              <input type="text" formControlName="primeContractorProjectNumber" class="form-control">
             </div>
 
-          
-          <!-- Conditional Dropdown for New Invoiced Contractor
-          <div class="form-group" *ngIf="jobForm.get('contractorInvoice')?.value === 'Other'">
-            <label>New Invoiced Contractor</label>
-            <select formControlName="newContractorInvoice" class="form-control" required>
-              <option value="">-- Select Customer --</option>
-              <option value="CustomerA">Customer A</option>
-              <option value="CustomerB">Customer B</option>
-              <option value="CustomerC">Customer C</option>
-            </select>
-          </div> -->
-
-          <!-- Input for Invoiced Contractor Project Number -->
+            <!-- Input for Invoiced Contractor -->
             <div class="form-group">
-              <label for="newContractorInvoiceProjectNumber">
-                Invoiced Contractor Project Number <span style="color:red">*</span>
-              </label>
-              <input
-                type="text"
-                id="newContractorInvoiceProjectNumber"
-                name="newContractorInvoiceProjectNumber"
-                class="form-control"
-                placeholder="Enter project number"
-                required
-              />
-
-              <div class="text-danger" *ngIf="jobForm.get('newContractorInvoiceProjectNumber')?.invalid && jobForm.get('newContractorInvoiceProjectNumber')?.touched">
-                <!-- The browser will automatically show the required message, so you can remove this or keep it for custom JS validation -->
-                Invoiced Contractor Project Number is required.
-              </div>
+              <label>Invoiced Contractor</label>
+              <select formControlName="contractorInvoice" class="form-control">
+                <option value="primeContractor">Prime Contractor</option>
+                <option value="other">Other</option>
+              </select>
             </div>
 
-          <!-- Input for Prevailing or Non Prevailing -->
-          <div class="form-group">
-              <label>Prevailing or Non Prevailing <span style="color:red">*</span></label>
-              <select formControlName="prevailingOrNot" class="form-control" required>
-                <option value="">-- Select Option --</option>
+            <!-- Conditional Input for "Other" Invoiced Contractor -->
+            <div class="form-group" *ngIf="isOtherContractor">
+              <label>New Invoiced Contractor</label>
+              <input type="text" formControlName="newContractorInvoice" class="form-control" placeholder="Enter Invoiced Contractor Name">
+            </div>
+
+            <!-- Input for Invoiced Contractor Project Number -->
+            <div class="form-group">
+              <label>Invoiced Contractor Project Number</label>
+              <select formControlName="contractorInvoiceProjectNumber" class="form-control">
+                <option value="primeContractorProjectNumber">Prime Contractor Project Number</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            <!-- Conditional Input for "Other" Contractor Project Number -->
+            <div class="form-group" *ngIf="isOtherContractorProjectNumber">
+              <label>New Invoiced Contractor Project Number</label>
+              <input type="text" formControlName="newContractorInvoiceProjectNumber" class="form-control" placeholder="Enter Invoiced Contractor's Project Number">
+            </div>
+
+            <!-- Input for Prevailing or Non Prevailing -->
+            <div class="form-group">
+              <label>Prevailing or Non Prevailing</label>
+              <select formControlName="prevailingOrNot" class="form-control">
                 <option value="prevailing">Prevailing</option>
                 <option value="nonPrevailing">Non Prevailing</option>
               </select>
-
-              <!-- Error message -->
-              <div class="text-danger" *ngIf="jobForm.get('prevailingOrNot')?.invalid && jobForm.get('prevailingOrNot')?.touched">
-                Please select Prevailing or Non Prevailing.
-              </div>
             </div>
 
             <!-- Conditional Input for Non Prevailing -->
@@ -126,21 +77,13 @@
             <!-- Conditional Input for Prevailing -->
             <div class="form-group" *ngIf="isPrevailing">
               <label>Reporting Requirement</label>
-              <select formControlName="reportRequirement" class="form-control" required>
-                <option value="">-- Select Reporting Requirement --</option>
-                <option value="AASHTOWare">AASHTOWare</option>
-                <option value="lpcTruck">LPC Truck</option>
-                <option value="salesforce">Salesforce</option>
-              </select>
+              <input type="text" formControlName="reportRequirement" class="form-control" placeholder="Enter Reporting Requirement">
 
-              <!-- Show only if Ashtware is selected -->
-              <div *ngIf="jobForm.get('reportRequirement')?.value === 'AASHTOWare'">
-                <label>Contract Number</label>
-                <input type="text" formControlName="contractNumber" class="form-control" placeholder="Enter Contract Number">
-              
-                <label>Project ID Number</label>
-                <input type="text" formControlName="projectId" class="form-control" placeholder="Enter Project ID Number">
-              </div>
+              <label>Contract Number</label>
+              <input type="text" formControlName="contractNumber" class="form-control" placeholder="Enter Contract Number">
+
+              <label>Project ID Number</label>
+              <input type="text" formControlName="projectId" class="form-control" placeholder="Enter Project ID Number">
 
               <!-- Prevailing Wage Class Code Table -->
               <div class="mt-3">
@@ -178,22 +121,11 @@
               </div>
             </div>
           </div>
-          
           <div class="stepper-buttons">
-            <button 
-            cdkStepperNext 
-            class="btn btn-primary"
-            [disabled]="!jobForm.get('project')?.valid">
-              Next →
-            </button>
+            <button cdkStepperNext class="btn btn-primary">Next →</button>
           </div>
-      
-        <!-- Show form error if any required fields are missing -->
-        <div *ngIf="showFormError" class="text-danger mt-2">
-          Please fill in all required fields before continuing.
-        </div>
         </cdk-step>
-
+  
         <!-- Step 2: Rate & Material -->
         <cdk-step [stepControl]="jobForm.controls['material']">
           <ng-template cdkStepLabel>
@@ -272,7 +204,7 @@
         
         </cdk-step>
   
-        <!-- Step 3: Date, Time, and Volume 
+        <!-- Step 3: Date, Time, and Volume -->
         <cdk-step>
           <ng-template cdkStepLabel>
             <div class="step-bullet">3</div>
@@ -291,14 +223,14 @@
             <button cdkStepperPrevious class="btn btn-secondary">← Previous</button>
             <button cdkStepperNext class="btn btn-primary">Next →</button>
           </div>
-        </cdk-step> -->
+        </cdk-step>
   
         
   
         <!-- Step 4: Loading & Unloading -->
         <cdk-step>
           <ng-template cdkStepLabel>
-            <div class="step-bullet">3</div>
+            <div class="step-bullet">4</div>
             <div class="step-title">Loading & Unloading</div>
           </ng-template>
           
@@ -630,7 +562,7 @@
         <!-- Step 6: Additional Notes -->
         <cdk-step>
           <ng-template cdkStepLabel>
-            <div class="step-bullet">4</div>
+            <div class="step-bullet">5</div>
             <div class="step-title">Additional Notes</div>
           </ng-template>
           <div class="form-content">

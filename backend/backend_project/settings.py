@@ -89,10 +89,29 @@ WSGI_APPLICATION = 'backend_project.wsgi.application'
 load_dotenv(BASE_DIR.parent.parent / ".env")
 load_dotenv(BASE_DIR.parent / ".env")
 
+# Use SQLite for tests, production database otherwise
+import sys
+# Check if running tests (pytest or Django test command)
+is_testing = 'test' in sys.argv or 'pytest' in sys.modules or any('pytest' in arg for arg in sys.argv)
 
-DATABASES = {
-  "default": dj_database_url.config(env="DATABASE_URL", conn_max_age=600, ssl_require=True)
-}
+if is_testing:
+    # Use SQLite in-memory database for tests
+    # Note: ArrayField is PostgreSQL-specific, so we'll need to handle it differently
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': ':memory:',
+            'OPTIONS': {
+                'init_command': "PRAGMA foreign_keys=ON;",
+            }
+        }
+    }
+    # Disable ArrayField for SQLite by using JSONField instead
+    # This is handled at the model level or via migrations
+else:
+    DATABASES = {
+        "default": dj_database_url.config(env="DATABASE_URL", conn_max_age=600, ssl_require=True)
+    }
 
 
 
