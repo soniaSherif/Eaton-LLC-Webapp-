@@ -40,6 +40,9 @@ testem.log
 .vscode
 .angular
 
+# Docs
+docs/
+
 # System files
 .DS_Store
 Thumbs.db
@@ -181,3 +184,6 @@ venv/
 backend/venv/
 **/pycache/
 *.pyc
+
+#planning
+planning/

@@ -142,6 +142,13 @@ class Job(models.Model):
         ]
     def __str__(self):
         return f"Job {self.job_number} - {self.project}"
+    
+JOB_STATUS_CHOICES = [
+    ('assigned', 'Assigned'),
+    ('en_route', 'En Route'),
+    ('on_site', 'On Site'),
+    ('completed', 'Completed'),
+]
 
 class JobDriverAssignment(models.Model):
     job  = models.ForeignKey(
@@ -157,13 +164,34 @@ class JobDriverAssignment(models.Model):
     )
     assigned_at   = models.DateTimeField(auto_now_add=True)
     unassigned_at = models.DateTimeField(null=True, blank=True)
+    status = models.CharField(max_length=20, choices=JOB_STATUS_CHOICES, default='assigned')
+    started_at = models.DateTimeField(null=True, blank=True)
+    on_site_at = models.DateTimeField(null=True, blank=True)
+    completed_at = models.DateTimeField(null=True, blank=True)
+
 
     class Meta:
         unique_together = ('job', 'driver_truck')  # prevent duplicates
 
     def __str__(self):
         return f"{self.driver_truck.driver.name} → {self.job.job_number}"
+    
 
+class DeviceToken(models.Model):
+    PLATFORM_CHOICES = [
+        ('ios', 'iOS'),
+        ('android', 'Android'),
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='device_tokens')
+    token = models.TextField(unique=True)
+    platform = models.CharField(max_length=10, choices=PLATFORM_CHOICES)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.user.username} ({self.platform})"
+        
 class Address(models.Model):
     street_address = models.CharField(max_length=255)
     country = models.CharField(max_length=100)
@@ -200,13 +228,21 @@ class Invoice(models.Model):
         ('Void', 'Void'),
     ]
 
-    customer   = models.ForeignKey('Customer', on_delete=models.PROTECT, related_name='invoices')
-    job        = models.ForeignKey('Job', on_delete=models.PROTECT, related_name='invoices')
+    customer = models.ForeignKey('Customer', on_delete=models.PROTECT, related_name='invoices')
+    job = models.ForeignKey('Job', on_delete=models.PROTECT, related_name='invoices')
+    submitted_by_driver = models.ForeignKey(
+        'Driver',
+        on_delete=models.PROTECT,
+        related_name='submitted_invoices',
+        null=True,
+        blank=True,
+    )
+
     invoice_no = models.CharField(max_length=32, unique=True, editable=False)
-    invoice_date = models.DateField(default=timezone.now)
+    invoice_date = models.DateField(default=timezone.localdate)
     start_date = models.DateField(null=True, blank=True, help_text="Start of the invoice period (week range)")
     end_date = models.DateField(null=True, blank=True, help_text="End of the invoice period (week range)")
-    status       = models.CharField(max_length=16, choices=STATUS_CHOICES, default='Draft')
+    status = models.CharField(max_length=16, choices=STATUS_CHOICES, default='Draft')
     total_amount = models.DecimalField(max_digits=12, decimal_places=2, default=Decimal('0.00'))
 
     def __str__(self):
@@ -276,7 +312,7 @@ class PayReport(models.Model):
         managed = True
         constraints = [
             models.CheckConstraint(
-                check=models.Q(week_end__gte=models.F('week_start')),
+                condition=models.Q(week_end__gte=models.F('week_start')),
                 name='pr_week_start_lte_end'
             ),
             models.UniqueConstraint(
@@ -393,3 +429,4 @@ class PasswordOTP(models.Model):
             self.used = True
         self.save(update_fields=["attempts", "used"])
         return ok
+
