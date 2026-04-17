@@ -64,7 +64,7 @@ export class DailyBoardComponent implements OnInit {
   }
  //open dialog and pass the data over at same time
  openDialog(aJobNumber: string): void {
-  const selectedJob = this.jobs.find(job => job.jobNumber === aJobNumber);
+  const selectedJob = this.jobs.find(job => job.job_number === aJobNumber);
 
   const dialogRef = this.dialog.open<
     DbDispatchDialogComponent,

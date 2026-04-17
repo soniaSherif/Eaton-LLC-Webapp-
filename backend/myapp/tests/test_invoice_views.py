@@ -20,6 +20,10 @@ from rest_framework import status as http_status
 from myapp.models import Invoice, InvoiceLine
 
 
+def _results(data):
+    return data.get('results', data) if isinstance(data, dict) else data
+
+
 class TestInvoiceListAPI:
     """Test GET /api/invoices/ endpoint."""
     
@@ -37,24 +41,26 @@ class TestInvoiceListAPI:
         response = authenticated_api_client.get(url)
         
         assert response.status_code == http_status.HTTP_200_OK
-        assert response.data == []
+        assert _results(response.data) == []
     
     def test_list_invoices(self, authenticated_api_client, test_invoice):
         """Test listing invoices."""
         url = reverse('invoice-list')
         response = authenticated_api_client.get(url)
+        results = _results(response.data)
         
         assert response.status_code == http_status.HTTP_200_OK
-        assert len(response.data) == 1
-        assert response.data[0]['id'] == test_invoice.id
+        assert len(results) == 1
+        assert results[0]['id'] == test_invoice.id
     
     def test_list_invoices_includes_nested_data(self, authenticated_api_client, test_invoice):
         """Test that list response includes customer and job data."""
         url = reverse('invoice-list')
         response = authenticated_api_client.get(url)
+        results = _results(response.data)
         
         assert response.status_code == http_status.HTTP_200_OK
-        invoice_data = response.data[0]
+        invoice_data = results[0]
         assert 'customer' in invoice_data
         assert 'job' in invoice_data
         assert invoice_data['customer']['company_name'] == test_invoice.customer.company_name
@@ -70,9 +76,10 @@ class TestInvoiceListAPI:
         
         url = reverse('invoice-list')
         response = authenticated_api_client.get(url)
+        results = _results(response.data)
         
         assert response.status_code == http_status.HTTP_200_OK
-        invoice_data = response.data[0]
+        invoice_data = results[0]
         assert 'lines' in invoice_data
         assert len(invoice_data['lines']) == 1
 
@@ -103,10 +110,11 @@ class TestInvoiceFilteringAPI:
         
         url = reverse('invoice-list')
         response = authenticated_api_client.get(url, {'customer': 'Test Customer'})
+        results = _results(response.data)
         
         assert response.status_code == http_status.HTTP_200_OK
-        assert len(response.data) == 1
-        assert response.data[0]['id'] == invoice1.id
+        assert len(results) == 1
+        assert results[0]['id'] == invoice1.id
     
     def test_filter_by_status(self, authenticated_api_client, test_customer, test_job):
         """Test filtering invoices by status."""
@@ -126,20 +134,28 @@ class TestInvoiceFilteringAPI:
         
         url = reverse('invoice-list')
         response = authenticated_api_client.get(url, {'status': 'Draft'})
+        results = _results(response.data)
         
         assert response.status_code == http_status.HTTP_200_OK
-        assert len(response.data) == 1
-        assert response.data[0]['id'] == invoice1.id
-        assert response.data[0]['status'] == 'Draft'
+        assert len(results) == 1
+        assert results[0]['id'] == invoice1.id
+        assert results[0]['status'] == 'Draft'
     
     def test_filter_by_project(self, authenticated_api_client, test_customer, test_job):
         """Test filtering invoices by project name."""
+        Invoice.objects.create(
+            customer=test_customer,
+            job=test_job,
+            invoice_date=date.today(),
+        )
+
         url = reverse('invoice-list')
         response = authenticated_api_client.get(url, {'project': test_job.project})
+        results = _results(response.data)
         
         assert response.status_code == http_status.HTTP_200_OK
-        assert len(response.data) >= 1
-        assert all(inv['job']['project'] == test_job.project for inv in response.data)
+        assert len(results) >= 1
+        assert all(inv['job']['project'] == test_job.project for inv in results)
     
     def test_filter_by_date(self, authenticated_api_client, test_customer, test_job):
         """Test filtering invoices by invoice_date."""
@@ -160,10 +176,11 @@ class TestInvoiceFilteringAPI:
         
         url = reverse('invoice-list')
         response = authenticated_api_client.get(url, {'date': today.isoformat()})
+        results = _results(response.data)
         
         assert response.status_code == http_status.HTTP_200_OK
-        assert len(response.data) == 1
-        assert response.data[0]['id'] == invoice1.id
+        assert len(results) == 1
+        assert results[0]['id'] == invoice1.id
 
 
 class TestInvoiceCreateAPI:

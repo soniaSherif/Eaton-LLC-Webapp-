@@ -16,19 +16,19 @@ export class JobService {
   }
 
   getAllJobs(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl);
+    return this.http.get<any[]>(`${this.apiUrl}?_ts=${Date.now()}`);
   }
 
   getJobsByDate(selectedDate: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}?date=${selectedDate}`);
+    return this.http.get<any[]>(`${this.apiUrl}?date=${selectedDate}&_ts=${Date.now()}`);
   }
   // job.service.ts
 
   getJobByNumber(jobNumber: string): Observable<any> {
-    return this.http.get<any>(`${environment.apiBaseUrl}jobs/${jobNumber}/`);
+    return this.http.get<any>(`${environment.apiBaseUrl}jobs/${jobNumber}/?_ts=${Date.now()}`);
   }
   getJobById(id: number): Observable<any> {
-    return this.http.get<any>(`${environment.apiBaseUrl}jobs/${id}/`);
+    return this.http.get<any>(`${environment.apiBaseUrl}jobs/${id}/?_ts=${Date.now()}`);
   }  
   // job.service.ts
   updateJob(id: number, data: any): Observable<any> {

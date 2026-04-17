@@ -1,21 +1,25 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenVerifyView
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
+
 from .views import AuthViewSet
-
-
 from . import views
 from .views import (
     JobViewSet, CustomerViewSet, DriverViewSet, RoleViewSet,
     UserViewSet, UserRoleViewSet, CommentViewSet, TruckViewSet,
-    DriverTruckAssignmentViewSet, RegisterView, CustomTokenObtainPairView, OperatorViewSet, AddressViewSet, JobDriverAssignmentViewSet,
-    CustomTokenRefreshView, protected_view, assign_truck_to_driver, unassigned_trucks,
-    PayReportViewSet, PayReportLineViewSet,
+    DriverTruckAssignmentViewSet, DeviceTokenViewSet,
+    RegisterView, CustomTokenObtainPairView, OperatorViewSet,
+    AddressViewSet, JobDriverAssignmentViewSet,
+    CustomTokenRefreshView, protected_view, assign_truck_to_driver,
+    unassigned_trucks, PayReportViewSet, PayReportLineViewSet,
+    InvoiceViewSet, InvoiceLineViewSet,
 )
 
 router = DefaultRouter()
 router.register(r'jobs', JobViewSet)
 router.register(r'customers', CustomerViewSet)
+router.register(r'devices', DeviceTokenViewSet, basename='devices')
 router.register(r'drivers', DriverViewSet)
 router.register(r'roles', RoleViewSet)
 router.register(r'users', UserViewSet)
@@ -29,10 +33,17 @@ router.register(r'job-driver-assignments', JobDriverAssignmentViewSet)
 router.register(r'pay-reports', PayReportViewSet, basename='pay-report')
 router.register(r'pay-report-lines', PayReportLineViewSet, basename='pay-report-line')
 router.register(r'auth', AuthViewSet, basename='auth')
-
+router.register(r'invoices', InvoiceViewSet, basename='invoice')
+router.register(r'invoice-lines', InvoiceLineViewSet, basename='invoice-line')
 
 urlpatterns = [
-    path('', include(router.urls)),  
+    # Swagger / OpenAPI docs
+    path('schema/', SpectacularAPIView.as_view(), name='schema'),
+    path('docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path('redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+
+    # API routes
+    path('', include(router.urls)),
     path('register/', RegisterView.as_view(), name='register'),
     path('login/', CustomTokenObtainPairView.as_view(), name='login'),
     path('token/refresh/', CustomTokenRefreshView.as_view(), name='token_refresh'),
@@ -40,5 +51,4 @@ urlpatterns = [
     path('protected/', protected_view, name='protected'),
     path('assign-truck/', assign_truck_to_driver, name='assign_truck'),
     path('unassigned-trucks/', unassigned_trucks, name='unassigned_trucks'),
-    
 ]
