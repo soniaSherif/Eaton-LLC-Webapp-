@@ -7,7 +7,7 @@ This file contains reusable fixtures that can be used across all invoice test fi
 import pytest
 from decimal import Decimal
 from datetime import date, timedelta
-from django.contrib.auth.models import User
+from django.contrib.auth.models import Group, User
 from django.utils import timezone
 
 from myapp.models import (
@@ -19,11 +19,14 @@ from myapp.models import (
 @pytest.fixture
 def test_user(db):
     """Create a test user."""
-    return User.objects.create_user(
+    user = User.objects.create_user(
         username='testuser',
         email='test@example.com',
         password='testpass123'
     )
+    manager_group, _ = Group.objects.get_or_create(name='Manager')
+    user.groups.add(manager_group)
+    return user
 
 
 @pytest.fixture
@@ -43,8 +46,7 @@ def test_customer(db):
         phone_number='555-1234',
         email='customer@test.com',
         address='123 Test St',
-        city='Test City',
-        state='MN'
+        city='Test City'
     )
 
 

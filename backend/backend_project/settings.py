@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-3#(cahk+@7w0!d$!b94+7^$s=fei+2!z*$-9^&s^@j15xfxphy
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -43,9 +43,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.postgres',
     'rest_framework',
     'rest_framework_simplejwt',
     'myapp',
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
@@ -57,6 +59,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'myapp.middleware.MobileClientMiddleware',
+
 ]
 
 ROOT_URLCONF = 'backend_project.urls'
@@ -91,9 +95,16 @@ load_dotenv(BASE_DIR.parent / ".env")
 
 
 
+
 DATABASES = {
-  "default": dj_database_url.config(env="DATABASE_URL", conn_max_age=600, ssl_require=True)
+  "default": dj_database_url.config(
+    env="DATABASE_URL",
+    conn_max_age=600,
+    ssl_require=os.environ.get("DATABASE_SSL_REQUIRE", "false").lower() == "true"
+  )
 }
+
+
 
 
 
@@ -139,10 +150,11 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:4200",  # Angular frontend (Development)
-    "https://yourdomain.com",  # Production frontend (Replace with actual domain)
+    "http://localhost:4200",   # Angular web app (Development)
+    "http://localhost:8081",   # React Native Expo mobile app (Development)
+    "https://yourdomain.com",  # Production (Replace with actual domain)
 ]
-CORS_ALLOW_ALL_ORIGINS = True  
+CORS_ALLOW_ALL_ORIGINS = False
 # REST_FRAMEWORK = {
 #     'DEFAULT_AUTHENTICATION_CLASSES': (
 #         'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -156,8 +168,11 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.AllowAny',  # Allow public access by default
+        'rest_framework.permissions.IsAuthenticated',  # Allow public access by default
     ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 20,
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 SIMPLE_JWT = {
@@ -196,3 +211,10 @@ DEFAULT_FROM_EMAIL = os.environ.get("FROM_EMAIL") or EMAIL_HOST_USER or "no-repl
 
 # Email timeout settings
 EMAIL_TIMEOUT = int(os.environ.get("EMAIL_TIMEOUT", 20))  # seconds
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Eaton LLC API',
+    'DESCRIPTION': 'API documentation for Eaton LLC mobile/backend integration',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+}

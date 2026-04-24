@@ -109,15 +109,16 @@
       <table *ngIf="selectedJob.driver_assignments?.length; else noDispatch">
         <thead>
           <tr>
-            <th>Time</th><th>Truck</th><th>Driver</th><th>Phone</th>
+            <th>Time</th><th>Truck</th><th>Driver</th><th>Phone</th><th>Status</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let a of selectedJob.driver_assignments">
-            <td>{{ a.driver_truck_info.assigned_at | date:'shortTime' }}</td>
+            <td>{{ a.assigned_at | date:'shortTime' }}</td>
             <td>{{ a.driver_truck_info.truck_type }}</td>
             <td>{{ a.driver_truck_info.driver }}</td>
             <td>{{ a.driver_truck_info.driver_phone }}</td>
+            <td>{{ a.status }}</td>
           </tr>
         </tbody>
       </table>

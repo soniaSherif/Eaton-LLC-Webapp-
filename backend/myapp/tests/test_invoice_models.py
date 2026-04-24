@@ -167,8 +167,8 @@ class TestInvoiceLineModel:
             unit_price=Decimal('75.25')
         )
         
-        # Expected: 5.50 * 75.25 = 413.875
-        assert line.line_total == Decimal('413.88')  # Rounded to 2 decimal places
+        # Model save() quantizes to two decimal places.
+        assert line.line_total == Decimal('413.88')
     
     def test_invoice_line_with_zero_values(self, test_invoice):
         """Test invoice line with zero quantity and price."""
